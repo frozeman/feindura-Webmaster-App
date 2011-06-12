@@ -42,7 +42,20 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.titleBar.title = @"TTT";
+    
+    // add a title which fits in the navbar
+    UILabel *title = [[UILabel alloc] init];
+	[title setBackgroundColor:[UIColor clearColor]];
+	[title setTextColor:[UIColor whiteColor]];
+    [title setShadowColor:[UIColor darkGrayColor]];
+	[title setText:NSLocalizedString(@"ADDFEINDURA_TITLE", nil)];
+	[title sizeToFit];
+    [title setAdjustsFontSizeToFitWidth:true];
+	[self.titleBar setTitleView:title];
+	[title release];
+    
+    // just adding the title as text
+    //self.titleBar.title = NSLocalizedString(@"ADDFEINDURA_TITLE", nil);
 }
 
 - (void)viewDidUnload {
@@ -61,12 +74,11 @@
 #pragma mark Methods
 
 -(IBAction)cancelAddFeindura:(id)sender {
-	//[self.delegate DismissAddFeinduraView];
+	[self.delegate DismissAddFeinduraView];
 }
 
--(IBAction)saveAddFeindura:(id)sender {
-    
-	//[self.delegate DismissAddFeinduraView];
+-(IBAction)saveAddFeindura:(id)sender {    
+	[self.delegate DismissAddFeinduraView];
 }
 
 @end

@@ -1,0 +1,458 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A3AB892D13A4D42F0025FE50 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3AB892C13A4D42F0025FE50 /* UIKit.framework */; };
+		A3AB892F13A4D42F0025FE50 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3AB892E13A4D42F0025FE50 /* Foundation.framework */; };
+		A3AB893113A4D42F0025FE50 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3AB893013A4D42F0025FE50 /* CoreGraphics.framework */; };
+		A3AB893713A4D42F0025FE50 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A3AB893513A4D42F0025FE50 /* InfoPlist.strings */; };
+		A3AB893A13A4D42F0025FE50 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A3AB893913A4D42F0025FE50 /* main.m */; };
+		A3AB893D13A4D42F0025FE50 /* feindura_Webmaster_ToolAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A3AB893C13A4D42F0025FE50 /* feindura_Webmaster_ToolAppDelegate.m */; };
+		A3AB894013A4D42F0025FE50 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3AB893E13A4D42F0025FE50 /* MainWindow.xib */; };
+		A3AB894313A4D42F0025FE50 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3AB894213A4D42F0025FE50 /* RootViewController.m */; };
+		A3AB894613A4D42F0025FE50 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3AB894413A4D42F0025FE50 /* RootViewController.xib */; };
+		A3AB894D13A4D4300025FE50 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3AB892C13A4D42F0025FE50 /* UIKit.framework */; };
+		A3AB894E13A4D4300025FE50 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3AB892E13A4D42F0025FE50 /* Foundation.framework */; };
+		A3AB894F13A4D4300025FE50 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3AB893013A4D42F0025FE50 /* CoreGraphics.framework */; };
+		A3AB895713A4D4300025FE50 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A3AB895513A4D4300025FE50 /* InfoPlist.strings */; };
+		A3AB895A13A4D4300025FE50 /* feindura_Webmaster_ToolTests.h in Resources */ = {isa = PBXBuildFile; fileRef = A3AB895913A4D4300025FE50 /* feindura_Webmaster_ToolTests.h */; };
+		A3AB895C13A4D4300025FE50 /* feindura_Webmaster_ToolTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A3AB895B13A4D4300025FE50 /* feindura_Webmaster_ToolTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A3AB895013A4D4300025FE50 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3AB891F13A4D42F0025FE50 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A3AB892713A4D42F0025FE50;
+			remoteInfo = "feindura Webmaster Tool";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		A3AB892813A4D42F0025FE50 /* feindura Webmaster Tool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "feindura Webmaster Tool.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A3AB892C13A4D42F0025FE50 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		A3AB892E13A4D42F0025FE50 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		A3AB893013A4D42F0025FE50 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		A3AB893413A4D42F0025FE50 /* feindura Webmaster Tool-Info.plist */ = {isa = PBXFileReference; path = "feindura Webmaster Tool-Info.plist"; sourceTree = "<group>"; };
+		A3AB893613A4D42F0025FE50 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A3AB893813A4D42F0025FE50 /* feindura Webmaster Tool-Prefix.pch */ = {isa = PBXFileReference; path = "feindura Webmaster Tool-Prefix.pch"; sourceTree = "<group>"; };
+		A3AB893913A4D42F0025FE50 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A3AB893B13A4D42F0025FE50 /* feindura_Webmaster_ToolAppDelegate.h */ = {isa = PBXFileReference; path = feindura_Webmaster_ToolAppDelegate.h; sourceTree = "<group>"; };
+		A3AB893C13A4D42F0025FE50 /* feindura_Webmaster_ToolAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = feindura_Webmaster_ToolAppDelegate.m; sourceTree = "<group>"; };
+		A3AB893F13A4D42F0025FE50 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		A3AB894113A4D42F0025FE50 /* RootViewController.h */ = {isa = PBXFileReference; path = RootViewController.h; sourceTree = "<group>"; };
+		A3AB894213A4D42F0025FE50 /* RootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		A3AB894513A4D42F0025FE50 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/RootViewController.xib; sourceTree = "<group>"; };
+		A3AB894C13A4D4300025FE50 /* feindura Webmaster ToolTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "feindura Webmaster ToolTests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A3AB895413A4D4300025FE50 /* feindura Webmaster ToolTests-Info.plist */ = {isa = PBXFileReference; path = "feindura Webmaster ToolTests-Info.plist"; sourceTree = "<group>"; };
+		A3AB895613A4D4300025FE50 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A3AB895813A4D4300025FE50 /* feindura Webmaster ToolTests-Prefix.pch */ = {isa = PBXFileReference; path = "feindura Webmaster ToolTests-Prefix.pch"; sourceTree = "<group>"; };
+		A3AB895913A4D4300025FE50 /* feindura_Webmaster_ToolTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = feindura_Webmaster_ToolTests.h; sourceTree = "<group>"; };
+		A3AB895B13A4D4300025FE50 /* feindura_Webmaster_ToolTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = feindura_Webmaster_ToolTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A3AB892513A4D42F0025FE50 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A3AB892D13A4D42F0025FE50 /* UIKit.framework in Frameworks */,
+				A3AB892F13A4D42F0025FE50 /* Foundation.framework in Frameworks */,
+				A3AB893113A4D42F0025FE50 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A3AB894813A4D4300025FE50 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A3AB894D13A4D4300025FE50 /* UIKit.framework in Frameworks */,
+				A3AB894E13A4D4300025FE50 /* Foundation.framework in Frameworks */,
+				A3AB894F13A4D4300025FE50 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A3AB891D13A4D42F0025FE50 = {
+			isa = PBXGroup;
+			children = (
+				A3AB893213A4D42F0025FE50 /* feindura Webmaster Tool */,
+				A3AB895213A4D4300025FE50 /* feindura Webmaster ToolTests */,
+				A3AB892B13A4D42F0025FE50 /* Frameworks */,
+				A3AB892913A4D42F0025FE50 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A3AB892913A4D42F0025FE50 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A3AB892813A4D42F0025FE50 /* feindura Webmaster Tool.app */,
+				A3AB894C13A4D4300025FE50 /* feindura Webmaster ToolTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A3AB892B13A4D42F0025FE50 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A3AB892C13A4D42F0025FE50 /* UIKit.framework */,
+				A3AB892E13A4D42F0025FE50 /* Foundation.framework */,
+				A3AB893013A4D42F0025FE50 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A3AB893213A4D42F0025FE50 /* feindura Webmaster Tool */ = {
+			isa = PBXGroup;
+			children = (
+				A3AB893B13A4D42F0025FE50 /* feindura_Webmaster_ToolAppDelegate.h */,
+				A3AB893C13A4D42F0025FE50 /* feindura_Webmaster_ToolAppDelegate.m */,
+				A3AB893E13A4D42F0025FE50 /* MainWindow.xib */,
+				A3AB894113A4D42F0025FE50 /* RootViewController.h */,
+				A3AB894213A4D42F0025FE50 /* RootViewController.m */,
+				A3AB894413A4D42F0025FE50 /* RootViewController.xib */,
+				A3AB893313A4D42F0025FE50 /* Supporting Files */,
+			);
+			path = "feindura Webmaster Tool";
+			sourceTree = "<group>";
+		};
+		A3AB893313A4D42F0025FE50 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A3AB893413A4D42F0025FE50 /* feindura Webmaster Tool-Info.plist */,
+				A3AB893513A4D42F0025FE50 /* InfoPlist.strings */,
+				A3AB893813A4D42F0025FE50 /* feindura Webmaster Tool-Prefix.pch */,
+				A3AB893913A4D42F0025FE50 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A3AB895213A4D4300025FE50 /* feindura Webmaster ToolTests */ = {
+			isa = PBXGroup;
+			children = (
+				A3AB895913A4D4300025FE50 /* feindura_Webmaster_ToolTests.h */,
+				A3AB895B13A4D4300025FE50 /* feindura_Webmaster_ToolTests.m */,
+				A3AB895313A4D4300025FE50 /* Supporting Files */,
+			);
+			path = "feindura Webmaster ToolTests";
+			sourceTree = "<group>";
+		};
+		A3AB895313A4D4300025FE50 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A3AB895413A4D4300025FE50 /* feindura Webmaster ToolTests-Info.plist */,
+				A3AB895513A4D4300025FE50 /* InfoPlist.strings */,
+				A3AB895813A4D4300025FE50 /* feindura Webmaster ToolTests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A3AB892713A4D42F0025FE50 /* feindura Webmaster Tool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A3AB895F13A4D4300025FE50 /* Build configuration list for PBXNativeTarget "feindura Webmaster Tool" */;
+			buildPhases = (
+				A3AB892413A4D42F0025FE50 /* Sources */,
+				A3AB892513A4D42F0025FE50 /* Frameworks */,
+				A3AB892613A4D42F0025FE50 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "feindura Webmaster Tool";
+			productName = "feindura Webmaster Tool";
+			productReference = A3AB892813A4D42F0025FE50 /* feindura Webmaster Tool.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A3AB894B13A4D4300025FE50 /* feindura Webmaster ToolTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A3AB896213A4D4300025FE50 /* Build configuration list for PBXNativeTarget "feindura Webmaster ToolTests" */;
+			buildPhases = (
+				A3AB894713A4D4300025FE50 /* Sources */,
+				A3AB894813A4D4300025FE50 /* Frameworks */,
+				A3AB894913A4D4300025FE50 /* Resources */,
+				A3AB894A13A4D4300025FE50 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A3AB895113A4D4300025FE50 /* PBXTargetDependency */,
+			);
+			name = "feindura Webmaster ToolTests";
+			productName = "feindura Webmaster ToolTests";
+			productReference = A3AB894C13A4D4300025FE50 /* feindura Webmaster ToolTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A3AB891F13A4D42F0025FE50 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = A3AB892213A4D42F0025FE50 /* Build configuration list for PBXProject "feindura Webmaster Tool" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = A3AB891D13A4D42F0025FE50;
+			productRefGroup = A3AB892913A4D42F0025FE50 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A3AB892713A4D42F0025FE50 /* feindura Webmaster Tool */,
+				A3AB894B13A4D4300025FE50 /* feindura Webmaster ToolTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A3AB892613A4D42F0025FE50 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A3AB893713A4D42F0025FE50 /* InfoPlist.strings in Resources */,
+				A3AB894013A4D42F0025FE50 /* MainWindow.xib in Resources */,
+				A3AB894613A4D42F0025FE50 /* RootViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A3AB894913A4D4300025FE50 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A3AB895713A4D4300025FE50 /* InfoPlist.strings in Resources */,
+				A3AB895A13A4D4300025FE50 /* feindura_Webmaster_ToolTests.h in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A3AB894A13A4D4300025FE50 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A3AB892413A4D42F0025FE50 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A3AB893A13A4D42F0025FE50 /* main.m in Sources */,
+				A3AB893D13A4D42F0025FE50 /* feindura_Webmaster_ToolAppDelegate.m in Sources */,
+				A3AB894313A4D42F0025FE50 /* RootViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A3AB894713A4D4300025FE50 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A3AB895C13A4D4300025FE50 /* feindura_Webmaster_ToolTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A3AB895113A4D4300025FE50 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A3AB892713A4D42F0025FE50 /* feindura Webmaster Tool */;
+			targetProxy = A3AB895013A4D4300025FE50 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		A3AB893513A4D42F0025FE50 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A3AB893613A4D42F0025FE50 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		A3AB893E13A4D42F0025FE50 /* MainWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A3AB893F13A4D42F0025FE50 /* en */,
+			);
+			name = MainWindow.xib;
+			sourceTree = "<group>";
+		};
+		A3AB894413A4D42F0025FE50 /* RootViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A3AB894513A4D42F0025FE50 /* en */,
+			);
+			name = RootViewController.xib;
+			sourceTree = "<group>";
+		};
+		A3AB895513A4D4300025FE50 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A3AB895613A4D4300025FE50 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A3AB895D13A4D4300025FE50 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		A3AB895E13A4D4300025FE50 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+		A3AB896013A4D4300025FE50 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "feindura Webmaster Tool/feindura Webmaster Tool-Prefix.pch";
+				INFOPLIST_FILE = "feindura Webmaster Tool/feindura Webmaster Tool-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		A3AB896113A4D4300025FE50 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "feindura Webmaster Tool/feindura Webmaster Tool-Prefix.pch";
+				INFOPLIST_FILE = "feindura Webmaster Tool/feindura Webmaster Tool-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		A3AB896313A4D4300025FE50 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/feindura Webmaster Tool.app/feindura Webmaster Tool";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "feindura Webmaster ToolTests/feindura Webmaster ToolTests-Prefix.pch";
+				INFOPLIST_FILE = "feindura Webmaster ToolTests/feindura Webmaster ToolTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		A3AB896413A4D4300025FE50 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/feindura Webmaster Tool.app/feindura Webmaster Tool";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "feindura Webmaster ToolTests/feindura Webmaster ToolTests-Prefix.pch";
+				INFOPLIST_FILE = "feindura Webmaster ToolTests/feindura Webmaster ToolTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A3AB892213A4D42F0025FE50 /* Build configuration list for PBXProject "feindura Webmaster Tool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A3AB895D13A4D4300025FE50 /* Debug */,
+				A3AB895E13A4D4300025FE50 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A3AB895F13A4D4300025FE50 /* Build configuration list for PBXNativeTarget "feindura Webmaster Tool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A3AB896013A4D4300025FE50 /* Debug */,
+				A3AB896113A4D4300025FE50 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		A3AB896213A4D4300025FE50 /* Build configuration list for PBXNativeTarget "feindura Webmaster ToolTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A3AB896313A4D4300025FE50 /* Debug */,
+				A3AB896413A4D4300025FE50 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A3AB891F13A4D42F0025FE50 /* Project object */;
+}

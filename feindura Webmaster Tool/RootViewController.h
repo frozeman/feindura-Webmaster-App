@@ -3,14 +3,22 @@
 //  feindura Webmaster Tool
 //
 //  Created by Fabian on 12.06.11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  Copyright 2011 [frozeman.de] All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
+#import "AddFeinduraViewController.h"
 
-@interface RootViewController : UITableViewController {
+@interface RootViewController : UITableViewController <AddFeinduraViewControllerDelegate> {
 
 }
+
+-(IBAction)showAddFeinduraView:(id)sender;
+
+
+#pragma mark Delegates
+
+-(void)DismissAddFeinduraView;
 
 
 @end

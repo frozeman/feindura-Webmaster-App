@@ -3,7 +3,7 @@
 //  feindura Webmaster Tool
 //
 //  Created by Fabian on 12.06.11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  Copyright 2011 [frozeman.de] All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

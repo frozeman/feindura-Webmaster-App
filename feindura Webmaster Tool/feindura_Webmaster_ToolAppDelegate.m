@@ -3,25 +3,26 @@
 //  feindura Webmaster Tool
 //
 //  Created by Fabian on 12.06.11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  Copyright 2011 [frozeman.de] All rights reserved.
 //
 
 #import "feindura_Webmaster_ToolAppDelegate.h"
+#import "RootViewController.h"
 
 @implementation feindura_Webmaster_ToolAppDelegate
 
 
-@synthesize window=_window;
-
-@synthesize navigationController=_navigationController;
+@synthesize window;
+@synthesize navigationController;
+@synthesize rootViewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
     // Add the navigation controller's view to the window and display.
-    self.window.rootViewController = self.navigationController;
-    [self.window makeKeyAndVisible];
-    return YES;
+    [window addSubview:[navigationController view]];
+    [window makeKeyAndVisible];  
+    return true;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -65,8 +66,9 @@
 
 - (void)dealloc
 {
-    [_window release];
-    [_navigationController release];
+    [navigationController release];
+    [rootViewController release];
+	[window release];
     [super dealloc];
 }
 

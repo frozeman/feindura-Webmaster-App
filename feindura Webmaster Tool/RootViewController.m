@@ -3,10 +3,11 @@
 //  feindura Webmaster Tool
 //
 //  Created by Fabian on 12.06.11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  Copyright 2011 [frozeman.de] All rights reserved.
 //
 
 #import "RootViewController.h"
+#import "AddFeinduraViewController.h"
 
 @implementation RootViewController
 
@@ -35,13 +36,13 @@
 	[super viewDidDisappear:animated];
 }
 
-/*
- // Override to allow orientations other than the default portrait orientation.
+
+// Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	// Return YES for supported orientations.
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);
+	//return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return true;
 }
- */
 
 // Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -109,8 +110,7 @@
 }
 */
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     /*
     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
     // ...
@@ -120,25 +120,41 @@
 	*/
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     
     // Relinquish ownership any cached data, images, etc that aren't in use.
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
 
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [super dealloc];
+}
+
+
+#pragma mark Methods
+
+-(IBAction)showAddFeinduraView:(id)sender {
+	AddFeinduraViewController *modalView = [[AddFeinduraViewController alloc] init];
+	modalView.delegate = self;
+    modalView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    
+	[self presentModalViewController:modalView animated:YES];
+	[modalView release];
+}
+
+
+#pragma mark Delegates
+
+-(void)DismissAddFeinduraView {
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 @end

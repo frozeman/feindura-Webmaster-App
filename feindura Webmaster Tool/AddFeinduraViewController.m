@@ -24,10 +24,7 @@
 }
 
 - (void)dealloc {
-    self.titleBar = nil;
-    self.delegate = nil;
     [titleBar release];
-    [delegate release];
     [super dealloc];
 }
 
@@ -61,8 +58,7 @@
 - (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
-    self.titleBar = nil;
-    self.delegate = nil;    
+    self.titleBar = nil;  
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -74,11 +70,11 @@
 #pragma mark Methods
 
 -(IBAction)cancelAddFeindura:(id)sender {
-	[self.delegate DismissAddFeinduraView];
+	[delegate DismissAddFeinduraView];
 }
 
 -(IBAction)saveAddFeindura:(id)sender {    
-	[self.delegate DismissAddFeinduraView];
+	[delegate DismissAddFeinduraView];
 }
 
 @end

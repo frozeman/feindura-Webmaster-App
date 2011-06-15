@@ -16,18 +16,37 @@
 
 @end
 
+
 #pragma mark Class
 
-@interface AddFeinduraViewController : UIViewController {
+@interface AddFeinduraViewController : UIViewController <UIScrollViewDelegate,UITextFieldDelegate> {
     
-    id<AddFeinduraViewControllerDelegate> delegate;    
+    id<AddFeinduraViewControllerDelegate> delegate;
+    IBOutlet UIScrollView *scrollView;
     IBOutlet UINavigationItem *titleBar;
+    
+    IBOutlet UILabel *urlTitle;
+    IBOutlet UILabel *accountTitle;
+    IBOutlet UITextField *url;
+    IBOutlet UITextField *username;
+    IBOutlet UITextField *password;
 }
 
 @property(nonatomic,assign) id<AddFeinduraViewControllerDelegate> delegate;
+@property(nonatomic,retain) UIScrollView *scrollView;
 @property(nonatomic,retain) UINavigationItem *titleBar;
+@property(nonatomic,retain) UILabel *urlTitle;
+@property(nonatomic,retain) UILabel *accountTitle;
+@property(nonatomic,retain) UITextField *url;
+@property(nonatomic,retain) UITextField *username;
+@property(nonatomic,retain) UITextField *password;
+
 
 -(IBAction)saveAddFeindura:(id)sender;
 -(IBAction)cancelAddFeindura:(id)sender;
+
+#pragma mark Delegates
+- (BOOL)textFieldShouldReturn:(UITextField *)textField;
+- (void)textFieldDidBeginEditing:(UITextField *)textField;
 
 @end

@@ -42,8 +42,9 @@
 @property(nonatomic,retain) UITextField *password;
 
 
--(IBAction)saveAddFeindura:(id)sender;
+-(BOOL)saveAddFeindura;
 -(IBAction)cancelAddFeindura:(id)sender;
+-(UITextField*)textFieldsAreEmpty;
 
 #pragma mark Delegates
 - (BOOL)textFieldShouldReturn:(UITextField *)textField;

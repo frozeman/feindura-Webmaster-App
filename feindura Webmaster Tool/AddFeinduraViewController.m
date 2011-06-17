@@ -94,11 +94,13 @@
     self.scrollView = nil;
 }
 
+/*
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
     //return (interfaceOrientation == UIInterfaceOrientationPortrait);
     return false;
 }
+*/
 
 #pragma mark Methods
 
@@ -106,13 +108,24 @@
 	[delegate DismissAddFeinduraView];
 }
 
--(IBAction)saveAddFeindura:(id)sender {    
+-(BOOL)saveAddFeindura {    
 	[delegate DismissAddFeinduraView];
+    return true;
+}
+
+- (UITextField*)textFieldsAreEmpty {
+    if([self.url.text isEqualToString:@""])
+        return self.url;    
+    else if([self.username.text isEqualToString:@""])
+        return self.username;
+    else if([self.password.text isEqualToString:@""])
+        return self.password;
+    else
+        return false;
 }
 
 
 #pragma mark Delegates
-
 
 // -> ScrollViewDelegate
 -(UIView*)viewForZoomingInScrollView:(UIScrollView*)sView {
@@ -120,27 +133,41 @@
 	return sView;
 }
 
-// -> TextDieldDelegates
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
-    if(textField.tag == 3)
+// ->> TextFieldDelegates
+
+// -> CHANGE Return Button 
+- (void)textFieldDidBeginEditing:(UITextField*)textField {
+    if(textField.tag == 3 &&
+       (self.textFieldsAreEmpty == false || self.textFieldsAreEmpty == textField))
         [textField setReturnKeyType:UIReturnKeyDone];
-    // NEED checks if the others are still empty!!
+    else if(textField.tag == 3)
+        [textField setReturnKeyType:UIReturnKeyNext];
 }
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+// JUMP to TextFields
+- (BOOL)textFieldShouldReturn:(UITextField*)textField {
     switch (textField.tag) {
         case 1:
+            // -> JUMP to the next one
             [[self.scrollView viewWithTag:2] becomeFirstResponder];
             break;
         case 2:
+            // -> JUMP to the next one
             [[self.scrollView viewWithTag:3] becomeFirstResponder];
             break;
         case 3:
+            // -> JUMP to the empty one 
+            if([self textFieldsAreEmpty] != false)
+                [[self textFieldsAreEmpty] becomeFirstResponder];
+            // -> SAVE the data
+            else 
+                [self saveAddFeindura];
+                
             break;
         default:
             [[self.scrollView viewWithTag:1] becomeFirstResponder];
             break;
     }
-    return YES;
+    return true;
 }
 
 @end

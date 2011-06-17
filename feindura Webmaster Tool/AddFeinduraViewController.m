@@ -7,6 +7,7 @@
 //
 
 #import "AddFeinduraViewController.h"
+//#import "SFHFKeychainUtils.h"
 
 
 @implementation AddFeinduraViewController
@@ -108,7 +109,41 @@
 	[delegate DismissAddFeinduraView];
 }
 
--(BOOL)saveAddFeindura {    
+-(BOOL)saveAddFeindura {
+    
+    // TODO: check internet connection first
+    // TODO: check if username and password is correct
+    
+    // -> STORE user data
+    
+    BOOL success;
+    NSError *error;
+	
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString *documentsDirectory = [paths objectAtIndex:0];
+	NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"settings.plist"];
+	
+	success = [fileManager fileExistsAtPath:filePath];
+	if (!success) {		
+		NSString *path = [[NSBundle mainBundle] pathForResource:@"settings" ofType:@"plist"];
+		success = [fileManager copyItemAtPath:path toPath:filePath error:&error];
+	}	
+	
+	NSMutableDictionary* plistDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
+	
+	[plistDict setValue:self.username.text forKey:self.url.text];
+	[plistDict writeToFile:filePath atomically: YES];
+    
+    [plistDict release];
+    
+    /*
+    NSURL *serverURL = [NSURL URLWithString:self.url.text];
+    NSError *error = nil;
+    
+    [SFHFKeychainUtils storeUsername:self.username.text andPassword:self.password.text forServiceName:[serverURL absoluteString] updateExisting:YES error:&error];
+     */
+    
 	[delegate DismissAddFeinduraView];
     return true;
 }

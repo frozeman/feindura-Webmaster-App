@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+//@class SFHFKeychainUtils;
+
 #pragma mark Protocol
 
 @protocol AddFeinduraViewControllerDelegate <NSObject>

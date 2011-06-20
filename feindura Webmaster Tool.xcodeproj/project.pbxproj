@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A30E74E613A4FD000026ECFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A30E74E513A4FD000026ECFF /* README.md */; };
 		A38A212A13ABDB6B00866212 /* settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = A38A212913ABDB6B00866212 /* settings.plist */; };
+		A38FEFED13AF7F4300250641 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = A38FEFEC13AF7F4300250641 /* NSString+MD5.m */; };
 		A3AB892D13A4D42F0025FE50 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3AB892C13A4D42F0025FE50 /* UIKit.framework */; };
 		A3AB892F13A4D42F0025FE50 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3AB892E13A4D42F0025FE50 /* Foundation.framework */; };
 		A3AB893113A4D42F0025FE50 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3AB893013A4D42F0025FE50 /* CoreGraphics.framework */; };
@@ -42,6 +43,8 @@
 /* Begin PBXFileReference section */
 		A30E74E513A4FD000026ECFF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		A38A212913ABDB6B00866212 /* settings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = settings.plist; sourceTree = "<group>"; };
+		A38FEFEB13AF7F4300250641 /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
+		A38FEFEC13AF7F4300250641 /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
 		A3AB892813A4D42F0025FE50 /* feindura Webmaster Tool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "feindura Webmaster Tool.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3AB892C13A4D42F0025FE50 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A3AB892E13A4D42F0025FE50 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -101,6 +104,15 @@
 			name = Thirdparty;
 			sourceTree = "<group>";
 		};
+		A38FEFE913AF7ED800250641 /* Helper Classes */ = {
+			isa = PBXGroup;
+			children = (
+				A38FEFEB13AF7F4300250641 /* NSString+MD5.h */,
+				A38FEFEC13AF7F4300250641 /* NSString+MD5.m */,
+			);
+			name = "Helper Classes";
+			sourceTree = "<group>";
+		};
 		A3AB891D13A4D42F0025FE50 = {
 			isa = PBXGroup;
 			children = (
@@ -141,6 +153,7 @@
 				A3AB894213A4D42F0025FE50 /* RootViewController.m */,
 				A3AB894413A4D42F0025FE50 /* RootViewController.xib */,
 				A3AB896A13A4D5810025FE50 /* ModalViews */,
+				A38FEFE913AF7ED800250641 /* Helper Classes */,
 				A38A212413ABCFE700866212 /* Thirdparty */,
 				A3AB893313A4D42F0025FE50 /* Supporting Files */,
 			);
@@ -305,6 +318,7 @@
 				A3AB893D13A4D42F0025FE50 /* feindura_Webmaster_ToolAppDelegate.m in Sources */,
 				A3AB894313A4D42F0025FE50 /* RootViewController.m in Sources */,
 				A3AB896813A4D5750025FE50 /* AddFeinduraViewController.m in Sources */,
+				A38FEFED13AF7F4300250641 /* NSString+MD5.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

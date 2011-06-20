@@ -7,6 +7,7 @@
 //
 
 #import "AddFeinduraViewController.h"
+#import "NSString+MD5.h"
 //#import "SFHFKeychainUtils.h"
 
 
@@ -111,31 +112,42 @@
 
 -(BOOL)saveAddFeindura {
     
-    // TODO: check internet connection first
-    // TODO: check if username and password is correct
+    // TODO: check internet connection first (if failed display error)
+    // TODO: check if username and password is correct (if failed display error)
     
     // -> STORE user data
     
-    BOOL success;
+    BOOL settingsExist;
     NSError *error;
-	
+    
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString *documentsDirectory = [paths objectAtIndex:0];
 	NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"settings.plist"];
 	
-	success = [fileManager fileExistsAtPath:filePath];
-	if (!success) {		
+    // if doesnt exist, create a new settings.plist file
+	settingsExist = [fileManager fileExistsAtPath:filePath];
+	if(!settingsExist) {
 		NSString *path = [[NSBundle mainBundle] pathForResource:@"settings" ofType:@"plist"];
-		success = [fileManager copyItemAtPath:path toPath:filePath error:&error];
+		settingsExist = [fileManager copyItemAtPath:path toPath:filePath error:&error];
 	}	
 	
-	NSMutableDictionary* plistDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
+    if(settingsExist) {
+        // create dictionaries for storing settings
+        NSMutableDictionary* settingsDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];    
+        NSMutableDictionary* currentAccountDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+                                                   @"username",self.username.text,
+                                                   @"password",[self.password.text MD5], nil];
 	
-	[plistDict setValue:self.username.text forKey:self.url.text];
-	[plistDict writeToFile:filePath atomically: YES];
+        // if setting doesnt exist alreay
+        if([settingsDict valueForKey:self.url.text] == nil) {
+            [settingsDict setObject: currentAccountDict forKey:self.url.text];
+            [settingsDict writeToFile:filePath atomically: YES];
+        }
     
-    [plistDict release];
+        [currentAccountDict release];
+        [settingsDict release];
+    }
     
     /*
     NSURL *serverURL = [NSURL URLWithString:self.url.text];
@@ -181,9 +193,23 @@
 // JUMP to TextFields
 - (BOOL)textFieldShouldReturn:(UITextField*)textField {
     switch (textField.tag) {
-        case 1:
+        case 1: {
+            
+            // add a slash on the end of the url    
+            self.url.text = [self.url.text stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+            self.url.text  = [self.url.text stringByAppendingString:@"/"];
+            
+            NSURL *cmsURL = [NSURL URLWithString:self.url.text];            
+            
+            // check if there is a scheme (like http://) in this url string
+            if([cmsURL scheme] == nil) {
+                self.url.text = [[NSString stringWithString:@"http://"] stringByAppendingString:self.url.text];
+                //[cmsURL initWithString:self.url.text];	
+            }  
+            
             // -> JUMP to the next one
             [[self.scrollView viewWithTag:2] becomeFirstResponder];
+            }
             break;
         case 2:
             // -> JUMP to the next one

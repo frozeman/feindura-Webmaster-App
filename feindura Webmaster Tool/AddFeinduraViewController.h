@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ASIHTTPRequestDelegate.h"
 
-//@class SFHFKeychainUtils;
+//@class ASIFormDataRequest; necessary?
 
 #pragma mark Protocol
 
@@ -21,7 +22,7 @@
 
 #pragma mark Class
 
-@interface AddFeinduraViewController : UIViewController <UIScrollViewDelegate,UITextFieldDelegate> {
+@interface AddFeinduraViewController : UIViewController <UIScrollViewDelegate,UITextFieldDelegate,ASIHTTPRequestDelegate> {
     
     id<AddFeinduraViewControllerDelegate> delegate;
     IBOutlet UIScrollView *scrollView;
@@ -47,13 +48,21 @@
 @property(nonatomic,retain) UIAlertView *wrongUrl;
 
 
--(BOOL)saveAddFeindura;
--(IBAction)cancelAddFeindura:(id)sender;
--(UITextField*)textFieldsAreEmpty;
--(BOOL)validateUrl:(NSString *)candidate;
+- (IBAction)cancelAddFeindura:(id)sender;
+- (void)checkFeinduraAccount;
+- (void)saveFeinduraAccount;
+- (UITextField*)textFieldsAreEmpty;
+- (BOOL)validateUrl:(NSString *)candidate;
+
 
 #pragma mark Delegates
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField;
 - (void)textFieldDidBeginEditing:(UITextField *)textField;
+
+- (void)requestStarted:(ASIHTTPRequest *)request;
+- (void)request:(ASIHTTPRequest *)request didReceiveResponseHeaders:(NSDictionary *)responseHeaders;
+- (void)requestFinished:(ASIHTTPRequest *)request;
+- (void)requestFailed:(ASIHTTPRequest *)request;
 
 @end

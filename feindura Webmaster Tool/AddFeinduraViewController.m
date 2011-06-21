@@ -8,7 +8,7 @@
 
 #import "AddFeinduraViewController.h"
 #import "NSString+MD5.h"
-//#import "SFHFKeychainUtils.h"
+#import "ASIFormDataRequest.h"
 
 
 @implementation AddFeinduraViewController
@@ -110,17 +110,52 @@
 
 #pragma mark Methods
 
--(IBAction)cancelAddFeindura:(id)sender {
+- (IBAction)cancelAddFeindura:(id)sender {
 	[delegate DismissAddFeinduraView];
 }
 
--(BOOL)saveAddFeindura {
+- (void)checkFeinduraAccount {
     
     // TODO: check internet connection first (if failed display error)
+    
+    NSURL *cmsUrl = [NSURL URLWithString:self.url.text];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:cmsUrl];
+    [request setDelegate:self];
+    [request setPostValue:self.username.text forKey:@"username"];
+    [request setPostValue:self.password.text forKey:@"password"];
+    [request startSynchronous];
+    NSError *requestError = [request error];
+    if (!requestError) {
+        //NSString *response = [request responseString];
+        //NSLog(response);
+    }
+    
+    
+    /*
+     or simple 
+     NSURL *aUrl = [NSURL URLWithString:@"http://www.apple.com/"];
+     NSURLRequest *request = [NSURLRequest requestWithURL:aUrl
+     cachePolicy:NSURLRequestUseProtocolCachePolicy
+     timeoutInterval:60.0];
+     
+     NSURLConnection *connection= [[NSURLConnection alloc] initWithRequest:request 
+     delegate:self];
+     
+     [request setHTTPMethod:@"POST"];
+     NSString *postString = @"company=Locassa&quality=AWESOME!";
+     [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
+     */
+    
+    
     // TODO: check if username and password is correct (if failed display error)
     
-    // -> STORE user data
+    [self saveFeinduraAccount];
+}
+
+- (void)saveFeinduraAccount {
     
+
+    // -> STORE user data    
     BOOL settingsExist;
     NSError *error;
     
@@ -139,7 +174,7 @@
     if(settingsExist) {
         // create dictionaries for storing settings
         NSMutableDictionary* settingsDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];    
-        NSMutableDictionary* currentAccountDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+        NSMutableDictionary* currentAccountDict = [[NSDictionary alloc] initWithObjectsAndKeys:
                                                    @"username",self.username.text,
                                                    @"password",[self.password.text MD5], nil];
 	
@@ -161,7 +196,6 @@
      */
     
 	[delegate DismissAddFeinduraView];
-    return true;
 }
 
 - (UITextField*)textFieldsAreEmpty {
@@ -186,7 +220,7 @@
 #pragma mark Delegates
 
 // -> ScrollViewDelegate
--(UIView*)viewForZoomingInScrollView:(UIScrollView*)sView {
+- (UIView*)viewForZoomingInScrollView:(UIScrollView*)sView {
 	// return a view that will be scaled. If delegate returns nil, nothing happens
 	return sView;
 }
@@ -202,12 +236,13 @@
     else if(textField.tag == 3 || [self validateUrl:self.url.text] == false)
         [textField setReturnKeyType:UIReturnKeyNext];
 }
-// JUMP to TextFields
+// ->> JUMP to TextFields
 - (BOOL)textFieldShouldReturn:(UITextField*)textField {
     switch (textField.tag) {
+        // -> URL TextField
         case 1: {
             
-                // add a slash on the end of the url    
+                // add a slash on the end of the url
                 self.url.text = [self.url.text stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
                 //self.url.text = [self.url.text stringByAppendingString:@"/"];
             
@@ -228,10 +263,14 @@
                 }                    
             }
             break;
+            
+        // -> USERNAME TextField
         case 2:
             // -> JUMP to the next one
             [[self.scrollView viewWithTag:3] becomeFirstResponder];
             break;
+            
+        // -> PASSWORD TextField
         case 3:
             // -> JUMP to the empty one 
             if([self textFieldsAreEmpty] != false)
@@ -242,7 +281,7 @@
                 [self.url becomeFirstResponder];
             // -> SAVE the data
             } else
-                [self saveAddFeindura];
+                [self checkFeinduraAccount];
                 
             break;
         default:
@@ -250,6 +289,18 @@
             break;
     }
     return true;
+}
+
+// ->> ASIHTTPRequestDelegates
+- (void)requestStarted:(ASIHTTPRequest *)request {
+    NSLog(@"request started");
+}
+- (void)request:(ASIHTTPRequest *)request didReceiveResponseHeaders:(NSDictionary *)responseHeaders {}
+- (void)requestFinished:(ASIHTTPRequest *)request {
+    NSLog(@"request finsihed");
+}
+- (void)requestFailed:(ASIHTTPRequest *)request {
+    NSLog(@"request failed");
 }
 
 @end

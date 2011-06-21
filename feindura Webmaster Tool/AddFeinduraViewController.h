@@ -32,6 +32,8 @@
     IBOutlet UITextField *url;
     IBOutlet UITextField *username;
     IBOutlet UITextField *password;
+    
+    UIAlertView *wrongUrl;
 }
 
 @property(nonatomic,assign) id<AddFeinduraViewControllerDelegate> delegate;
@@ -42,11 +44,13 @@
 @property(nonatomic,retain) UITextField *url;
 @property(nonatomic,retain) UITextField *username;
 @property(nonatomic,retain) UITextField *password;
+@property(nonatomic,retain) UIAlertView *wrongUrl;
 
 
 -(BOOL)saveAddFeindura;
 -(IBAction)cancelAddFeindura:(id)sender;
 -(UITextField*)textFieldsAreEmpty;
+-(BOOL)validateUrl:(NSString *)candidate;
 
 #pragma mark Delegates
 - (BOOL)textFieldShouldReturn:(UITextField *)textField;

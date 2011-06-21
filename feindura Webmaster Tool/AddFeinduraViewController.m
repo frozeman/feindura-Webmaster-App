@@ -15,9 +15,10 @@
 
 // PROPERTIES
 @synthesize delegate;
-@synthesize scrollView, titleBar;
-@synthesize urlTitle, accountTitle;
-@synthesize url, username, password;
+@synthesize scrollView, titleBar; // TopBar
+@synthesize urlTitle, accountTitle; // Labels
+@synthesize url, username, password; //TextFields
+@synthesize wrongUrl; // ALerts
 
 // METHODS
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -30,6 +31,7 @@
 }
 
 - (void)dealloc {
+    [wrongUrl release];
     [urlTitle release];
     [accountTitle release];
     [url release];
@@ -80,13 +82,15 @@
     [self.scrollView setContentSize:CGSizeMake(self.scrollView.frame.size.width,
                                                self.password.frame.origin.y + self.password.frame.size.height + 15)];
     //[self.scrollView setContentOffset:CGPointMake(0,200)];
-    //NSLog(@"%@",self.scrollView);
-    //NSLog(@"%@",self.password);
+    
+    // -> set up the ALerts
+    self.wrongUrl = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ADDFEINDURA_ALERT_TITLE_WRONGURL", nil) message:NSLocalizedString(@"ADDFEINDURA_ALERT_TEXT_WRONGURL", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"ADDFEINDURA_ALERT_BUTTON_WRONGURL", nil) otherButtonTitles: nil];
 }
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
+    
+    self.wrongUrl = nil;
     self.urlTitle = nil;
     self.accountTitle = nil;
     self.url = nil;
@@ -171,6 +175,13 @@
         return false;
 }
 
+- (BOOL)validateUrl: (NSString *) candidate {
+    NSString *urlRegEx =
+    @"(http|https)://((\\w)*|([0-9]*)|([-|_])*)+([\\.|/]((\\w)*|([0-9]*)|([-|_])*))+";
+    NSPredicate *urlTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", urlRegEx]; 
+    return [urlTest evaluateWithObject:candidate];
+}
+
 
 #pragma mark Delegates
 
@@ -185,9 +196,10 @@
 // -> CHANGE Return Button 
 - (void)textFieldDidBeginEditing:(UITextField*)textField {
     if(textField.tag == 3 &&
-       (self.textFieldsAreEmpty == false || self.textFieldsAreEmpty == textField))
+       (self.textFieldsAreEmpty == false || self.textFieldsAreEmpty == textField) &&
+       [self validateUrl:self.url.text])
         [textField setReturnKeyType:UIReturnKeyDone];
-    else if(textField.tag == 3)
+    else if(textField.tag == 3 || [self validateUrl:self.url.text] == false)
         [textField setReturnKeyType:UIReturnKeyNext];
 }
 // JUMP to TextFields
@@ -195,20 +207,25 @@
     switch (textField.tag) {
         case 1: {
             
-            // add a slash on the end of the url    
-            self.url.text = [self.url.text stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
-            self.url.text  = [self.url.text stringByAppendingString:@"/"];
+                // add a slash on the end of the url    
+                self.url.text = [self.url.text stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+                //self.url.text = [self.url.text stringByAppendingString:@"/"];
             
-            NSURL *cmsURL = [NSURL URLWithString:self.url.text];            
+                NSURL *cmsURL = [NSURL URLWithString:self.url.text];            
             
-            // check if there is a scheme (like http://) in this url string
-            if([cmsURL scheme] == nil) {
-                self.url.text = [[NSString stringWithString:@"http://"] stringByAppendingString:self.url.text];
-                //[cmsURL initWithString:self.url.text];	
-            }  
-            
-            // -> JUMP to the next one
-            [[self.scrollView viewWithTag:2] becomeFirstResponder];
+                // check if there is a scheme (like http://) in this url string
+                if([cmsURL scheme] == nil) {
+                    self.url.text = [[NSString stringWithString:@"http://"] stringByAppendingString:self.url.text];
+                    //[cmsURL initWithString:self.url.text];	
+                }
+                
+                // -> JUMP to the next one, if is a valid url
+                if([self validateUrl:self.url.text])                    
+                    [[self.scrollView viewWithTag:2] becomeFirstResponder];
+                // -> otherwise throw warning
+                else {
+                    [self.wrongUrl show];
+                }                    
             }
             break;
         case 2:
@@ -219,8 +236,12 @@
             // -> JUMP to the empty one 
             if([self textFieldsAreEmpty] != false)
                 [[self textFieldsAreEmpty] becomeFirstResponder];
+            // -> JUMP to url, if not valid
+            if([self validateUrl:self.url.text] == false) {
+                [self.wrongUrl show];
+                [self.url becomeFirstResponder];
             // -> SAVE the data
-            else 
+            } else
                 [self saveAddFeindura];
                 
             break;

@@ -10,6 +10,7 @@
 #import "NSString+MD5.h"
 #import "ASIFormDataRequest.h"
 #import "Reachability.h"
+#import "SFHFKeychainUtils.h"
 
 
 @implementation AddFeinduraViewController
@@ -164,27 +165,38 @@
     
 
     // -> STORE user data    
-    BOOL settingsExist;
-    NSError *error;
+    BOOL settingsFileExist;
+    NSError *fileError;
+    NSError *keychainError;
     
+    // ->> STORE password in keychain
+    [SFHFKeychainUtils storeUsername:self.username.text andPassword:self.password.text forServiceName:self.url.text updateExisting:true error:&keychainError];
+    
+    /*
+     to get it:
+    [SFHFKeychainUtils getPasswordForUsername:self.username.text andServiceName: self.url.text error:&keychainError];
+     */
+     
+    
+    // ->> SAVE settings.plist
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString *documentsDirectory = [paths objectAtIndex:0];
 	NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"settings.plist"];
 	
     // if doesnt exist, create a new settings.plist file
-	settingsExist = [fileManager fileExistsAtPath:filePath];
-	if(!settingsExist) {
+	settingsFileExist = [fileManager fileExistsAtPath:filePath];
+	if(!settingsFileExist) {
 		NSString *path = [[NSBundle mainBundle] pathForResource:@"settings" ofType:@"plist"];
-		settingsExist = [fileManager copyItemAtPath:path toPath:filePath error:&error];
+		settingsFileExist = [fileManager copyItemAtPath:path toPath:filePath error:&fileError];
 	}	
 	
-    if(settingsExist) {
+    if(settingsFileExist) {
         // create dictionaries for storing settings
         NSMutableDictionary* settingsDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];    
         NSMutableDictionary* currentAccountDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                                   @"username",self.username.text,
-                                                   @"password",[self.password.text MD5], nil];
+                                                   @"username",self.username.text,nil];
+                                                   //@"password",[self.password.text MD5], nil];
 	
         // if setting doesnt exist alreay
         if([settingsDict valueForKey:self.url.text] == nil) {

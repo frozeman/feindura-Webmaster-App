@@ -10,6 +10,8 @@
 		A30E74E613A4FD000026ECFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A30E74E513A4FD000026ECFF /* README.md */; };
 		A38A212A13ABDB6B00866212 /* settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = A38A212913ABDB6B00866212 /* settings.plist */; };
 		A38FEFED13AF7F4300250641 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = A38FEFEC13AF7F4300250641 /* NSString+MD5.m */; };
+		A390809613B1FE7400F26A6C /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A390809513B1FE7400F26A6C /* SFHFKeychainUtils.m */; };
+		A390809913B228F700F26A6C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A390809813B228F700F26A6C /* Security.framework */; };
 		A393670813B0A37200ADBD73 /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = A39366F513B0A37200ADBD73 /* ASIAuthenticationDialog.m */; };
 		A393670913B0A37200ADBD73 /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = A39366F813B0A37200ADBD73 /* ASIDataCompressor.m */; };
 		A393670A13B0A37200ADBD73 /* ASIDataDecompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = A39366FA13B0A37200ADBD73 /* ASIDataDecompressor.m */; };
@@ -58,6 +60,9 @@
 		A38A212913ABDB6B00866212 /* settings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = settings.plist; sourceTree = "<group>"; };
 		A38FEFEB13AF7F4300250641 /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		A38FEFEC13AF7F4300250641 /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
+		A390809413B1FE7400F26A6C /* SFHFKeychainUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFHFKeychainUtils.h; sourceTree = "<group>"; };
+		A390809513B1FE7400F26A6C /* SFHFKeychainUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHFKeychainUtils.m; sourceTree = "<group>"; };
+		A390809813B228F700F26A6C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		A39366F413B0A37200ADBD73 /* ASIAuthenticationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIAuthenticationDialog.h; sourceTree = "<group>"; };
 		A39366F513B0A37200ADBD73 /* ASIAuthenticationDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIAuthenticationDialog.m; sourceTree = "<group>"; };
 		A39366F613B0A37200ADBD73 /* ASICacheDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASICacheDelegate.h; sourceTree = "<group>"; };
@@ -118,6 +123,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A390809913B228F700F26A6C /* Security.framework in Frameworks */,
 				A393671B13B0A7C700ADBD73 /* libz.1.2.3.dylib in Frameworks */,
 				A3AB893113A4D42F0025FE50 /* CoreGraphics.framework in Frameworks */,
 				A393671813B0A78B00ADBD73 /* MobileCoreServices.framework in Frameworks */,
@@ -144,6 +150,8 @@
 		A38A212413ABCFE700866212 /* Thirdparty */ = {
 			isa = PBXGroup;
 			children = (
+				A390809413B1FE7400F26A6C /* SFHFKeychainUtils.h */,
+				A390809513B1FE7400F26A6C /* SFHFKeychainUtils.m */,
 				A39366F213B0A34700ADBD73 /* ASIHTTPRequest */,
 			);
 			name = Thirdparty;
@@ -156,6 +164,14 @@
 				A38FEFEC13AF7F4300250641 /* NSString+MD5.m */,
 			);
 			name = "Helper Classes";
+			sourceTree = "<group>";
+		};
+		A390809A13B2290500F26A6C /* SFHFKeychainUtils */ = {
+			isa = PBXGroup;
+			children = (
+				A390809813B228F700F26A6C /* Security.framework */,
+			);
+			name = SFHFKeychainUtils;
 			sourceTree = "<group>";
 		};
 		A39366F213B0A34700ADBD73 /* ASIHTTPRequest */ = {
@@ -222,6 +238,7 @@
 		A3AB892B13A4D42F0025FE50 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A390809A13B2290500F26A6C /* SFHFKeychainUtils */,
 				A393671C13B0BB9E00ADBD73 /* ASIHTTP Assets */,
 				A3AB892C13A4D42F0025FE50 /* UIKit.framework */,
 				A3AB892E13A4D42F0025FE50 /* Foundation.framework */,
@@ -415,6 +432,7 @@
 				A393670E13B0A37200ADBD73 /* ASIInputStream.m in Sources */,
 				A393670F13B0A37200ADBD73 /* ASINetworkQueue.m in Sources */,
 				A393671213B0A3A200ADBD73 /* Reachability.m in Sources */,
+				A390809613B1FE7400F26A6C /* SFHFKeychainUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

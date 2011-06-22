@@ -9,6 +9,7 @@
 #import "AddFeinduraViewController.h"
 #import "NSString+MD5.h"
 #import "ASIFormDataRequest.h"
+#import "Reachability.h"
 
 
 @implementation AddFeinduraViewController
@@ -18,7 +19,8 @@
 @synthesize scrollView, titleBar; // TopBar
 @synthesize urlTitle, accountTitle; // Labels
 @synthesize url, username, password; //TextFields
-@synthesize wrongUrl; // ALerts
+@synthesize wrongUrl, wrongAccount, wrongFeinduraUrl; // Alerts
+@synthesize request, internetReachable, hostReachable, internetActive; // Request
 
 // METHODS
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -31,6 +33,12 @@
 }
 
 - (void)dealloc {
+    [internetReachable release];
+    [hostReachable release];
+    [request clearDelegatesAndCancel];
+    [request release];
+    [wrongFeinduraUrl release];
+    [wrongAccount release];
     [wrongUrl release];
     [urlTitle release];
     [accountTitle release];
@@ -84,12 +92,36 @@
     //[self.scrollView setContentOffset:CGPointMake(0,200)];
     
     // -> set up the ALerts
-    self.wrongUrl = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ADDFEINDURA_ALERT_TITLE_WRONGURL", nil) message:NSLocalizedString(@"ADDFEINDURA_ALERT_TEXT_WRONGURL", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"ADDFEINDURA_ALERT_BUTTON_WRONGURL", nil) otherButtonTitles: nil];
+    UIAlertView *wrongUrlTemp = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ADDFEINDURA_ALERT_TITLE_WRONGURL", nil) message:NSLocalizedString(@"ADDFEINDURA_ALERT_TEXT_WRONGURL", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"ADDFEINDURA_ALERT_BUTTON_OK", nil) otherButtonTitles: nil];
+    self.wrongUrl = wrongUrlTemp;
+    [wrongUrlTemp release];
+    
+    UIAlertView *wrongAccountTemp = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ADDFEINDURA_ALERT_TITLE_WRONGACCOUNT", nil) message:NSLocalizedString(@"ADDFEINDURA_ALERT_TEXT_WRONGACCOUNT", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"ADDFEINDURA_ALERT_BUTTON_OK", nil) otherButtonTitles: nil];
+    self.wrongAccount = wrongAccountTemp;
+    [wrongAccountTemp release];
+    
+    UIAlertView *wrongFeinduraUrlTemp = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ADDFEINDURA_ALERT_TITLE_WRONGURL", nil) message:NSLocalizedString(@"ADDFEINDURA_ALERT_TEXT_WRONGFEINDURAURL", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"ADDFEINDURA_ALERT_BUTTON_OK", nil) otherButtonTitles: nil];
+    self.wrongFeinduraUrl = wrongFeinduraUrlTemp;
+    [wrongFeinduraUrlTemp release];
+    
+    // -> CHECK for Internet Connection
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNetworkStatus:) name:kReachabilityChangedNotification object:nil];
+    self.internetReachable = [Reachability reachabilityForInternetConnection];
+    [self.internetReachable startNotifier];
+    // check if a pathway to a random host exists
+    self.hostReachable = [Reachability reachabilityWithHostName: @"www.google.com"];
+    [self.hostReachable startNotifier];
 }
 
 - (void)viewDidUnload {
     [super viewDidUnload];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    self.internetReachable = nil;
+    self.hostReachable = nil;
+    self.wrongFeinduraUrl = nil;
+    self.wrongAccount = nil;
     self.wrongUrl = nil;
     self.urlTitle = nil;
     self.accountTitle = nil;
@@ -116,40 +148,16 @@
 
 - (void)checkFeinduraAccount {
     
-    // TODO: check internet connection first (if failed display error)
+    if(self.internetActive) {
+        NSURL *cmsUrl = [NSURL URLWithString:self.url.text];
+        self.request = [ASIFormDataRequest requestWithURL:cmsUrl];
+        [self.request setDelegate:self];
+        [self.request setPostValue:self.username.text forKey:@"username"];
+        [self.request setPostValue:self.password.text forKey:@"password"];
+        [self.request startAsynchronous];
+    } else
+        [self saveFeinduraAccount];
     
-    NSURL *cmsUrl = [NSURL URLWithString:self.url.text];
-    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:cmsUrl];
-    [request setDelegate:self];
-    [request setPostValue:self.username.text forKey:@"username"];
-    [request setPostValue:self.password.text forKey:@"password"];
-    [request startSynchronous];
-    NSError *requestError = [request error];
-    if (!requestError) {
-        //NSString *response = [request responseString];
-        //NSLog(response);
-    }
-    
-    
-    /*
-     or simple 
-     NSURL *aUrl = [NSURL URLWithString:@"http://www.apple.com/"];
-     NSURLRequest *request = [NSURLRequest requestWithURL:aUrl
-     cachePolicy:NSURLRequestUseProtocolCachePolicy
-     timeoutInterval:60.0];
-     
-     NSURLConnection *connection= [[NSURLConnection alloc] initWithRequest:request 
-     delegate:self];
-     
-     [request setHTTPMethod:@"POST"];
-     NSString *postString = @"company=Locassa&quality=AWESOME!";
-     [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
-     */
-    
-    
-    // TODO: check if username and password is correct (if failed display error)
-    
-    [self saveFeinduraAccount];
 }
 
 - (void)saveFeinduraAccount {
@@ -216,6 +224,37 @@
     return [urlTest evaluateWithObject:candidate];
 }
 
+- (void)checkNetworkStatus:(NSNotification *)notice {
+    // called after network status changes
+    
+    NetworkStatus internetStatus = [internetReachable currentReachabilityStatus];
+    switch (internetStatus)
+    
+    {
+        case NotReachable:
+        {
+            NSLog(@"The internet is down.");
+            self.internetActive = false;
+            break;
+            
+        }
+        case ReachableViaWiFi:
+        {
+            NSLog(@"The internet is working via WIFI.");
+            self.internetActive = true;
+            break;
+            
+        }
+        case ReachableViaWWAN:
+        {
+            NSLog(@"The internet is working via WWAN.");
+            self.internetActive = true;
+            break;
+            
+        }
+    }
+}
+
 
 #pragma mark Delegates
 
@@ -250,8 +289,7 @@
             
                 // check if there is a scheme (like http://) in this url string
                 if([cmsURL scheme] == nil) {
-                    self.url.text = [[NSString stringWithString:@"http://"] stringByAppendingString:self.url.text];
-                    //[cmsURL initWithString:self.url.text];	
+                    self.url.text = [[NSString stringWithString:@"http://"] stringByAppendingString:self.url.text];	
                 }
                 
                 // -> JUMP to the next one, if is a valid url
@@ -280,7 +318,7 @@
                 [self.wrongUrl show];
                 [self.url becomeFirstResponder];
             // -> SAVE the data
-            } else
+            } else if([self textFieldsAreEmpty] == false)
                 [self checkFeinduraAccount];
                 
             break;
@@ -291,16 +329,45 @@
     return true;
 }
 
+
 // ->> ASIHTTPRequestDelegates
+
+// -> START
 - (void)requestStarted:(ASIHTTPRequest *)request {
     NSLog(@"request started");
+    // TODO: change status bar text
 }
 - (void)request:(ASIHTTPRequest *)request didReceiveResponseHeaders:(NSDictionary *)responseHeaders {}
-- (void)requestFinished:(ASIHTTPRequest *)request {
+
+// -> FINISHED
+- (void)requestFinished:(ASIHTTPRequest *)requestResponse {
     NSLog(@"request finsihed");
+    
+    // Use when fetching binary data
+    //NSData *responseData = [requestResponse responseData];
+    
+    NSString *responseString = [requestResponse responseString];
+    
+    if([responseString isEqualToString:@"TRUE"])
+        [self saveFeinduraAccount];
+    else if([responseString isEqualToString:@"FALSE"]) {
+        [self.wrongAccount show];
+        [self.username becomeFirstResponder];
+    } else {
+        [self.wrongFeinduraUrl show];
+        [self.url becomeFirstResponder];
+    }
 }
+
+// -> FAILED
 - (void)requestFailed:(ASIHTTPRequest *)request {
     NSLog(@"request failed");
+    
+    [self.wrongUrl show];
+    [self.url becomeFirstResponder];
+    
+    //NSError *error = [request error];
+
 }
 
 @end

@@ -190,6 +190,7 @@
 		A393671C13B0BB9E00ADBD73 /* ASIHTTP Assets */ = {
 			isa = PBXGroup;
 			children = (
+				A393671A13B0A7C700ADBD73 /* libz.1.2.3.dylib */,
 				A393671913B0A79800ADBD73 /* CoreGraphics.framework */,
 				A393671713B0A78B00ADBD73 /* MobileCoreServices.framework */,
 				A393671513B0A78200ADBD73 /* SystemConfiguration.framework */,
@@ -201,7 +202,6 @@
 		A3AB891D13A4D42F0025FE50 = {
 			isa = PBXGroup;
 			children = (
-				A393671A13B0A7C700ADBD73 /* libz.1.2.3.dylib */,
 				A3AB893213A4D42F0025FE50 /* feindura Webmaster Tool */,
 				A3AB895213A4D4300025FE50 /* feindura Webmaster ToolTests */,
 				A3AB892B13A4D42F0025FE50 /* Frameworks */,

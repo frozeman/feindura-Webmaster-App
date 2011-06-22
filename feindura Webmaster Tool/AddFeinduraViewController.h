@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "ASIHTTPRequestDelegate.h"
 
-//@class ASIFormDataRequest; necessary?
+@class ASIFormDataRequest;
+@class Reachability;
 
 #pragma mark Protocol
 
@@ -35,6 +36,13 @@
     IBOutlet UITextField *password;
     
     UIAlertView *wrongUrl;
+    UIAlertView *wrongAccount;
+    UIAlertView *wrongFeinduraUrl;
+    
+    ASIFormDataRequest *request;
+    Reachability *internetReachable;
+    Reachability *hostReachable;
+    BOOL internetActive;
 }
 
 @property(nonatomic,assign) id<AddFeinduraViewControllerDelegate> delegate;
@@ -46,6 +54,12 @@
 @property(nonatomic,retain) UITextField *username;
 @property(nonatomic,retain) UITextField *password;
 @property(nonatomic,retain) UIAlertView *wrongUrl;
+@property(nonatomic,retain) UIAlertView *wrongAccount;
+@property(nonatomic,retain) UIAlertView *wrongFeinduraUrl;
+@property(nonatomic,retain) ASIFormDataRequest *request;
+@property(nonatomic,retain) Reachability *internetReachable;
+@property(nonatomic,retain) Reachability *hostReachable;
+@property(nonatomic,assign) BOOL internetActive;
 
 
 - (IBAction)cancelAddFeindura:(id)sender;
@@ -53,6 +67,8 @@
 - (void)saveFeinduraAccount;
 - (UITextField*)textFieldsAreEmpty;
 - (BOOL)validateUrl:(NSString *)candidate;
+
+- (void) checkNetworkStatus:(NSNotification *)notice;
 
 
 #pragma mark Delegates

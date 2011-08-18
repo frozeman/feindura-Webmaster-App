@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A30E74E613A4FD000026ECFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A30E74E513A4FD000026ECFF /* README.md */; };
+		A3337C1313FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3337C1113FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.m */; };
+		A3337C1413FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3337C1213FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.xib */; };
 		A38A212A13ABDB6B00866212 /* settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = A38A212913ABDB6B00866212 /* settings.plist */; };
 		A38FEFED13AF7F4300250641 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = A38FEFEC13AF7F4300250641 /* NSString+MD5.m */; };
 		A390809613B1FE7400F26A6C /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A390809513B1FE7400F26A6C /* SFHFKeychainUtils.m */; };
@@ -57,6 +59,9 @@
 
 /* Begin PBXFileReference section */
 		A30E74E513A4FD000026ECFF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		A3337C1013FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = feinduraDetailStatsViewController.h; sourceTree = "<group>"; };
+		A3337C1113FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = feinduraDetailStatsViewController.m; sourceTree = "<group>"; };
+		A3337C1213FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = feinduraDetailStatsViewController.xib; sourceTree = "<group>"; };
 		A38A212913ABDB6B00866212 /* settings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = settings.plist; sourceTree = "<group>"; };
 		A38FEFEB13AF7F4300250641 /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		A38FEFEC13AF7F4300250641 /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
@@ -147,6 +152,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A3337C0E13FDCBFA00ABC6B9 /* TableViews */ = {
+			isa = PBXGroup;
+			children = (
+				A3337C1013FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.h */,
+				A3337C1113FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.m */,
+				A3337C1213FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.xib */,
+			);
+			name = TableViews;
+			sourceTree = "<group>";
+		};
 		A38A212413ABCFE700866212 /* Thirdparty */ = {
 			isa = PBXGroup;
 			children = (
@@ -256,6 +271,7 @@
 				A3AB894113A4D42F0025FE50 /* RootViewController.h */,
 				A3AB894213A4D42F0025FE50 /* RootViewController.m */,
 				A3AB894413A4D42F0025FE50 /* RootViewController.xib */,
+				A3337C0E13FDCBFA00ABC6B9 /* TableViews */,
 				A3AB896A13A4D5810025FE50 /* ModalViews */,
 				A38FEFE913AF7ED800250641 /* Helper Classes */,
 				A38A212413ABCFE700866212 /* Thirdparty */,
@@ -383,6 +399,7 @@
 				A3AB897D13A4DE0E0025FE50 /* Localizable.strings in Resources */,
 				A30E74E613A4FD000026ECFF /* README.md in Resources */,
 				A38A212A13ABDB6B00866212 /* settings.plist in Resources */,
+				A3337C1413FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -433,6 +450,7 @@
 				A393670F13B0A37200ADBD73 /* ASINetworkQueue.m in Sources */,
 				A393671213B0A3A200ADBD73 /* Reachability.m in Sources */,
 				A390809613B1FE7400F26A6C /* SFHFKeychainUtils.m in Sources */,
+				A3337C1313FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

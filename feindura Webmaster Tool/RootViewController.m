@@ -8,6 +8,7 @@
 
 #import "RootViewController.h"
 #import "AddFeinduraViewController.h"
+#import "feinduraDetailStatsViewController.h"
 
 @implementation RootViewController
 

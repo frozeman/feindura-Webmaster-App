@@ -12,9 +12,14 @@
 
 @implementation RootViewController
 
+@synthesize feinduraStats;
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.feinduraStats = [[NSMutableArray alloc] init];
+    [feinduraStats addObject:@"feindura demo"];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -53,7 +58,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 0;
+    return [feinduraStats count];
 }
 
 // Customize the appearance of table view cells.
@@ -66,7 +71,9 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
 
-    // Configure the cell.
+    cell.textLabel.text = [feinduraStats objectAtIndex:indexPath.row];
+    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+    
     return cell;
 }
 
@@ -112,13 +119,15 @@
 */
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    /*
-    <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-    // ...
+  
+    feinduraDetailStatsViewController *detailViewController = [[feinduraDetailStatsViewController alloc] initWithNibName:@"feinduraDetailStatsViewController" bundle:nil];
+    
+    [detailViewController setTitle:[feinduraStats objectAtIndex:indexPath.row]];
+    
     // Pass the selected object to the new view controller.
     [self.navigationController pushViewController:detailViewController animated:YES];
     [detailViewController release];
-	*/
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -130,12 +139,11 @@
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-
-    // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
-    // For example: self.myOutlet = nil;
+    self.feinduraStats = nil;
 }
 
 - (void)dealloc {
+    [feinduraStats release];
     [super dealloc];
 }
 

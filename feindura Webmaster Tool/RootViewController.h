@@ -10,8 +10,10 @@
 #import "AddFeinduraViewController.h"
 
 @interface RootViewController : UITableViewController <AddFeinduraViewControllerDelegate> {
-
+    NSMutableArray *feinduraStats;
 }
+
+@property(nonatomic,retain) NSMutableArray *feinduraStats;
 
 -(IBAction)showAddFeinduraView:(id)sender;
 

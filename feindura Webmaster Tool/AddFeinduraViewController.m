@@ -86,7 +86,7 @@
     self.password.placeholder = NSLocalizedString(@"ADDFEINDURA_TEXT_PASSWORD", nil);
     self.password.tag = 3;
     
-    // -> basic set tup
+    // -> basic setup
     [self.url becomeFirstResponder];
     [self.scrollView setContentSize:CGSizeMake(self.scrollView.frame.size.width,
                                                self.password.frame.origin.y + self.password.frame.size.height + 15)];

@@ -155,6 +155,9 @@
 		A3337C0E13FDCBFA00ABC6B9 /* TableViews */ = {
 			isa = PBXGroup;
 			children = (
+				A3AB894113A4D42F0025FE50 /* RootViewController.h */,
+				A3AB894213A4D42F0025FE50 /* RootViewController.m */,
+				A3AB894413A4D42F0025FE50 /* RootViewController.xib */,
 				A3337C1013FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.h */,
 				A3337C1113FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.m */,
 				A3337C1213FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.xib */,
@@ -268,9 +271,6 @@
 				A3AB893B13A4D42F0025FE50 /* feindura_Webmaster_ToolAppDelegate.h */,
 				A3AB893C13A4D42F0025FE50 /* feindura_Webmaster_ToolAppDelegate.m */,
 				A3AB893E13A4D42F0025FE50 /* MainWindow.xib */,
-				A3AB894113A4D42F0025FE50 /* RootViewController.h */,
-				A3AB894213A4D42F0025FE50 /* RootViewController.m */,
-				A3AB894413A4D42F0025FE50 /* RootViewController.xib */,
 				A3337C0E13FDCBFA00ABC6B9 /* TableViews */,
 				A3AB896A13A4D5810025FE50 /* ModalViews */,
 				A38FEFE913AF7ED800250641 /* Helper Classes */,

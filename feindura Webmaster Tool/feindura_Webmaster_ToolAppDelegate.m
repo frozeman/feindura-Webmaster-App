@@ -15,13 +15,29 @@
 @synthesize window;
 @synthesize navigationController;
 @synthesize rootViewController;
+@synthesize titleBar;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
     // Add the navigation controller's view to the window and display.
     [window addSubview:[navigationController view]];
-    [window makeKeyAndVisible];  
+    [window makeKeyAndVisible];
+    
+    // -> add a title which fits in the navbar
+    UILabel *title = [[UILabel alloc] init];
+    [title setBackgroundColor:[UIColor clearColor]];
+    [title setTextColor:[UIColor whiteColor]];
+    [title setShadowColor:[UIColor darkGrayColor]];
+    [title setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
+    [title setText:NSLocalizedString(@"OVERVIEW_TITLE", nil)];
+    [title sizeToFit];
+    [title setAdjustsFontSizeToFitWidth:true];
+    [titleBar setTitle:NSLocalizedString(@"OVERVIEW_TITLE", nil)];
+    [titleBar setTitleView:title];
+    [title release];
+
+    
     return true;
 }
 

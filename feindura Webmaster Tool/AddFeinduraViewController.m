@@ -11,8 +11,7 @@
 #import "ASIFormDataRequest.h"
 #import "Reachability.h"
 #import "SFHFKeychainUtils.h"
-
-#import "syncFeinduraStats.h"
+#import "syncFeinduraAccounts.h"
 
 
 @implementation AddFeinduraViewController
@@ -24,6 +23,7 @@
 @synthesize url, username, password; //TextFields
 @synthesize wrongUrl, wrongAccount, wrongFeinduraUrl; // Alerts
 @synthesize request, internetReachable, hostReachable, internetActive; // Request
+@synthesize feinduraAccounts;
 
 // METHODS
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -36,6 +36,7 @@
 }
 
 - (void)dealloc {
+    [feinduraAccounts release];
     [internetReachable release];
     [hostReachable release];
     [request clearDelegatesAndCancel];
@@ -65,13 +66,22 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    syncFeinduraStats *test = [[syncFeinduraStats alloc] init];
-    //NSLog(@"process Name: %@ Process ID: %d",test.settingsFilePath);
-    for (id key in test.feinduraDataBases) {
+    syncFeinduraAccounts *tmp = [[syncFeinduraAccounts alloc] init];
+    self.feinduraAccounts = tmp;
+    [tmp release];
+    
+    //NSLog(@"process Name: %@ Process ID: %d",self.feinduraAccounts.settingsFilePath);
+    for (id key in self.feinduraAccounts.dataBase) {
         
-        NSLog(@"key: %@, value: %@", key, [test.feinduraDataBases objectForKey:key]);
+        NSLog(@"key: %@, value: %@", key, [self.feinduraAccounts.dataBase objectForKey:key]);
         
     }
+    
+    
+    
+    
+    
+    
     
     // -> add a title which fits in the navbar
     UILabel *title = [[UILabel alloc] init];
@@ -129,6 +139,7 @@
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
+    self.feinduraAccounts = nil;
     self.internetReachable = nil;
     self.hostReachable = nil;
     self.wrongFeinduraUrl = nil;
@@ -171,12 +182,9 @@
     
 }
 
-- (void)saveFeinduraAccount {
-    
+- (void)saveFeinduraAccount {    
 
     // -> STORE user data    
-    BOOL settingsFileExist;
-    NSError *fileError;
     NSError *keychainError;
     
     // ->> STORE password in keychain
@@ -185,45 +193,21 @@
     /*
      to get it:
     [SFHFKeychainUtils getPasswordForUsername:self.username.text andServiceName: self.url.text error:&keychainError];
-     */
-     
-    
-    // ->> SAVE settings.plist
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString *documentsDirectory = [paths objectAtIndex:0];
-	NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"settings.plist"];
-	
-    // if doesnt exist, create a new settings.plist file
-	settingsFileExist = [fileManager fileExistsAtPath:filePath];
-	if(!settingsFileExist) {
-		NSString *path = [[NSBundle mainBundle] pathForResource:@"settings" ofType:@"plist"];
-		settingsFileExist = [fileManager copyItemAtPath:path toPath:filePath error:&fileError];
-	}	
-	
-    if(settingsFileExist) {
-        // create dictionaries for storing settings
-        NSMutableDictionary* settingsDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];    
-        NSMutableDictionary* currentAccountDict = [[NSDictionary alloc] initWithObjectsAndKeys:
+     */     
+
+    // if account doesnt already exist OR has a new username
+    if([self.feinduraAccounts.dataBase valueForKey:self.url.text] == nil || ([self.feinduraAccounts.dataBase valueForKey:self.url.text] != nil && ![[[self.feinduraAccounts.dataBase objectForKey:self.url.text] valueForKey:@"username"] isEqualToString: self.username.text])) {
+        
+        // create dictionaries for storing current feindura account
+        NSMutableDictionary* currentAccount = [[NSDictionary alloc] initWithObjectsAndKeys:
                                                    self.username.text,@"username",nil];
-                                                   //[self.password.text MD5],@"password", nil];
-	
-        // if setting doesnt exist alreay
-        if([settingsDict valueForKey:self.url.text] == nil) {
-            [settingsDict setObject: currentAccountDict forKey:self.url.text];
-            [settingsDict writeToFile:filePath atomically: YES];
-        }
-    
-        [currentAccountDict release];
-        [settingsDict release];
+                                                //[self.password.text MD5],@"password", nil];
+        // add new feindura account to the database
+        [self.feinduraAccounts.dataBase setObject: currentAccount forKey:self.url.text];
+        [self.feinduraAccounts saveAccounts];
+        
+        [currentAccount release];
     }
-    
-    /*
-    NSURL *serverURL = [NSURL URLWithString:self.url.text];
-    NSError *error = nil;
-    
-    [SFHFKeychainUtils storeUsername:self.username.text andPassword:self.password.text forServiceName:[serverURL absoluteString] updateExisting:YES error:&error];
-     */
     
 	[delegate DismissAddFeinduraView];
 }

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ASIHTTPRequestDelegate.h"
+#import "syncFeinduraAccounts.h"
 
 @class ASIFormDataRequest;
 @class Reachability;
@@ -43,6 +44,8 @@
     Reachability *internetReachable;
     Reachability *hostReachable;
     BOOL internetActive;
+    
+    syncFeinduraAccounts *feinduraAccounts;
 }
 
 @property(nonatomic,assign) id<AddFeinduraViewControllerDelegate> delegate;
@@ -60,6 +63,7 @@
 @property(nonatomic,retain) Reachability *internetReachable;
 @property(nonatomic,retain) Reachability *hostReachable;
 @property(nonatomic,assign) BOOL internetActive;
+@property(nonatomic,retain) syncFeinduraAccounts *feinduraAccounts;
 
 
 - (IBAction)cancelAddFeindura:(id)sender;

@@ -12,6 +12,8 @@
 #import "Reachability.h"
 #import "SFHFKeychainUtils.h"
 
+#import "syncFeinduraStats.h"
+
 
 @implementation AddFeinduraViewController
 
@@ -62,6 +64,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    syncFeinduraStats *test = [[syncFeinduraStats alloc] init];
+    //NSLog(@"process Name: %@ Process ID: %d",test.settingsFilePath);
+    for (id key in test.feinduraDataBases) {
+        
+        NSLog(@"key: %@, value: %@", key, [test.feinduraDataBases objectForKey:key]);
+        
+    }
     
     // -> add a title which fits in the navbar
     UILabel *title = [[UILabel alloc] init];
@@ -195,8 +205,8 @@
         // create dictionaries for storing settings
         NSMutableDictionary* settingsDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];    
         NSMutableDictionary* currentAccountDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                                   @"username",self.username.text,nil];
-                                                   //@"password",[self.password.text MD5], nil];
+                                                   self.username.text,@"username",nil];
+                                                   //[self.password.text MD5],@"password", nil];
 	
         // if setting doesnt exist alreay
         if([settingsDict valueForKey:self.url.text] == nil) {

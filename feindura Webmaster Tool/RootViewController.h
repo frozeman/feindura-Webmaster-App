@@ -8,12 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "AddFeinduraViewController.h"
+#import "syncFeinduraAccounts.h"
 
 @interface RootViewController : UITableViewController <AddFeinduraViewControllerDelegate> {
-    NSMutableArray *feinduraStats;
+    NSMutableArray *tableList;
+    syncFeinduraAccounts *feinduraAccounts;
 }
 
-@property(nonatomic,retain) NSMutableArray *feinduraStats;
+@property(nonatomic,retain) NSMutableArray *tableList;
+@property(nonatomic,retain) syncFeinduraAccounts *feinduraAccounts;
 
 -(IBAction)showAddFeinduraView:(id)sender;
 

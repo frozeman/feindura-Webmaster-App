@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		A30E74E613A4FD000026ECFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A30E74E513A4FD000026ECFF /* README.md */; };
 		A31CB23814052FFB001FE17A /* syncFeinduraAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = A31CB23714052FFB001FE17A /* syncFeinduraAccounts.m */; };
+		A31CB23E1405F4EB001FE17A /* Sunflower.gif in Resources */ = {isa = PBXBuildFile; fileRef = A31CB23D1405F4EB001FE17A /* Sunflower.gif */; };
+		A31CB2401405F570001FE17A /* favicon.ico in Resources */ = {isa = PBXBuildFile; fileRef = A31CB23F1405F570001FE17A /* favicon.ico */; };
 		A3337C1313FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3337C1113FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.m */; };
 		A3337C1413FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3337C1213FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.xib */; };
 		A38A212A13ABDB6B00866212 /* settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = A38A212913ABDB6B00866212 /* settings.plist */; };
@@ -60,8 +62,10 @@
 
 /* Begin PBXFileReference section */
 		A30E74E513A4FD000026ECFF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
-		A31CB23614052FFB001FE17A /* syncFeinduraAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; path = syncFeinduraAccounts.h; sourceTree = "<group>"; };
+		A31CB23614052FFB001FE17A /* syncFeinduraAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = syncFeinduraAccounts.h; sourceTree = "<group>"; };
 		A31CB23714052FFB001FE17A /* syncFeinduraAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = syncFeinduraAccounts.m; sourceTree = "<group>"; };
+		A31CB23D1405F4EB001FE17A /* Sunflower.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = Sunflower.gif; path = Images/Sunflower.gif; sourceTree = "<group>"; };
+		A31CB23F1405F570001FE17A /* favicon.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; name = favicon.ico; path = Images/favicon.ico; sourceTree = "<group>"; };
 		A3337C1013FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = feinduraDetailStatsViewController.h; sourceTree = "<group>"; };
 		A3337C1113FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = feinduraDetailStatsViewController.m; sourceTree = "<group>"; };
 		A3337C1213FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = feinduraDetailStatsViewController.xib; sourceTree = "<group>"; };
@@ -155,6 +159,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A31CB23C1405F425001FE17A /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				A31CB23F1405F570001FE17A /* favicon.ico */,
+				A31CB23D1405F4EB001FE17A /* Sunflower.gif */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
 		A3337C0E13FDCBFA00ABC6B9 /* TableViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -271,6 +284,7 @@
 		A3AB893213A4D42F0025FE50 /* feindura Webmaster Tool */ = {
 			isa = PBXGroup;
 			children = (
+				A31CB23C1405F425001FE17A /* Images */,
 				A3AB893B13A4D42F0025FE50 /* feindura_Webmaster_ToolAppDelegate.h */,
 				A3AB893C13A4D42F0025FE50 /* feindura_Webmaster_ToolAppDelegate.m */,
 				A3AB893E13A4D42F0025FE50 /* MainWindow.xib */,
@@ -405,6 +419,8 @@
 				A30E74E613A4FD000026ECFF /* README.md in Resources */,
 				A38A212A13ABDB6B00866212 /* settings.plist in Resources */,
 				A3337C1413FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.xib in Resources */,
+				A31CB23E1405F4EB001FE17A /* Sunflower.gif in Resources */,
+				A31CB2401405F570001FE17A /* favicon.ico in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

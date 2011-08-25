@@ -9,17 +9,30 @@
 #import "RootViewController.h"
 #import "AddFeinduraViewController.h"
 #import "feinduraDetailStatsViewController.h"
+#import "syncFeinduraAccounts.h"
 
 @implementation RootViewController
 
-@synthesize feinduraStats;
+@synthesize tableList;
+@synthesize feinduraAccounts;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    self.feinduraStats = [[NSMutableArray alloc] init];
-    [feinduraStats addObject:@"feindura demo"];
+    // LOAD feindura Accounts
+    syncFeinduraAccounts *tmp = [[syncFeinduraAccounts alloc] init];
+    self.feinduraAccounts = tmp;
+    [tmp release];
+    
+    // ADD feindura Accounts to the tableList
+    self.tableList = [[NSMutableArray alloc] init];
+    for (id key in self.feinduraAccounts.dataBase) {
+        if([[self.feinduraAccounts.dataBase objectForKey:key] objectForKey:@"title"] != nil)
+            [self.tableList addObject:[[self.feinduraAccounts.dataBase objectForKey:key] objectForKey:@"title"]];
+        else
+            [self.tableList addObject:key];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -58,7 +71,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [feinduraStats count];
+    return [tableList count];
 }
 
 // Customize the appearance of table view cells.
@@ -66,15 +79,58 @@
 {
     static NSString *CellIdentifier = @"Cell";
     
+    UILabel *cellText;
+    cellText = [[UILabel alloc] initWithFrame:CGRectMake( 45, 12, 175, 20 )];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-    }
-
-    cell.textLabel.text = [feinduraStats objectAtIndex:indexPath.row];
-    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
+        
+        [cellText setBackgroundColor:[UIColor clearColor]];
+        [cellText setTextColor:[UIColor darkGrayColor]];
+        [cellText setShadowColor:[UIColor clearColor]];
+        [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
+        [cellText setText:[self.tableList objectAtIndex:indexPath.row]];
+        [cellText setAdjustsFontSizeToFitWidth:true];
+        [cell.contentView addSubview: cellText];
+        //[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+    }    
+    
+    //NSDictionary *item = (NSDictionary *)[self.tableList objectAtIndex:indexPath.row];
+    //[self.feinduraAccounts.dataBase objectForKey:]
+    //cell.textLabel = cellText;//[item objectForKey:@"title"];
+    
+    NSArray *keys = [self.feinduraAccounts.dataBase allKeys];
+    id aKey = [keys objectAtIndex:indexPath.row];
+    id tableRow = [self.feinduraAccounts.dataBase objectForKey:aKey];
+    
+    // set tableRow text
+    if([tableRow objectForKey:@"title"] != nil)
+        cellText.text = [tableRow objectForKey:@"title"];
+    else
+        cellText.text = aKey;    
+    [cellText release];
+    
+    // set tableRow userStatistics
+    if([[tableRow objectForKey:@"statistics"] objectForKey:@"userVisitCount"] != nil)
+        cell.detailTextLabel.text = [[tableRow objectForKey:@"statistics"] objectForKey:@"userVisitCount"];
+    else
+        cell.detailTextLabel.text = @"-";  
+    
+    // ADD a image
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"favicon" ofType:@"ico"];
+    UIImage *theImage = [UIImage imageWithContentsOfFile:path];
+    cell.imageView.image = theImage;
+    
+    
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    UIColor *altCellColor = [UIColor colorWithWhite:0.95 alpha:0.1];
+    if (indexPath.row == 0 || indexPath.row%2 == 0)
+        altCellColor = [UIColor colorWithWhite:0.99 alpha:0.1];
+    cell.backgroundColor = altCellColor;
 }
 
 /*
@@ -119,15 +175,15 @@
 */
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-  
+  /*
     feinduraDetailStatsViewController *detailViewController = [[feinduraDetailStatsViewController alloc] initWithNibName:@"feinduraDetailStatsViewController" bundle:nil];
     
-    [detailViewController setTitle:[feinduraStats objectAtIndex:indexPath.row]];
+    [detailViewController setTitle:[tableList objectAtIndex:indexPath.row]];
     
     // Pass the selected object to the new view controller.
     [self.navigationController pushViewController:detailViewController animated:YES];
     [detailViewController release];
-
+*/
 }
 
 - (void)didReceiveMemoryWarning {
@@ -139,11 +195,13 @@
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-    self.feinduraStats = nil;
+    self.feinduraAccounts = nil;
+    self.tableList = nil;
 }
 
 - (void)dealloc {
-    [feinduraStats release];
+    [feinduraAccounts release];
+    [tableList release];
     [super dealloc];
 }
 

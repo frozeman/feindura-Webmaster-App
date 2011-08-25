@@ -11,7 +11,6 @@
 
 @implementation feindura_Webmaster_ToolAppDelegate
 
-
 @synthesize window;
 @synthesize navigationController;
 @synthesize rootViewController;
@@ -19,6 +18,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+
     // Override point for customization after application launch.
     // Add the navigation controller's view to the window and display.
     [window addSubview:[navigationController view]];
@@ -36,7 +36,6 @@
     [titleBar setTitle:NSLocalizedString(@"OVERVIEW_TITLE", nil)];
     [titleBar setTitleView:title];
     [title release];
-
     
     return true;
 }

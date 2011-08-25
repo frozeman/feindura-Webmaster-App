@@ -51,6 +51,7 @@
 
 #pragma mark Methods
 - (void)loadAccounts {
+    self.dataBase = nil;
     NSMutableDictionary *tmp = [[NSMutableDictionary alloc] initWithContentsOfFile:self.settingsFilePath];
     self.dataBase = tmp;
     [tmp release];
@@ -62,6 +63,8 @@
 }
 
 - (BOOL)updateAccounts {
+    
+    [self loadAccounts];
     return true;
 }
 

@@ -15,6 +15,7 @@
 
 @synthesize tableList;
 @synthesize feinduraAccounts;
+@synthesize uiTableView;
 
 - (void)viewDidLoad
 {
@@ -80,7 +81,7 @@
     static NSString *CellIdentifier = @"Cell";
     
     UILabel *cellText;
-    cellText = [[UILabel alloc] initWithFrame:CGRectMake( 45, 12, 175, 20 )];
+    cellText = [[UILabel alloc] initWithFrame:CGRectMake( 45, 12, 165, 20 )];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
@@ -92,7 +93,7 @@
         [cellText setText:[self.tableList objectAtIndex:indexPath.row]];
         [cellText setAdjustsFontSizeToFitWidth:true];
         [cell.contentView addSubview: cellText];
-        //[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     }    
     
     //NSDictionary *item = (NSDictionary *)[self.tableList objectAtIndex:indexPath.row];
@@ -175,7 +176,6 @@
 */
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-  /*
     feinduraDetailStatsViewController *detailViewController = [[feinduraDetailStatsViewController alloc] initWithNibName:@"feinduraDetailStatsViewController" bundle:nil];
     
     [detailViewController setTitle:[tableList objectAtIndex:indexPath.row]];
@@ -183,7 +183,6 @@
     // Pass the selected object to the new view controller.
     [self.navigationController pushViewController:detailViewController animated:YES];
     [detailViewController release];
-*/
 }
 
 - (void)didReceiveMemoryWarning {
@@ -222,6 +221,11 @@
 
 -(void)DismissAddFeinduraView {
 	[self dismissModalViewControllerAnimated:YES];
+    
+    // reload tableView
+    [feinduraAccounts updateAccounts];
+    [uiTableView reloadData];
+    [uiTableView setEditing:true animated:true];
 }
 
 @end

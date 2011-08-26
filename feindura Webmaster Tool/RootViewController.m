@@ -81,12 +81,13 @@
     static NSString *CellIdentifier = @"Cell";
     
     UILabel *cellText;
-    cellText = [[UILabel alloc] initWithFrame:CGRectMake( 45, 12, 165, 20 )];
+    cellText = [[UILabel alloc] initWithFrame:CGRectMake( 45, 11, 165, 20 )];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
+        cell.detailTextLabel.text = @"-";        
         
-        [cellText setBackgroundColor:[UIColor clearColor]];
+        [cellText setBackgroundColor:[UIColor whiteColor]];
         [cellText setTextColor:[UIColor darkGrayColor]];
         [cellText setShadowColor:[UIColor clearColor]];
         [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
@@ -114,24 +115,28 @@
     // set tableRow userStatistics
     if([[tableRow objectForKey:@"statistics"] objectForKey:@"userVisitCount"] != nil)
         cell.detailTextLabel.text = [[tableRow objectForKey:@"statistics"] objectForKey:@"userVisitCount"];
-    else
-        cell.detailTextLabel.text = @"-";  
     
     // ADD a image
     NSString *path = [[NSBundle mainBundle] pathForResource:@"favicon" ofType:@"ico"];
     UIImage *theImage = [UIImage imageWithContentsOfFile:path];
     cell.imageView.image = theImage;
     
-    
-    
+
     return cell;
 }
 
+// Make Table rows changing color
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    UIColor *altCellColor = [UIColor colorWithWhite:0.95 alpha:0.1];
+    UIColor *altCellColor;
     if (indexPath.row == 0 || indexPath.row%2 == 0)
-        altCellColor = [UIColor colorWithWhite:0.99 alpha:0.1];
+        altCellColor = [UIColor colorWithWhite:0.995 alpha:1];
+    else
+        altCellColor = [UIColor colorWithWhite:0.98 alpha:1];
+    
     cell.backgroundColor = altCellColor;
+    for (UIView *view in [cell.contentView subviews]) {
+        [view setBackgroundColor:altCellColor];
+    }
 }
 
 /*
@@ -172,6 +177,9 @@
 {
     // Return NO if you do not want the item to be re-orderable.
     return YES;
+}
+
+- (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 */
 
@@ -216,6 +224,13 @@
 	[modalView release];
 }
 
+-(IBAction)editFeinduraAccounts:(id)sender {
+    if(uiTableView.editing == false)
+        [uiTableView setEditing:true animated:true];
+    else
+        [uiTableView setEditing:false animated:true];
+}
+
 
 #pragma mark Delegates
 
@@ -225,7 +240,6 @@
     // reload tableView
     [feinduraAccounts updateAccounts];
     [uiTableView reloadData];
-    [uiTableView setEditing:true animated:true];
 }
 
 @end

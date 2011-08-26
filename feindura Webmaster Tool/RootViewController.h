@@ -21,6 +21,7 @@
 @property(nonatomic,retain) IBOutlet UITableView *uiTableView;
 
 -(IBAction)showAddFeinduraView:(id)sender;
+-(IBAction)editFeinduraAccounts:(id)sender;
 
 
 #pragma mark Delegates

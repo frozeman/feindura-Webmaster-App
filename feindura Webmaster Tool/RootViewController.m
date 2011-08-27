@@ -80,41 +80,57 @@
 {
     static NSString *CellIdentifier = @"Cell";
     
-    UILabel *cellText;
-    cellText = [[UILabel alloc] initWithFrame:CGRectMake( 45, 11, 165, 20 )];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
-        cell.detailTextLabel.text = @"-";        
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];               
         
-        [cellText setBackgroundColor:[UIColor whiteColor]];
+        UILabel *cellText;
+        cellText = [[UILabel alloc] initWithFrame:CGRectMake( 45, 11, 165, 20 )];
+        [cellText setBackgroundColor:[UIColor clearColor]];
         [cellText setTextColor:[UIColor darkGrayColor]];
-        [cellText setShadowColor:[UIColor clearColor]];
+        //[cellText setShadowColor:[UIColor clearColor]];
         [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
-        [cellText setText:[self.tableList objectAtIndex:indexPath.row]];
         [cellText setAdjustsFontSizeToFitWidth:true];
+        [cellText setMinimumFontSize: 12.0];
+        [cellText setTag:1];
         [cell.contentView addSubview: cellText];
+        [cellText release];
+        
+        UILabel *cellStats;
+        cellStats = [[UILabel alloc] initWithFrame:CGRectMake( 220, 11, 65, 20 )];
+        [cellStats setText:@"-"];
+        [cellStats setTextColor:[UIColor colorWithRed:0.84 green:0.58 blue:0.23 alpha:1]];
+        [cellStats setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
+        [cellStats setAdjustsFontSizeToFitWidth:true];
+        [cellStats setMinimumFontSize: 8.0];
+        [cellStats setTextAlignment:UITextAlignmentRight];
+        [cellStats setTag:2];
+        [cell.contentView addSubview: cellStats];
+        [cellStats release];
+        
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     }    
     
-    //NSDictionary *item = (NSDictionary *)[self.tableList objectAtIndex:indexPath.row];
-    //[self.feinduraAccounts.dataBase objectForKey:]
-    //cell.textLabel = cellText;//[item objectForKey:@"title"];
-    
+    // get feindura account keys from indexPath.row
     NSArray *keys = [self.feinduraAccounts.dataBase allKeys];
     id aKey = [keys objectAtIndex:indexPath.row];
-    id tableRow = [self.feinduraAccounts.dataBase objectForKey:aKey];
+    id feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:aKey];
     
-    // set tableRow text
-    if([tableRow objectForKey:@"title"] != nil)
-        cellText.text = [tableRow objectForKey:@"title"];
-    else
-        cellText.text = aKey;    
-    [cellText release];
-    
-    // set tableRow userStatistics
-    if([[tableRow objectForKey:@"statistics"] objectForKey:@"userVisitCount"] != nil)
-        cell.detailTextLabel.text = [[tableRow objectForKey:@"statistics"] objectForKey:@"userVisitCount"];
+    // add the text to the cells
+    for (UILabel *view in [cell.contentView subviews]) {        
+        // set tableRow text
+        if(view.tag == 1) {            
+            if([feinduraAccount objectForKey:@"title"] != nil)
+                [view setText:[feinduraAccount objectForKey:@"title"]];
+            else
+                [view setText:aKey];
+        }
+        
+        // set tableRow userStatistics
+        if(view.tag == 2 && [[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCount"] != nil) {            
+            [view setText:[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCount"]];
+        }
+    }
     
     // ADD a image
     NSString *path = [[NSBundle mainBundle] pathForResource:@"favicon" ofType:@"ico"];
@@ -180,7 +196,8 @@
 }
 
 - (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-}
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    [cell.imageView setHidden:true];
 */
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

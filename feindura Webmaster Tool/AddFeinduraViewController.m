@@ -70,18 +70,14 @@
     self.feinduraAccounts = tmp;
     [tmp release];
     
+    /*
     //NSLog(@"process Name: %@ Process ID: %d",self.feinduraAccounts.settingsFilePath);
     for (id key in self.feinduraAccounts.dataBase) {
         
         NSLog(@"key: %@, value: %@", key, [self.feinduraAccounts.dataBase objectForKey:key]);
         
     }
-    
-    
-    
-    
-    
-    
+     */
     
     // -> add a title which fits in the navbar
     UILabel *title = [[UILabel alloc] init];

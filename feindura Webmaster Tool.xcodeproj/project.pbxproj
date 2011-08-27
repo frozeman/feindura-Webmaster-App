@@ -194,6 +194,8 @@
 		A38FEFE913AF7ED800250641 /* Helper Classes */ = {
 			isa = PBXGroup;
 			children = (
+				A31CB23614052FFB001FE17A /* syncFeinduraAccounts.h */,
+				A31CB23714052FFB001FE17A /* syncFeinduraAccounts.m */,
 				A38FEFEB13AF7F4300250641 /* NSString+MD5.h */,
 				A38FEFEC13AF7F4300250641 /* NSString+MD5.m */,
 			);
@@ -288,8 +290,6 @@
 				A3AB893B13A4D42F0025FE50 /* feindura_Webmaster_ToolAppDelegate.h */,
 				A3AB893C13A4D42F0025FE50 /* feindura_Webmaster_ToolAppDelegate.m */,
 				A3AB893E13A4D42F0025FE50 /* MainWindow.xib */,
-				A31CB23614052FFB001FE17A /* syncFeinduraAccounts.h */,
-				A31CB23714052FFB001FE17A /* syncFeinduraAccounts.m */,
 				A3337C0E13FDCBFA00ABC6B9 /* TableViews */,
 				A3AB896A13A4D5810025FE50 /* ModalViews */,
 				A38FEFE913AF7ED800250641 /* Helper Classes */,

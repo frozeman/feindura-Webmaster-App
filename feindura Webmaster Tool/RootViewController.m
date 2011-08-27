@@ -13,7 +13,6 @@
 
 @implementation RootViewController
 
-@synthesize tableList;
 @synthesize feinduraAccounts;
 @synthesize uiTableView;
 
@@ -26,14 +25,6 @@
     self.feinduraAccounts = tmp;
     [tmp release];
     
-    // ADD feindura Accounts to the tableList
-    self.tableList = [[NSMutableArray alloc] init];
-    for (id key in self.feinduraAccounts.dataBase) {
-        if([[self.feinduraAccounts.dataBase objectForKey:key] objectForKey:@"title"] != nil)
-            [self.tableList addObject:[[self.feinduraAccounts.dataBase objectForKey:key] objectForKey:@"title"]];
-        else
-            [self.tableList addObject:key];
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -72,7 +63,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [tableList count];
+    NSArray *accountNumber = [self.feinduraAccounts.dataBase allKeys];
+    return [accountNumber count];
 }
 
 // Customize the appearance of table view cells.
@@ -203,7 +195,15 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     feinduraDetailStatsViewController *detailViewController = [[feinduraDetailStatsViewController alloc] initWithNibName:@"feinduraDetailStatsViewController" bundle:nil];
     
-    [detailViewController setTitle:[tableList objectAtIndex:indexPath.row]];
+    // get feindura account keys from indexPath.row
+    NSArray *keys = [self.feinduraAccounts.dataBase allKeys];
+    id aKey = [keys objectAtIndex:indexPath.row];
+    id feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:aKey];
+    
+    if([feinduraAccount objectForKey:@"title"] != nil)
+        [detailViewController setTitle:[feinduraAccount objectForKey:@"title"]];
+    else
+        [detailViewController setTitle:aKey];
     
     // Pass the selected object to the new view controller.
     [self.navigationController pushViewController:detailViewController animated:YES];
@@ -220,12 +220,12 @@
 - (void)viewDidUnload {
     [super viewDidUnload];
     self.feinduraAccounts = nil;
-    self.tableList = nil;
+    self.uiTableView = nil;
 }
 
 - (void)dealloc {
     [feinduraAccounts release];
-    [tableList release];
+    [uiTableView release];
     [super dealloc];
 }
 

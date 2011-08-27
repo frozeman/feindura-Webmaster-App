@@ -11,12 +11,10 @@
 #import "syncFeinduraAccounts.h"
 
 @interface RootViewController : UITableViewController <AddFeinduraViewControllerDelegate> {
-    NSMutableArray *tableList;
     syncFeinduraAccounts *feinduraAccounts;
     IBOutlet UITableView *uiTableView;
 }
 
-@property(nonatomic,retain) NSMutableArray *tableList;
 @property(nonatomic,retain) syncFeinduraAccounts *feinduraAccounts;
 @property(nonatomic,retain) IBOutlet UITableView *uiTableView;
 

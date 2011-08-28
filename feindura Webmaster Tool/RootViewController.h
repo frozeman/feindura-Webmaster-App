@@ -12,10 +12,12 @@
 
 @interface RootViewController : UITableViewController <AddFeinduraViewControllerDelegate> {
     syncFeinduraAccounts *feinduraAccounts;
+    AddFeinduraViewController *addFeinduraModalView;
     IBOutlet UITableView *uiTableView;
 }
 
 @property(nonatomic,retain) syncFeinduraAccounts *feinduraAccounts;
+@property(nonatomic,retain) AddFeinduraViewController *addFeinduraModalView;
 @property(nonatomic,retain) IBOutlet UITableView *uiTableView;
 
 -(IBAction)showAddFeinduraView:(id)sender;

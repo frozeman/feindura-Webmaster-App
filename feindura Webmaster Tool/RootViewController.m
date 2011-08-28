@@ -12,6 +12,7 @@
 @implementation RootViewController
 
 @synthesize feinduraAccounts;
+@synthesize addFeinduraModalView;
 @synthesize uiTableView;
 
 - (void)viewDidLoad
@@ -79,7 +80,7 @@
         [cellText setBackgroundColor:[UIColor clearColor]];
         [cellText setTextColor:[UIColor darkGrayColor]];
         //[cellText setShadowColor:[UIColor clearColor]];
-        [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
+        [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15]];
         [cellText setAdjustsFontSizeToFitWidth:true];
         [cellText setMinimumFontSize: 12.0];
         [cellText setTag:1];
@@ -90,7 +91,7 @@
         cellStats = [[UILabel alloc] initWithFrame:CGRectMake( 220, 11, 65, 20 )];
         [cellStats setText:@"-"];
         [cellStats setTextColor:[UIColor colorWithRed:0.84 green:0.58 blue:0.23 alpha:1]];
-        [cellStats setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
+        [cellStats setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15]];
         [cellStats setAdjustsFontSizeToFitWidth:true];
         [cellStats setMinimumFontSize: 8.0];
         [cellStats setTextAlignment:UITextAlignmentRight];
@@ -231,12 +232,14 @@
 #pragma mark Methods
 
 -(IBAction)showAddFeinduraView:(id)sender {
-	AddFeinduraViewController *modalView = [[AddFeinduraViewController alloc] init];
-	modalView.delegate = self;
-    modalView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-    
-	[self presentModalViewController:modalView animated:YES];
-	[modalView release];
+    if (self.addFeinduraModalView == nil) {
+        AddFeinduraViewController *modalView = [[AddFeinduraViewController alloc] init];
+        modalView.delegate = self;
+        modalView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        self.addFeinduraModalView = modalView;
+        [modalView release];
+    }    
+	[self presentModalViewController:self.addFeinduraModalView animated:YES];
 }
 
 -(IBAction)editFeinduraAccounts:(id)sender {

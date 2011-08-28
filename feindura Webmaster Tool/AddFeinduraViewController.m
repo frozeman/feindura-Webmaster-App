@@ -20,7 +20,7 @@
 @synthesize urlTitle, accountTitle; // Labels
 @synthesize url, username, password; //TextFields
 @synthesize wrongUrl, wrongAccount, wrongFeinduraUrl; // Alerts
-@synthesize request, internetReachable, hostReachable, internetActive; // Request
+@synthesize request; // Request
 @synthesize feinduraAccounts;
 
 // METHODS
@@ -45,21 +45,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    syncFeinduraAccounts *tmp = [[syncFeinduraAccounts alloc] initWithoutInternet];
-    self.feinduraAccounts = tmp;
-    [tmp release];
-    
-    //RootViewController *tmp = ((RootViewController *)self.parentViewController);
-    //[tmp release];
-    
-    /*
-    //NSLog(@"process Name: %@ Process ID: %d",self.feinduraAccounts.settingsFilePath);
-    for (id key in self.feinduraAccounts.dataBase) {
-        
-        NSLog(@"key: %@, value: %@", key, [self.feinduraAccounts.dataBase objectForKey:key]);
-        
-    }
-     */
+    // get the feindura accounts form the parentview
+    syncFeinduraAccounts *delagateTemp = ((RootViewController *)self.delegate).feinduraAccounts;
+    self.feinduraAccounts = delagateTemp;
+    [delagateTemp release];
     
     // -> add a title which fits in the navbar
     UILabel *title = [[UILabel alloc] init];
@@ -102,14 +91,7 @@
     UIAlertView *wrongFeinduraUrlTemp = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ADDFEINDURA_ALERT_TITLE_WRONGURL", nil) message:NSLocalizedString(@"ADDFEINDURA_ALERT_TEXT_WRONGFEINDURAURL", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"ADDFEINDURA_ALERT_BUTTON_OK", nil) otherButtonTitles: nil];
     self.wrongFeinduraUrl = wrongFeinduraUrlTemp;
     [wrongFeinduraUrlTemp release];
-    
-    // -> CHECK for Internet Connection
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNetworkStatus:) name:kReachabilityChangedNotification object:nil];
-    self.internetReachable = [Reachability reachabilityForInternetConnection];
-    [self.internetReachable startNotifier];
-    // check if a pathway to a random host exists
-    self.hostReachable = [Reachability reachabilityWithHostName: @"www.google.com"];
-    [self.hostReachable startNotifier];
+
 }
 
 - (void)viewDidUnload {
@@ -118,8 +100,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     self.feinduraAccounts = nil;
-    self.internetReachable = nil;
-    self.hostReachable = nil;
     self.wrongFeinduraUrl = nil;
     self.wrongAccount = nil;
     self.wrongUrl = nil;
@@ -134,8 +114,6 @@
 
 - (void)dealloc {
     [feinduraAccounts release];
-    [internetReachable release];
-    [hostReachable release];
     [request clearDelegatesAndCancel];
     [request release];
     [wrongFeinduraUrl release];
@@ -167,7 +145,7 @@
 
 - (void)checkFeinduraAccount {
     
-    if(self.internetActive) {
+    if(self.feinduraAccounts.internetActive) {
         NSURL *cmsUrl = [NSURL URLWithString:self.url.text];
         self.request = [ASIFormDataRequest requestWithURL:cmsUrl];
         [self.request setDelegate:self];
@@ -226,38 +204,6 @@
     NSPredicate *urlTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", urlRegEx]; 
     return [urlTest evaluateWithObject:candidate];
 }
-
-- (void)checkNetworkStatus:(NSNotification *)notice {
-    // called after network status changes
-    
-    NetworkStatus internetStatus = [internetReachable currentReachabilityStatus];
-    switch (internetStatus)
-    
-    {
-        case NotReachable:
-        {
-            NSLog(@"The internet is down.");
-            self.internetActive = false;
-            break;
-            
-        }
-        case ReachableViaWiFi:
-        {
-            NSLog(@"The internet is working via WIFI.");
-            self.internetActive = true;
-            break;
-            
-        }
-        case ReachableViaWWAN:
-        {
-            NSLog(@"The internet is working via WWAN.");
-            self.internetActive = true;
-            break;
-            
-        }
-    }
-}
-
 
 #pragma mark Delegates
 

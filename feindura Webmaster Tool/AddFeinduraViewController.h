@@ -39,11 +39,7 @@
     UIAlertView *wrongAccount;
     UIAlertView *wrongFeinduraUrl;
     
-    ASIFormDataRequest *request;
-    Reachability *internetReachable;
-    Reachability *hostReachable;
-    BOOL internetActive;
-    
+    ASIFormDataRequest *request;    
     syncFeinduraAccounts *feinduraAccounts;
 }
 
@@ -59,9 +55,6 @@
 @property(nonatomic,retain) UIAlertView *wrongAccount;
 @property(nonatomic,retain) UIAlertView *wrongFeinduraUrl;
 @property(nonatomic,retain) ASIFormDataRequest *request;
-@property(nonatomic,retain) Reachability *internetReachable;
-@property(nonatomic,retain) Reachability *hostReachable;
-@property(nonatomic,assign) BOOL internetActive;
 @property(nonatomic,retain) syncFeinduraAccounts *feinduraAccounts;
 
 
@@ -70,8 +63,6 @@
 - (void)saveFeinduraAccount;
 - (UITextField*)textFieldsAreEmpty;
 - (BOOL)validateUrl:(NSString *)candidate;
-
-- (void) checkNetworkStatus:(NSNotification *)notice;
 
 
 #pragma mark Delegates

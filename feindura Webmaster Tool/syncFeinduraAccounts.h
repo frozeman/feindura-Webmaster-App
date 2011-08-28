@@ -32,7 +32,7 @@
 #pragma mark Methods
 
 -(syncFeinduraAccounts *)initWithoutInternet;
--(id)setSettingsPath;
+-(BOOL)setSettingsPath;
 
 -(void)loadAccounts;
 -(void)saveAccounts;

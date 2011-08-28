@@ -53,7 +53,7 @@
     return self;
 }
 
--(id)setSettingsPath {
+-(BOOL)setSettingsPath {
     BOOL settingsFileExist;
     NSError *fileError;
     

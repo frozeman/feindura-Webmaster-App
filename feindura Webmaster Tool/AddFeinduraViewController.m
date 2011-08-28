@@ -21,7 +21,7 @@
 @synthesize url, username, password; //TextFields
 @synthesize wrongUrl, wrongAccount, wrongFeinduraUrl; // Alerts
 @synthesize request; // Request
-@synthesize feinduraAccounts;
+@synthesize feinduraAccountsFromRootView;
 
 // METHODS
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -47,7 +47,7 @@
     
     // get the feindura accounts form the parentview
     syncFeinduraAccounts *delagateTemp = ((RootViewController *)self.delegate).feinduraAccounts;
-    self.feinduraAccounts = delagateTemp;
+    self.feinduraAccountsFromRootView = delagateTemp;
     [delagateTemp release];
     
     // -> add a title which fits in the navbar
@@ -97,9 +97,10 @@
 - (void)viewDidUnload {
     [super viewDidUnload];
     
+    [request clearDelegatesAndCancel];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    self.feinduraAccounts = nil;
+    self.feinduraAccountsFromRootView = nil;
     self.wrongFeinduraUrl = nil;
     self.wrongAccount = nil;
     self.wrongUrl = nil;
@@ -112,20 +113,18 @@
     self.scrollView = nil;
 }
 
-- (void)dealloc {
-    [feinduraAccounts release];
-    [request clearDelegatesAndCancel];
-    [request release];
-    [wrongFeinduraUrl release];
-    [wrongAccount release];
-    [wrongUrl release];
-    [urlTitle release];
-    [accountTitle release];
-    [url release];
-    [username release];
-    [password release];
-    [titleBar release];
-    [scrollView release];
+- (void)dealloc {    
+//    [request release];
+//    [wrongFeinduraUrl release];
+//    [wrongAccount release];
+//    [wrongUrl release];
+//    [urlTitle release];
+//    [accountTitle release];
+//    [url release];
+//    [username release];
+//    [password release];
+//    [titleBar release];
+//    [scrollView release];
     [super dealloc];
 }
 
@@ -140,12 +139,12 @@
 #pragma mark Methods
 
 - (IBAction)cancelAddFeindura:(id)sender {
-	[delegate DismissAddFeinduraView];
+	[self.delegate DismissAddFeinduraView];
 }
 
 - (void)checkFeinduraAccount {
     
-    if(self.feinduraAccounts.internetActive) {
+    if(self.feinduraAccountsFromRootView.internetActive) {
         NSURL *cmsUrl = [NSURL URLWithString:self.url.text];
         self.request = [ASIFormDataRequest requestWithURL:cmsUrl];
         [self.request setDelegate:self];
@@ -171,15 +170,15 @@
      */     
 
     // if account doesnt already exist OR has a new username
-    if([self.feinduraAccounts.dataBase valueForKey:self.url.text] == nil || ([self.feinduraAccounts.dataBase valueForKey:self.url.text] != nil && ![[[self.feinduraAccounts.dataBase objectForKey:self.url.text] valueForKey:@"username"] isEqualToString: self.username.text])) {
+    if([self.feinduraAccountsFromRootView.dataBase valueForKey:self.url.text] == nil || ([self.feinduraAccountsFromRootView.dataBase valueForKey:self.url.text] != nil && ![[[self.feinduraAccountsFromRootView.dataBase objectForKey:self.url.text] valueForKey:@"username"] isEqualToString: self.username.text])) {
         
         // create dictionaries for storing current feindura account
         NSMutableDictionary* currentAccount = [[NSDictionary alloc] initWithObjectsAndKeys:
                                                    self.username.text,@"username",nil];
                                                 //[self.password.text MD5],@"password", nil];
         // add new feindura account to the database
-        [self.feinduraAccounts.dataBase setObject: currentAccount forKey:self.url.text];
-        [self.feinduraAccounts saveAccounts];
+        [self.feinduraAccountsFromRootView.dataBase setObject: currentAccount forKey:self.url.text];
+        [self.feinduraAccountsFromRootView saveAccounts];
         
         [currentAccount release];
     }
@@ -205,6 +204,19 @@
     return [urlTest evaluateWithObject:candidate];
 }
 
+- (void)repairURL {
+    
+    // add a slash on the end of the url
+    self.url.text = [self.url.text stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+    
+    NSURL *cmsURL = [NSURL URLWithString:self.url.text];            
+    
+    // check if there is a scheme (like http://) in this url string
+    if([cmsURL scheme] == nil) {
+        self.url.text = [[NSString stringWithString:@"http://"] stringByAppendingString:self.url.text];	
+    }
+}
+
 #pragma mark Delegates
 
 // -> ScrollViewDelegate
@@ -225,36 +237,33 @@
         [textField setReturnKeyType:UIReturnKeyNext];
 }
 // ->> JUMP to TextFields
-- (BOOL)textFieldShouldReturn:(UITextField*)textField {
+- (void)textFieldShouldReturn:(UITextField*)textField {
+    
+    // always check url first
+    [self repairURL];
+    if(![self validateUrl:self.url.text]) {
+        [self.wrongUrl show];
+        [self.url becomeFirstResponder];
+        return;
+    }
+    
     switch (textField.tag) {
         // -> URL TextField
         case 1: {
-            
-                // add a slash on the end of the url
-                self.url.text = [self.url.text stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
-                //self.url.text = [self.url.text stringByAppendingString:@"/"];
-            
-                NSURL *cmsURL = [NSURL URLWithString:self.url.text];            
-            
-                // check if there is a scheme (like http://) in this url string
-                if([cmsURL scheme] == nil) {
-                    self.url.text = [[NSString stringWithString:@"http://"] stringByAppendingString:self.url.text];	
-                }
-                
                 // -> JUMP to the next one, if is a valid url
                 if([self validateUrl:self.url.text])                    
-                    [[self.scrollView viewWithTag:2] becomeFirstResponder];
+                    [self.username becomeFirstResponder];
                 // -> otherwise throw warning
                 else {
                     [self.wrongUrl show];
-                }                    
+                }     
             }
             break;
             
         // -> USERNAME TextField
         case 2:
             // -> JUMP to the next one
-            [[self.scrollView viewWithTag:3] becomeFirstResponder];
+            [self.password becomeFirstResponder];
             break;
             
         // -> PASSWORD TextField
@@ -275,7 +284,6 @@
             [[self.scrollView viewWithTag:1] becomeFirstResponder];
             break;
     }
-    return true;
 }
 
 

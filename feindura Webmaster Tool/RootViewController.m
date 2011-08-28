@@ -73,7 +73,7 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];               
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];         
         
         UILabel *cellText;
         cellText = [[UILabel alloc] initWithFrame:CGRectMake( 45, 11, 165, 20 )];
@@ -223,7 +223,6 @@
 }
 
 - (void)dealloc {
-    [feinduraAccounts release];
     [uiTableView release];
     [super dealloc];
 }
@@ -232,14 +231,14 @@
 #pragma mark Methods
 
 -(IBAction)showAddFeinduraView:(id)sender {
-    if (self.addFeinduraModalView == nil) {
-        AddFeinduraViewController *modalView = [[AddFeinduraViewController alloc] init];
-        modalView.delegate = self;
-        modalView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-        self.addFeinduraModalView = modalView;
-        [modalView release];
-    }    
-	[self presentModalViewController:self.addFeinduraModalView animated:YES];
+    
+    AddFeinduraViewController *modalView = [[AddFeinduraViewController alloc] init];
+    modalView.delegate = self;
+    modalView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+
+	[self presentModalViewController:modalView animated:YES];
+    [modalView release];
+    
 }
 
 -(IBAction)editFeinduraAccounts:(id)sender {
@@ -254,9 +253,9 @@
 
 -(void)DismissAddFeinduraView {
 	[self dismissModalViewControllerAnimated:YES];
-    
+
     // reload tableView
-    [feinduraAccounts updateAccounts];
+    [self.feinduraAccounts updateAccounts];
     [uiTableView reloadData];
 }
 

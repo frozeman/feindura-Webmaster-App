@@ -22,7 +22,7 @@ Fabian Vogelsteller <http://frozeman.de>
 <http://feindura.org>
 
 ### DESCRIPTION
-iPhone app for feindura webmasters, to view multiple feindura cms statistics in one app
+iPhone app for feindura webmasters, to view multiple feindura cms statistics at once.
 
 ### FEATURES
 * displays statistics of multiple feindura CMS's

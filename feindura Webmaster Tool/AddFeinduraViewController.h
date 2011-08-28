@@ -40,7 +40,7 @@
     UIAlertView *wrongFeinduraUrl;
     
     ASIFormDataRequest *request;    
-    syncFeinduraAccounts *feinduraAccounts;
+    syncFeinduraAccounts *feinduraAccountsFromRootView;
 }
 
 @property(nonatomic,assign) id<AddFeinduraViewControllerDelegate> delegate;
@@ -55,7 +55,7 @@
 @property(nonatomic,retain) UIAlertView *wrongAccount;
 @property(nonatomic,retain) UIAlertView *wrongFeinduraUrl;
 @property(nonatomic,retain) ASIFormDataRequest *request;
-@property(nonatomic,retain) syncFeinduraAccounts *feinduraAccounts;
+@property(nonatomic,retain) syncFeinduraAccounts *feinduraAccountsFromRootView;
 
 
 - (IBAction)cancelAddFeindura:(id)sender;
@@ -63,11 +63,11 @@
 - (void)saveFeinduraAccount;
 - (UITextField*)textFieldsAreEmpty;
 - (BOOL)validateUrl:(NSString *)candidate;
-
+- (void)repairURL;
 
 #pragma mark Delegates
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField;
+- (void)textFieldShouldReturn:(UITextField *)textField;
 - (void)textFieldDidBeginEditing:(UITextField *)textField;
 
 - (void)requestStarted:(ASIHTTPRequest *)request;

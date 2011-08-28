@@ -76,6 +76,12 @@
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
+    self.dataBase = nil;
+    self.settingsFilePath = nil;
+    self.request = nil;
+    self.internetReachable = nil;
+    self.hostReachable = nil;
+    
     [settingsFilePath release];
     [dataBase release];
     [request release];
@@ -100,43 +106,46 @@
 
 - (BOOL)updateAccounts {
     
-    if(self.internetActive) {
-        /*
-        NSURL *cmsUrl = [NSURL URLWithString:self.url.text];
-        self.request = [ASIFormDataRequest requestWithURL:cmsUrl];
-        [self.request setDelegate:self];
-        [self.request setPostValue:self.username.text forKey:@"username"];
-        [self.request setPostValue:self.password.text forKey:@"password"];
-        [self.request startAsynchronous];
-         */
+    // -> FETCH NEW ACCOUNT DATA
+    // get feindura account keys
+    NSArray *keys = [self.dataBase allKeys];
+    
+    // start loading new data from the servers
+    for (NSString *key in keys) {        
+        if(self.internetActive) {
+            NSLog(@"%@",key);
+            NSURL *cmsUrl = [NSURL URLWithString:key];
+            self.request = [ASIFormDataRequest requestWithURL:cmsUrl];
+            [self.request setDelegate:self];
+            [self.request setPostValue:@"load" forKey:@"status"];
+            [self.request startAsynchronous];
+        } else
+            return false;
     }
     
-    [self loadAccounts];
+    //[self loadAccounts];
     return true;
 }
 
+#pragma mark Selectors
+
 // called after network status changes 
-- (void)checkNetworkStatus:(NSNotification *)notice {
-    
+- (void)checkNetworkStatus:(NSNotification *)notice {    
     NetworkStatus internetStatus = [internetReachable currentReachabilityStatus];
-    switch (internetStatus)
-    {
-        case NotReachable:
-        {
+    switch (internetStatus) {
+        case NotReachable: {
             NSLog(@"The internet is down.");
             self.internetActive = false;
             break;
             
         }
-        case ReachableViaWiFi:
-        {
+        case ReachableViaWiFi: {
             NSLog(@"The internet is working via WIFI.");
             self.internetActive = true;
             break;
             
         }
-        case ReachableViaWWAN:
-        {
+        case ReachableViaWWAN: {
             NSLog(@"The internet is working via WWAN.");
             self.internetActive = true;
             break;
@@ -151,14 +160,14 @@
 
 // -> START
 - (void)requestStarted:(ASIHTTPRequest *)request {
-    NSLog(@"request started");
+    NSLog(@"START fetching new account data from server");
     // TODO: change status bar text
 }
 - (void)request:(ASIHTTPRequest *)request didReceiveResponseHeaders:(NSDictionary *)responseHeaders {}
 
 // -> FINISHED
 - (void)requestFinished:(ASIHTTPRequest *)requestResponse {
-    NSLog(@"request finsihed");
+    NSLog(@"END fetching new account data from server");
     
     // Use when fetching binary data
     //NSData *responseData = [requestResponse responseData];
@@ -178,7 +187,7 @@
 
 // -> FAILED
 - (void)requestFailed:(ASIHTTPRequest *)request {
-    NSLog(@"request failed");
+    NSLog(@"FAILED fetching new account data from server");
     
     //[self.wrongUrl show];
     //[self.url becomeFirstResponder];

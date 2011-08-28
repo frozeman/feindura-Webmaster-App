@@ -22,6 +22,7 @@
     // LOAD feindura Accounts
     syncFeinduraAccounts *tmp = [[syncFeinduraAccounts alloc] init];
     self.feinduraAccounts = tmp;
+    self.feinduraAccounts.delegate = self;
     [tmp release];
     
 }
@@ -123,10 +124,18 @@
         }
     }
     
+    NSLog(@"ACCOUNT %@",feinduraAccounts);
+    
     // ADD a image
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"favicon" ofType:@"ico"];
-    UIImage *theImage = [UIImage imageWithContentsOfFile:path];
-    cell.imageView.image = theImage;
+    if([[feinduraAccount valueForKey:@"status"] isEqualToString:@"failed"]) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"failed.icon" ofType:@"png"];
+        UIImage *theImage = [UIImage imageWithContentsOfFile:path];
+        cell.imageView.image = theImage;
+    } else {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"default.icon" ofType:@"png"];
+        UIImage *theImage = [UIImage imageWithContentsOfFile:path];
+        cell.imageView.image = theImage;
+    }
     
 
     return cell;

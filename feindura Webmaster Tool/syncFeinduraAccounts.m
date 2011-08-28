@@ -7,13 +7,15 @@
 //
 
 #import "syncFeinduraAccounts.h"
+#import "RootViewController.h"
 
 @implementation syncFeinduraAccounts
 
 @synthesize settingsFilePath;
 @synthesize dataBase;
-@synthesize request;
+@synthesize httpRequest;
 @synthesize internetReachable, hostReachable, internetActive; // Check Network
+@synthesize delegate;
 
 - (id)init
 {
@@ -78,13 +80,13 @@
     
     self.dataBase = nil;
     self.settingsFilePath = nil;
-    self.request = nil;
+    self.httpRequest = nil;
     self.internetReachable = nil;
     self.hostReachable = nil;
     
     [settingsFilePath release];
     [dataBase release];
-    [request release];
+    [httpRequest release];
     [internetReachable release];
     [hostReachable release];
     [super dealloc];
@@ -115,10 +117,11 @@
         if(self.internetActive) {
             NSLog(@"%@",key);
             NSURL *cmsUrl = [NSURL URLWithString:key];
-            self.request = [ASIFormDataRequest requestWithURL:cmsUrl];
-            [self.request setDelegate:self];
-            [self.request setPostValue:@"load" forKey:@"status"];
-            [self.request startAsynchronous];
+            self.httpRequest = [ASIFormDataRequest requestWithURL:cmsUrl];
+            [self.httpRequest setDelegate:self];
+            [self.httpRequest setPostValue:@"load" forKey:@"status"];
+            //[self.request setPostValue:@"url" forKey:@"status"];
+            [self.httpRequest startAsynchronous];
         } else
             return false;
     }
@@ -169,30 +172,34 @@
 - (void)requestFinished:(ASIHTTPRequest *)requestResponse {
     NSLog(@"END fetching new account data from server");
     
-    // Use when fetching binary data
-    //NSData *responseData = [requestResponse responseData];
     
-    NSString *responseString = [requestResponse responseString];
+    //...
+
     
-    if([responseString isEqualToString:@"TRUE"]) {
-        //[self saveFeinduraAccount];
-    } else if([responseString isEqualToString:@"FALSE"]) {
-        //[self.wrongAccount show];
-        //[self.username becomeFirstResponder];
-    } else {
-        //[self.wrongFeinduraUrl show];
-        //[self.url becomeFirstResponder];
-    }
+    NSMutableDictionary *succedAccount = [self.dataBase objectForKey:[requestResponse.originalURL absoluteString]];    
+    [succedAccount setValue:@"online" forKey:@"status"];    
+    [self.dataBase setObject:succedAccount forKey:[requestResponse.originalURL absoluteString]];
+    
+    [self saveAccounts];
+    
+    // reload the tableList
+    RootViewController *delagateTemp = ((RootViewController *)self.delegate);  
+    [delagateTemp.uiTableView reloadData];  
 }
 
 // -> FAILED
 - (void)requestFailed:(ASIHTTPRequest *)request {
     NSLog(@"FAILED fetching new account data from server");
     
-    //[self.wrongUrl show];
-    //[self.url becomeFirstResponder];
+    NSMutableDictionary *failedAccount = [self.dataBase objectForKey:[request.originalURL absoluteString]];    
+    [failedAccount setValue:@"failed" forKey:@"status"];    
+    [self.dataBase setObject:failedAccount forKey:[request.originalURL absoluteString]];
     
-    //NSError *error = [request error];
+    [self saveAccounts];
+    
+    // reload the tableList
+    RootViewController *delagateTemp = ((RootViewController *)self.delegate);  
+    [delagateTemp.uiTableView reloadData];   
     
 }
 

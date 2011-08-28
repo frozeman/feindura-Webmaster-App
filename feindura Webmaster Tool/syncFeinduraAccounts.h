@@ -14,20 +14,23 @@
     NSString *settingsFilePath;
     NSMutableDictionary *dataBase;
     
-    ASIFormDataRequest *request;
+    ASIFormDataRequest *httpRequest;
     Reachability *internetReachable;
     Reachability *hostReachable;
     BOOL internetActive;
+    
+    id delegate;
 }
 
 #pragma mark Properties
 
 @property(nonatomic,retain) NSString *settingsFilePath;
 @property(nonatomic,retain) NSMutableDictionary *dataBase;
-@property(nonatomic,retain) ASIFormDataRequest *request;
+@property(nonatomic,retain) ASIFormDataRequest *httpRequest;
 @property(nonatomic,retain) Reachability *internetReachable;
 @property(nonatomic,retain) Reachability *hostReachable;
 @property(nonatomic,assign) BOOL internetActive;
+@property(nonatomic,retain) id delegate;
 
 #pragma mark Methods
 

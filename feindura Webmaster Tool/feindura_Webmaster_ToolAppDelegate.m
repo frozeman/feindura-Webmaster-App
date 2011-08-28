@@ -7,7 +7,6 @@
 //
 
 #import "feindura_Webmaster_ToolAppDelegate.h"
-#import "RootViewController.h"
 
 @implementation feindura_Webmaster_ToolAppDelegate
 

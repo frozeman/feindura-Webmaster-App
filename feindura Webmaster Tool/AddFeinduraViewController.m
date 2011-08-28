@@ -8,10 +8,8 @@
 
 #import "AddFeinduraViewController.h"
 #import "NSString+MD5.h"
-#import "ASIFormDataRequest.h"
-#import "Reachability.h"
 #import "SFHFKeychainUtils.h"
-#import "syncFeinduraAccounts.h"
+#import "RootViewController.h"
 
 
 @implementation AddFeinduraViewController
@@ -35,25 +33,6 @@
     return self;
 }
 
-- (void)dealloc {
-    [feinduraAccounts release];
-    [internetReachable release];
-    [hostReachable release];
-    [request clearDelegatesAndCancel];
-    [request release];
-    [wrongFeinduraUrl release];
-    [wrongAccount release];
-    [wrongUrl release];
-    [urlTitle release];
-    [accountTitle release];
-    [url release];
-    [username release];
-    [password release];
-    [titleBar release];
-    [scrollView release];
-    [super dealloc];
-}
-
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
@@ -66,9 +45,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    syncFeinduraAccounts *tmp = [[syncFeinduraAccounts alloc] init];
+    syncFeinduraAccounts *tmp = [[syncFeinduraAccounts alloc] initWithoutInternet];
     self.feinduraAccounts = tmp;
     [tmp release];
+    
+    //RootViewController *tmp = ((RootViewController *)self.parentViewController);
+    //[tmp release];
     
     /*
     //NSLog(@"process Name: %@ Process ID: %d",self.feinduraAccounts.settingsFilePath);
@@ -148,6 +130,25 @@
     self.password = nil;
     self.titleBar = nil;
     self.scrollView = nil;
+}
+
+- (void)dealloc {
+    [feinduraAccounts release];
+    [internetReachable release];
+    [hostReachable release];
+    [request clearDelegatesAndCancel];
+    [request release];
+    [wrongFeinduraUrl release];
+    [wrongAccount release];
+    [wrongUrl release];
+    [urlTitle release];
+    [accountTitle release];
+    [url release];
+    [username release];
+    [password release];
+    [titleBar release];
+    [scrollView release];
+    [super dealloc];
 }
 
 /*

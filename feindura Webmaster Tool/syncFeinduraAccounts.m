@@ -7,8 +7,6 @@
 //
 
 #import "syncFeinduraAccounts.h"
-#import "ASIFormDataRequest.h"
-#import "Reachability.h"
 
 @implementation syncFeinduraAccounts
 
@@ -22,32 +20,16 @@
     self = [super init];
     if (self) {
         
-        BOOL settingsFileExist;
-        NSError *fileError;
+        // -> CHECK for Internet Connection
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNetworkStatus:) name:kReachabilityChangedNotification object:nil];
+        self.internetReachable = [Reachability reachabilityForInternetConnection];
+        [self.internetReachable startNotifier];
+        // check if a pathway to a random host exists
+        self.hostReachable = [Reachability reachabilityWithHostName: @"www.google.com"];
+        [self.hostReachable startNotifier];
         
-        // ->> GET settings.plist PATH
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        self.settingsFilePath = [documentsDirectory stringByAppendingPathComponent:@"settings.plist"];
-        
-        // -> if doesnt exist, create a new settings.plist file
-        settingsFileExist = [fileManager fileExistsAtPath:self.settingsFilePath];
-        if(!settingsFileExist) {
-        	NSString *path = [[NSBundle mainBundle] pathForResource:@"settings" ofType:@"plist"];
-        	settingsFileExist = [fileManager copyItemAtPath:path toPath:self.settingsFilePath error:&fileError];
-        }
-        
-        if(settingsFileExist) {
-            // -> CHECK for Internet Connection
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNetworkStatus:) name:kReachabilityChangedNotification object:nil];
-            self.internetReachable = [Reachability reachabilityForInternetConnection];
-            [self.internetReachable startNotifier];
-            // check if a pathway to a random host exists
-            self.hostReachable = [Reachability reachabilityWithHostName: @"www.google.com"];
-            [self.hostReachable startNotifier];
-            
-            // load account database
+        // -> load account database
+        if([self setSettingsPath]) {
             [self loadAccounts];
         } else
             return false;
@@ -56,7 +38,44 @@
     return self;
 }
 
+- (id)initWithoutInternet
+{
+    self = [super init];
+    if (self) {
+        
+        // -> load account database
+        if([self setSettingsPath]) {
+            [self loadAccounts];
+        } else
+            return false;
+    }
+    
+    return self;
+}
+
+-(id)setSettingsPath {
+    BOOL settingsFileExist;
+    NSError *fileError;
+    
+    // ->> GET settings.plist PATH
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    self.settingsFilePath = [documentsDirectory stringByAppendingPathComponent:@"settings.plist"];
+    
+    // -> if doesnt exist, create a new settings.plist file
+    settingsFileExist = [fileManager fileExistsAtPath:self.settingsFilePath];
+    if(!settingsFileExist) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"settings" ofType:@"plist"];
+        settingsFileExist = [fileManager copyItemAtPath:path toPath:self.settingsFilePath error:&fileError];
+    }
+    
+    return settingsFileExist;
+}
+
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     [settingsFilePath release];
     [dataBase release];
     [request release];

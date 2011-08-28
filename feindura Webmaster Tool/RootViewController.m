@@ -7,9 +7,7 @@
 //
 
 #import "RootViewController.h"
-#import "AddFeinduraViewController.h"
 #import "feinduraDetailStatsViewController.h"
-#import "syncFeinduraAccounts.h"
 
 @implementation RootViewController
 

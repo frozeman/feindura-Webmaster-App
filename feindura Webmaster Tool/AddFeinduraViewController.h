@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ASIHTTPRequestDelegate.h"
-#import "syncFeinduraAccounts.h"
+#import "ASIFormDataRequest.h"
+#import "Reachability.h"
 
-@class ASIFormDataRequest;
-@class Reachability;
+#import "syncFeinduraAccounts.h"
 
 #pragma mark Protocol
 

@@ -7,10 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ASIHTTPRequestDelegate.h"
-
-@class ASIFormDataRequest;
-@class Reachability;
+#import "ASIFormDataRequest.h"
+#import "Reachability.h"
 
 @interface syncFeinduraAccounts : NSObject {
     NSString *settingsFilePath;
@@ -32,6 +30,9 @@
 @property(nonatomic,assign) BOOL internetActive;
 
 #pragma mark Methods
+
+-(syncFeinduraAccounts *)initWithoutInternet;
+-(id)setSettingsPath;
 
 -(void)loadAccounts;
 -(void)saveAccounts;

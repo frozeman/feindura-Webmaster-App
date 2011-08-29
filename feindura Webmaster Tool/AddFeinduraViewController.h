@@ -57,7 +57,8 @@
 @property(nonatomic,retain) syncFeinduraAccounts *feinduraAccountsFromRootView;
 
 
-- (IBAction)cancelAddFeindura:(id)sender;
+- (IBAction)buttonCancelAddFeindura:(id)sender;
+- (IBAction)buttonSaveFeinduraAccount:(id)sender;
 - (void)checkFeinduraAccount;
 - (void)saveFeinduraAccount;
 - (UITextField*)textFieldsAreEmpty;

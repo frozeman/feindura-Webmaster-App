@@ -13,7 +13,7 @@
 @interface RootViewController : UITableViewController <AddFeinduraViewControllerDelegate> {
     syncFeinduraAccounts *feinduraAccounts;
     IBOutlet UITableView *uiTableView;
-    IBOutlet UINavigationItem *titleBar;  
+    IBOutlet UINavigationItem *titleBar;
 }
 
 @property(nonatomic,retain) syncFeinduraAccounts *feinduraAccounts;
@@ -22,6 +22,7 @@
 
 -(IBAction)showAddFeinduraView:(id)sender;
 -(IBAction)editFeinduraAccounts:(id)sender;
+-(IBAction)refreshFeinduraAccounts:(id)sender;
 
 
 #pragma mark Delegates

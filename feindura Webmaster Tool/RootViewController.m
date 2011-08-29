@@ -274,6 +274,10 @@
         [uiTableView setEditing:false animated:true];
 }
 
+-(IBAction)refreshFeinduraAccounts:(id)sender {
+    [self.feinduraAccounts updateAccounts];
+}
+
 
 #pragma mark Delegates
 

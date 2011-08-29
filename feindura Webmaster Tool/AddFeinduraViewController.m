@@ -142,8 +142,11 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 
 #pragma mark Methods
 
-- (IBAction)cancelAddFeindura:(id)sender {
+- (IBAction)buttonCancelAddFeindura:(id)sender {
 	[self.delegate DismissAddFeinduraView];
+}
+- (IBAction)buttonSaveFeinduraAccount:(id)sender {
+        [self checkFeinduraAccount];
 }
 
 - (void)checkFeinduraAccount {
@@ -275,7 +278,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
         // -> URL TextField
         case 1: {
                 // -> JUMP to the next one, if is a valid url
-                if([self validateUrl:self.url.text])                    
+                if([self validateUrl:self.url.text])                
                     [self.username becomeFirstResponder];
                 // -> otherwise throw warning
                 else {

@@ -223,6 +223,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [self.dataBase setObject:succedAccount forKey:[request.userInfo valueForKey:@"id"]];
     //NSLog(@"%@",succedAccount);
     [self saveAccounts];
+    [self loadAccounts];
 
     // reload the tableList
     RootViewController *delagateTemp = ((RootViewController *)self.delegate);  
@@ -240,6 +241,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [self.dataBase setObject:failedAccount forKey:[self.dataBase objectForKey:[request.userInfo valueForKey:@"id"]]];
     
     [self saveAccounts];
+    [self loadAccounts];
     
     // reload the tableList
     RootViewController *delagateTemp = ((RootViewController *)self.delegate);  

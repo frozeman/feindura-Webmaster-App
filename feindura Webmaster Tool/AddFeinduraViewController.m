@@ -11,6 +11,7 @@
 #import "SFHFKeychainUtils.h"
 #import "RootViewController.h"
 
+static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmasterTool.controller.php";
 
 @implementation AddFeinduraViewController
 
@@ -113,18 +114,21 @@
     self.scrollView = nil;
 }
 
-- (void)dealloc {    
-//    [request release];
-//    [wrongFeinduraUrl release];
-//    [wrongAccount release];
-//    [wrongUrl release];
-//    [urlTitle release];
-//    [accountTitle release];
-//    [url release];
-//    [username release];
-//    [password release];
-//    [titleBar release];
-//    [scrollView release];
+- (void)dealloc {
+    
+    //[delegate release];
+    //[feinduraAccountsFromRootView release];
+    [request release];
+    [wrongFeinduraUrl release];
+    [wrongAccount release];
+    [wrongUrl release];
+    [urlTitle release];
+    [accountTitle release];
+    [url release];
+    [username release];
+    [password release];
+    [titleBar release];
+    [scrollView release];    
     [super dealloc];
 }
 
@@ -145,9 +149,13 @@
 - (void)checkFeinduraAccount {
     
     if(self.feinduraAccountsFromRootView.internetActive) {
-        NSURL *cmsUrl = [NSURL URLWithString:self.url.text];
+        NSString *tempUrl = [[NSString stringWithString:self.url.text] stringByAppendingString:feinduraControllerPath];
+        NSURL *cmsUrl = [NSURL URLWithString:tempUrl];
+        //NSLog(@"FULLURL %@",tempUrl);
+        
         self.request = [ASIFormDataRequest requestWithURL:cmsUrl];
         [self.request setDelegate:self];
+        [self.request setPostValue:@"check" forKey:@"status"];
         [self.request setPostValue:self.username.text forKey:@"username"];
         [self.request setPostValue:self.password.text forKey:@"password"];
         [self.request startAsynchronous];
@@ -178,6 +186,7 @@
                                                 //[self.password.text MD5],@"password", nil];
         // add new feindura account to the database
         [self.feinduraAccountsFromRootView.dataBase setObject: currentAccount forKey:self.url.text];
+        //[self.feinduraAccountsFromRootView.dataBase addObject:currentAccount];
         [self.feinduraAccountsFromRootView saveAccounts];
         
         [currentAccount release];

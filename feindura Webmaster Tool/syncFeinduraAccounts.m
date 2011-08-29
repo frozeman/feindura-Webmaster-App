@@ -8,6 +8,9 @@
 
 #import "syncFeinduraAccounts.h"
 #import "RootViewController.h"
+#import "SBJson.h"
+
+static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmasterTool.controller.php";
 
 @implementation syncFeinduraAccounts
 
@@ -110,17 +113,17 @@
     
     // -> FETCH NEW ACCOUNT DATA
     // get feindura account keys
-    NSArray *keys = [self.dataBase allKeys];
+    NSArray *urls = [self.dataBase allKeys];
     
     // start loading new data from the servers
-    for (NSString *key in keys) {        
+    for (NSString *feinduraUrl in urls) {
         if(self.internetActive) {
-            NSLog(@"%@",key);
-            NSURL *cmsUrl = [NSURL URLWithString:key];
+            // ADD feinduraControllerPath
+            NSURL *cmsUrl = [NSURL URLWithString:[feinduraUrl stringByAppendingString:feinduraControllerPath]];
+            //NSLog(@"FULLURL %@",cmsUrl.absoluteURL);
             self.httpRequest = [ASIFormDataRequest requestWithURL:cmsUrl];
             [self.httpRequest setDelegate:self];
             [self.httpRequest setPostValue:@"load" forKey:@"status"];
-            //[self.request setPostValue:@"url" forKey:@"status"];
             [self.httpRequest startAsynchronous];
         } else
             return false;
@@ -172,16 +175,20 @@
 - (void)requestFinished:(ASIHTTPRequest *)requestResponse {
     NSLog(@"END fetching new account data from server");
     
+    // shorten to original url
+    NSString *orgURL = [[NSString stringWithString:[requestResponse.originalURL absoluteString]] stringByReplacingOccurrencesOfString:feinduraControllerPath withString:@""];
+    NSLog(@"%@",orgURL);
+    
     
     //...
 
-    
-    NSMutableDictionary *succedAccount = [self.dataBase objectForKey:[requestResponse.originalURL absoluteString]];    
-    [succedAccount setValue:@"online" forKey:@"status"];    
-    [self.dataBase setObject:succedAccount forKey:[requestResponse.originalURL absoluteString]];
+    // STORE success status
+    NSMutableDictionary *succedAccount = [self.dataBase objectForKey:orgURL];    
+    [succedAccount setValue:@"online" forKey:@"status"];
+    [self.dataBase setObject:succedAccount forKey:orgURL];
     
     [self saveAccounts];
-    
+
     // reload the tableList
     RootViewController *delagateTemp = ((RootViewController *)self.delegate);  
     [delagateTemp.uiTableView reloadData];  
@@ -191,9 +198,13 @@
 - (void)requestFailed:(ASIHTTPRequest *)request {
     NSLog(@"FAILED fetching new account data from server");
     
-    NSMutableDictionary *failedAccount = [self.dataBase objectForKey:[request.originalURL absoluteString]];    
-    [failedAccount setValue:@"failed" forKey:@"status"];    
-    [self.dataBase setObject:failedAccount forKey:[request.originalURL absoluteString]];
+    // shorten to original url
+    NSString *orgURL = [[NSString stringWithString:[request.originalURL absoluteString]] stringByReplacingOccurrencesOfString:feinduraControllerPath withString:@""];
+    
+    // STORE failed status
+    NSMutableDictionary *failedAccount = [self.dataBase objectForKey:orgURL];    
+    [failedAccount setValue:@"failed" forKey:@"status"];
+    [self.dataBase setObject:failedAccount forKey:orgURL];
     
     [self saveAccounts];
     

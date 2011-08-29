@@ -13,7 +13,6 @@
 @interface syncFeinduraAccounts : NSObject {
     NSString *settingsFilePath;
     NSMutableDictionary *dataBase;
-    
     ASIFormDataRequest *httpRequest;
     Reachability *internetReachable;
     Reachability *hostReachable;

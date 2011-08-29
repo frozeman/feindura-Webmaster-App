@@ -12,7 +12,6 @@
 @implementation RootViewController
 
 @synthesize feinduraAccounts;
-@synthesize addFeinduraModalView;
 @synthesize uiTableView;
 
 - (void)viewDidLoad
@@ -124,8 +123,6 @@
         }
     }
     
-    NSLog(@"ACCOUNT %@",feinduraAccounts);
-    
     // ADD a image
     if([[feinduraAccount valueForKey:@"status"] isEqualToString:@"failed"]) {
         NSString *path = [[NSBundle mainBundle] pathForResource:@"failed.icon" ofType:@"png"];
@@ -232,6 +229,7 @@
 }
 
 - (void)dealloc {
+    [feinduraAccounts release];
     [uiTableView release];
     [super dealloc];
 }

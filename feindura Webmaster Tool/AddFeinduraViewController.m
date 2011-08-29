@@ -146,6 +146,21 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 	[self.delegate DismissAddFeinduraView];
 }
 - (IBAction)buttonSaveFeinduraAccount:(id)sender {
+    
+    // repair url
+    [self repairURL];
+    
+    // validate url
+    if(![self validateUrl:self.url.text])                
+        [self.wrongUrl show];
+    
+    else if([self.url.text isEqualToString:@""])
+        [self.url becomeFirstResponder];
+    else if([self.username.text isEqualToString:@""])
+        [self.username becomeFirstResponder];
+    else if([self.password.text isEqualToString:@""])
+        [self.password becomeFirstResponder];
+    else
         [self checkFeinduraAccount];
 }
 

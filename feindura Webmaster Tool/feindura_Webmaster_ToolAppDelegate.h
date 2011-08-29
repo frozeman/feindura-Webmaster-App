@@ -16,12 +16,10 @@
     UIWindow *window;
     IBOutlet UINavigationController *navigationController;
 	IBOutlet RootViewController *rootViewController;
-    IBOutlet UINavigationItem *titleBar;    
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet UINavigationController *navigationController;
-@property (nonatomic, retain) RootViewController *rootViewController;
-@property (nonatomic,retain) UINavigationItem *titleBar;
+@property (nonatomic, retain) IBOutlet RootViewController *rootViewController;
 
 @end

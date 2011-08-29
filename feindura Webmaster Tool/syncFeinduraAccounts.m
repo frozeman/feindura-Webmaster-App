@@ -113,36 +113,39 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 
 - (BOOL)updateAccounts {
     
-    [self loadAccounts];
-    
-    // -> FETCH NEW ACCOUNT DATA
-    NSError *keychainError;
-    // get feindura account keys
-    NSArray *accountIds = [self.dataBase allKeys];
-    
-    // start loading new data from the servers
-    for (NSString *accountId in accountIds) {
-        if(self.internetActive) {
-            // ADD feinduraControllerPath
-            NSURL *cmsUrl = [NSURL URLWithString:[[[self.dataBase objectForKey:accountId] objectForKey:@"url"] stringByAppendingString:feinduraControllerPath]];
-            //NSLog(@"FULLURL %@",cmsUrl.absoluteURL);
+    if(self.internetActive) {
+        
+        // -> FETCH NEW ACCOUNT DATA
+        NSError *keychainError;
+        // get feindura account keys
+        NSArray *accountIds = [self.dataBase allKeys];
+        
+        // start loading new data from the servers
+        for (NSString *accountId in accountIds) {
             
-            // START REQUEST
-            // username,password,status=fetch,id
-            self.httpRequest = [ASIFormDataRequest requestWithURL:cmsUrl];
-            [self.httpRequest setDelegate:self];
-            [self.httpRequest setPostValue:[[self.dataBase objectForKey:accountId] objectForKey:@"account"] forKey:@"username"];
-            [self.httpRequest setPostValue:[SFHFKeychainUtils getPasswordForUsername:[[self.dataBase objectForKey:accountId] objectForKey:@"account"]
-                                                              andServiceName: [[self.dataBase objectForKey:accountId] objectForKey:@"url"]
-                                                              error:&keychainError]
-                              forKey:@"password"];
-            [self.httpRequest setPostValue:@"fetch" forKey:@"status"];
-            [self.httpRequest setUserInfo:[NSDictionary dictionaryWithObject:accountId forKey:@"id"]]; // set id to identify request
-            [self.httpRequest startAsynchronous];
-        } else
-            return false;
+                // ADD feinduraControllerPath
+                NSURL *cmsUrl = [NSURL URLWithString:[[[self.dataBase objectForKey:accountId] objectForKey:@"url"] stringByAppendingString:feinduraControllerPath]];
+                //NSLog(@"FULLURL %@",cmsUrl.absoluteURL);
+                
+                // START REQUEST
+                // username,password,status=fetch,id
+                self.httpRequest = [ASIFormDataRequest requestWithURL:cmsUrl];
+                [self.httpRequest setDelegate:self];
+                [self.httpRequest setPostValue:[[self.dataBase objectForKey:accountId] objectForKey:@"account"] forKey:@"username"];
+                [self.httpRequest setPostValue:[SFHFKeychainUtils getPasswordForUsername:[[self.dataBase objectForKey:accountId] objectForKey:@"account"]
+                                                                  andServiceName: [[self.dataBase objectForKey:accountId] objectForKey:@"url"]
+                                                                  error:&keychainError]
+                                  forKey:@"password"];
+                [self.httpRequest setPostValue:@"FETCH" forKey:@"status"];
+                [self.httpRequest setUserInfo:[NSDictionary dictionaryWithObject:accountId forKey:@"id"]]; // set id to identify request
+                [self.httpRequest startAsynchronous];
+            
+        }
+        return true;
+    } else {
+        [self loadAccounts];
+        return false;
     }    
-    return true;
 }
 
 #pragma mark Selectors
@@ -160,12 +163,16 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
         case ReachableViaWiFi: {
             NSLog(@"The internet is working via WIFI.");
             self.internetActive = true;
+            // update on when connection is available
+            [self updateAccounts];
             break;
             
         }
         case ReachableViaWWAN: {
             NSLog(@"The internet is working via WWAN.");
             self.internetActive = true;
+            // update on when connection is available
+            [self updateAccounts];
             break;
             
         }
@@ -187,13 +194,34 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 - (void)requestFinished:(ASIHTTPRequest *)request {
     NSLog(@"END fetching new account data from server");
     
-    //...
-
-    // STORE success status
     NSMutableDictionary *succedAccount = [self.dataBase objectForKey:[request.userInfo valueForKey:@"id"]];
-    [succedAccount setValue:@"works" forKey:@"status"];
+    
+    // -> WRONG account
+    if([request.responseString isEqualToString:@"FALSE"]) {    
+        [succedAccount setValue:@"FAILED" forKey:@"status"];
+        
+    // -> else try to get json data
+    } else {    
+        // CORRECT data fetched
+        NSDictionary *fetchedData = [request.responseString JSONValue];
+        
+        if([fetchedData valueForKey:@"title"] != nil) {        
+            [succedAccount setValue:[fetchedData valueForKey:@"title"] forKey:@"title"]; // set title
+            if([fetchedData objectForKey:@"statistics"] != nil)
+                [succedAccount setObject:[fetchedData objectForKey:@"statistics"] forKey:@"statistics"]; // set statistics
+            if([fetchedData objectForKey:@"browser"] != nil)
+                [[succedAccount objectForKey:@"statistics"] setObject:[fetchedData objectForKey:@"browser"] forKey:@"browser"]; // set statistics
+            [succedAccount setValue:@"WORKING" forKey:@"status"];
+        
+        // WRONG feindura url
+        } else {
+            [succedAccount setValue:@"FAILED" forKey:@"status"];
+        }
+    }    
+
+    // STORE success status    
     [self.dataBase setObject:succedAccount forKey:[request.userInfo valueForKey:@"id"]];
-    NSLog(@"%@",succedAccount);
+    //NSLog(@"%@",succedAccount);
     [self saveAccounts];
 
     // reload the tableList
@@ -208,7 +236,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     
     // STORE failed status
     NSMutableDictionary *failedAccount = [self.dataBase objectForKey:[request.userInfo valueForKey:@"id"]];    
-    [failedAccount setValue:@"failed" forKey:@"status"];
+    [failedAccount setValue:@"FAILED" forKey:@"status"];
     [self.dataBase setObject:failedAccount forKey:[self.dataBase objectForKey:[request.userInfo valueForKey:@"id"]]];
     
     [self saveAccounts];
@@ -218,6 +246,5 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [delagateTemp.uiTableView reloadData];
     self.httpRequest = nil;
 }
-
 
 @end

@@ -13,10 +13,12 @@
 @interface RootViewController : UITableViewController <AddFeinduraViewControllerDelegate> {
     syncFeinduraAccounts *feinduraAccounts;
     IBOutlet UITableView *uiTableView;
+    IBOutlet UINavigationItem *titleBar;  
 }
 
 @property(nonatomic,retain) syncFeinduraAccounts *feinduraAccounts;
 @property(nonatomic,retain) IBOutlet UITableView *uiTableView;
+@property (nonatomic,retain) UINavigationItem *titleBar;
 
 -(IBAction)showAddFeinduraView:(id)sender;
 -(IBAction)editFeinduraAccounts:(id)sender;

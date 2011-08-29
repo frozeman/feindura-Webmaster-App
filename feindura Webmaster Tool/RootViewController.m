@@ -8,15 +8,30 @@
 
 #import "RootViewController.h"
 #import "feinduraDetailStatsViewController.h"
+#import "feindura_Webmaster_ToolAppDelegate.h"
 
 @implementation RootViewController
 
 @synthesize feinduraAccounts;
 @synthesize uiTableView;
+@synthesize titleBar;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // -> add a title which fits in the navbar
+    UILabel *title = [[UILabel alloc] init];
+    [title setBackgroundColor:[UIColor clearColor]];
+    [title setTextColor:[UIColor whiteColor]];
+    [title setShadowColor:[UIColor darkGrayColor]];
+    [title setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
+    [title setText:NSLocalizedString(@"OVERVIEW_TITLE", nil)];
+    [title sizeToFit];
+    [title setAdjustsFontSizeToFitWidth:true];
+    [titleBar setTitle:NSLocalizedString(@"OVERVIEW_TITLE", nil)];
+    [titleBar setTitleView:title];
+    [title release];
     
     // LOAD feindura Accounts
     syncFeinduraAccounts *tmp = [[syncFeinduraAccounts alloc] init];
@@ -24,6 +39,9 @@
     self.feinduraAccounts.delegate = self;
     [tmp release];
     
+    //(feindura_Webmaster_ToolAppDelegate *)([[UIApplication sharedApplication] delegate]).rootViewController = self; 
+    
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -79,7 +97,6 @@
         cellText = [[UILabel alloc] initWithFrame:CGRectMake( 45, 11, 165, 20 )];
         [cellText setBackgroundColor:[UIColor clearColor]];
         [cellText setTextColor:[UIColor darkGrayColor]];
-        //[cellText setShadowColor:[UIColor clearColor]];
         [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15]];
         [cellText setAdjustsFontSizeToFitWidth:true];
         [cellText setMinimumFontSize: 12.0];
@@ -111,20 +128,20 @@
     for (UILabel *view in [cell.contentView subviews]) {        
         // set tableRow text
         if(view.tag == 1) {            
-            if([feinduraAccount objectForKey:@"title"] != nil && ![[feinduraAccount objectForKey:@"title"] isEqualToString:@""])
-                [view setText:[feinduraAccount objectForKey:@"title"]];
+            if([feinduraAccount objectForKey:@"title"] != nil && ![[feinduraAccount valueForKey:@"title"] isEqualToString:@""])
+                [view setText:[feinduraAccount valueForKey:@"title"]];
             else
-                [view setText:[feinduraAccount objectForKey:@"url"]];
+                [view setText:[feinduraAccount valueForKey:@"url"]];
         }
         
         // set tableRow userStatistics
-        if(view.tag == 2 && [[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCount"] != nil) {            
-            [view setText:[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCount"]];
+        if(view.tag == 2 && [feinduraAccount objectForKey:@"statistics"] != nil && [[feinduraAccount objectForKey:@"statistics"] valueForKey:@"userVisitCount"] != nil) {            
+            [view setText:[[[feinduraAccount objectForKey:@"statistics"] valueForKey:@"userVisitCount"] stringValue]];
         }
     }
     
     // ADD a image
-    if([[feinduraAccount valueForKey:@"status"] isEqualToString:@"failed"]) {
+    if([[feinduraAccount valueForKey:@"status"] isEqualToString:@"FAILED"]) {
         NSString *path = [[NSBundle mainBundle] pathForResource:@"failed.icon" ofType:@"png"];
         UIImage *theImage = [UIImage imageWithContentsOfFile:path];
         cell.imageView.image = theImage;
@@ -226,11 +243,13 @@
     [super viewDidUnload];
     self.feinduraAccounts = nil;
     self.uiTableView = nil;
+    self.titleBar = nil;
 }
 
 - (void)dealloc {
     [feinduraAccounts release];
     [uiTableView release];
+    [titleBar release];
     [super dealloc];
 }
 

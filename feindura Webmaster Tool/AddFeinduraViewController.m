@@ -155,9 +155,9 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
         
         self.request = [ASIFormDataRequest requestWithURL:cmsUrl];
         [self.request setDelegate:self];
-        [self.request setPostValue:@"check" forKey:@"status"];
+        [self.request setPostValue:@"CHECK" forKey:@"status"];
         [self.request setPostValue:self.username.text forKey:@"username"];
-        [self.request setPostValue:self.password.text forKey:@"password"];
+        [self.request setPostValue:[self.password.text MD5] forKey:@"password"];
         [self.request startAsynchronous];
     } else
         [self saveFeinduraAccount];

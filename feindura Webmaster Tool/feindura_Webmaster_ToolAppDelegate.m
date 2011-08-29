@@ -13,7 +13,6 @@
 @synthesize window;
 @synthesize navigationController;
 @synthesize rootViewController;
-@synthesize titleBar;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -22,19 +21,6 @@
     // Add the navigation controller's view to the window and display.
     [window addSubview:[navigationController view]];
     [window makeKeyAndVisible];
-    
-    // -> add a title which fits in the navbar
-    UILabel *title = [[UILabel alloc] init];
-    [title setBackgroundColor:[UIColor clearColor]];
-    [title setTextColor:[UIColor whiteColor]];
-    [title setShadowColor:[UIColor darkGrayColor]];
-    [title setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
-    [title setText:NSLocalizedString(@"OVERVIEW_TITLE", nil)];
-    [title sizeToFit];
-    [title setAdjustsFontSizeToFitWidth:true];
-    [titleBar setTitle:NSLocalizedString(@"OVERVIEW_TITLE", nil)];
-    [titleBar setTitleView:title];
-    [title release];
     
     return true;
 }
@@ -67,6 +53,10 @@
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+
+    
+    //NSLog(@" intet: %@",self.rootViewController.feinduraAccounts.internetActive);
+    [rootViewController.feinduraAccounts updateAccounts];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

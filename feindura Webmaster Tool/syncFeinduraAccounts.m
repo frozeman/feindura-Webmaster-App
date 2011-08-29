@@ -101,6 +101,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     self.dataBase = nil;
     NSMutableDictionary *tmp = [[NSMutableDictionary alloc] initWithContentsOfFile:self.settingsFilePath];
     self.dataBase = tmp;
+    //NSLog(@"DB %@",self.dataBase);
     [tmp release];
 }
 

@@ -137,7 +137,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
                                                               error:&keychainError]
                               forKey:@"password"];
             [self.httpRequest setPostValue:@"fetch" forKey:@"status"];
-            [self.httpRequest setPostValue:accountId forKey:@"id"];
+            [self.httpRequest setUserInfo:[NSDictionary dictionaryWithObject:accountId forKey:@"id"]]; // set id to identify request
             [self.httpRequest startAsynchronous];
         } else
             return false;
@@ -186,20 +186,20 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 // -> FINISHED
 - (void)requestFinished:(ASIHTTPRequest *)request {
     NSLog(@"END fetching new account data from server");
-   
-   
+    
     //...
 
     // STORE success status
-//    NSMutableDictionary *succedAccount = [self.dataBase objectForKey:[request.postData valueForKey:@"id"]];
-//    [succedAccount setValue:@"online" forKey:@"status"];
-//    [self.dataBase setObject:succedAccount forKey:[request.postData valueForKey:@"id"]];
-//    NSLog(@"%@",succedAccount);
-//    [self saveAccounts];
+    NSMutableDictionary *succedAccount = [self.dataBase objectForKey:[request.userInfo valueForKey:@"id"]];
+    [succedAccount setValue:@"works" forKey:@"status"];
+    [self.dataBase setObject:succedAccount forKey:[request.userInfo valueForKey:@"id"]];
+    NSLog(@"%@",succedAccount);
+    [self saveAccounts];
 
     // reload the tableList
     RootViewController *delagateTemp = ((RootViewController *)self.delegate);  
-    [delagateTemp.uiTableView reloadData];  
+    [delagateTemp.uiTableView reloadData];
+    self.httpRequest = nil;
 }
 
 // -> FAILED
@@ -207,16 +207,16 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     NSLog(@"FAILED fetching new account data from server");
     
     // STORE failed status
-    NSMutableDictionary *failedAccount = [self.dataBase objectForKey:[request.postBody valueForKey:@"id"]];    
+    NSMutableDictionary *failedAccount = [self.dataBase objectForKey:[request.userInfo valueForKey:@"id"]];    
     [failedAccount setValue:@"failed" forKey:@"status"];
-    [self.dataBase setObject:failedAccount forKey:[self.dataBase objectForKey:[request.postBody valueForKey:@"id"]]];
+    [self.dataBase setObject:failedAccount forKey:[self.dataBase objectForKey:[request.userInfo valueForKey:@"id"]]];
     
     [self saveAccounts];
     
     // reload the tableList
     RootViewController *delagateTemp = ((RootViewController *)self.delegate);  
     [delagateTemp.uiTableView reloadData];
-    
+    self.httpRequest = nil;
 }
 
 

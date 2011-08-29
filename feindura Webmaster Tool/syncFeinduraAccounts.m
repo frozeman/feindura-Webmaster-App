@@ -9,6 +9,7 @@
 #import "syncFeinduraAccounts.h"
 #import "RootViewController.h"
 #import "SBJson.h"
+#import "SFHFKeychainUtils.h"
 
 static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmasterTool.controller.php";
 
@@ -112,25 +113,35 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 
 - (BOOL)updateAccounts {
     
+    [self loadAccounts];
+    
     // -> FETCH NEW ACCOUNT DATA
+    NSError *keychainError;
     // get feindura account keys
-    NSArray *urls = [self.dataBase allKeys];
+    NSArray *accountIds = [self.dataBase allKeys];
     
     // start loading new data from the servers
-    for (NSString *feinduraUrl in urls) {
+    for (NSString *accountId in accountIds) {
         if(self.internetActive) {
             // ADD feinduraControllerPath
-            NSURL *cmsUrl = [NSURL URLWithString:[feinduraUrl stringByAppendingString:feinduraControllerPath]];
+            NSURL *cmsUrl = [NSURL URLWithString:[[[self.dataBase objectForKey:accountId] objectForKey:@"url"] stringByAppendingString:feinduraControllerPath]];
             //NSLog(@"FULLURL %@",cmsUrl.absoluteURL);
+            
+            // START REQUEST
+            // username,password,status=fetch,id
             self.httpRequest = [ASIFormDataRequest requestWithURL:cmsUrl];
             [self.httpRequest setDelegate:self];
-            [self.httpRequest setPostValue:@"load" forKey:@"status"];
+            [self.httpRequest setPostValue:[[self.dataBase objectForKey:accountId] objectForKey:@"account"] forKey:@"username"];
+            [self.httpRequest setPostValue:[SFHFKeychainUtils getPasswordForUsername:[[self.dataBase objectForKey:accountId] objectForKey:@"account"]
+                                                              andServiceName: [[self.dataBase objectForKey:accountId] objectForKey:@"url"]
+                                                              error:&keychainError]
+                              forKey:@"password"];
+            [self.httpRequest setPostValue:@"fetch" forKey:@"status"];
+            [self.httpRequest setPostValue:accountId forKey:@"id"];
             [self.httpRequest startAsynchronous];
         } else
             return false;
-    }
-    
-    //[self loadAccounts];
+    }    
     return true;
 }
 
@@ -173,22 +184,18 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 - (void)request:(ASIHTTPRequest *)request didReceiveResponseHeaders:(NSDictionary *)responseHeaders {}
 
 // -> FINISHED
-- (void)requestFinished:(ASIHTTPRequest *)requestResponse {
+- (void)requestFinished:(ASIHTTPRequest *)request {
     NSLog(@"END fetching new account data from server");
-    
-    // shorten to original url
-    NSString *orgURL = [[NSString stringWithString:[requestResponse.originalURL absoluteString]] stringByReplacingOccurrencesOfString:feinduraControllerPath withString:@""];
-    NSLog(@"%@",orgURL);
-    
-    
+   
+   
     //...
 
     // STORE success status
-    NSMutableDictionary *succedAccount = [self.dataBase objectForKey:orgURL];    
-    [succedAccount setValue:@"online" forKey:@"status"];
-    [self.dataBase setObject:succedAccount forKey:orgURL];
-    
-    [self saveAccounts];
+//    NSMutableDictionary *succedAccount = [self.dataBase objectForKey:[request.postData valueForKey:@"id"]];
+//    [succedAccount setValue:@"online" forKey:@"status"];
+//    [self.dataBase setObject:succedAccount forKey:[request.postData valueForKey:@"id"]];
+//    NSLog(@"%@",succedAccount);
+//    [self saveAccounts];
 
     // reload the tableList
     RootViewController *delagateTemp = ((RootViewController *)self.delegate);  
@@ -199,19 +206,16 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 - (void)requestFailed:(ASIHTTPRequest *)request {
     NSLog(@"FAILED fetching new account data from server");
     
-    // shorten to original url
-    NSString *orgURL = [[NSString stringWithString:[request.originalURL absoluteString]] stringByReplacingOccurrencesOfString:feinduraControllerPath withString:@""];
-    
     // STORE failed status
-    NSMutableDictionary *failedAccount = [self.dataBase objectForKey:orgURL];    
+    NSMutableDictionary *failedAccount = [self.dataBase objectForKey:[request.postBody valueForKey:@"id"]];    
     [failedAccount setValue:@"failed" forKey:@"status"];
-    [self.dataBase setObject:failedAccount forKey:orgURL];
+    [self.dataBase setObject:failedAccount forKey:[self.dataBase objectForKey:[request.postBody valueForKey:@"id"]]];
     
     [self saveAccounts];
     
     // reload the tableList
     RootViewController *delagateTemp = ((RootViewController *)self.delegate);  
-    [delagateTemp.uiTableView reloadData];   
+    [delagateTemp.uiTableView reloadData];
     
 }
 

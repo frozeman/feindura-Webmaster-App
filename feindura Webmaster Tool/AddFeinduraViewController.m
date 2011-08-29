@@ -170,22 +170,37 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     NSError *keychainError;
     
     // ->> STORE password in keychain
-    [SFHFKeychainUtils storeUsername:self.username.text andPassword:self.password.text forServiceName:self.url.text updateExisting:true error:&keychainError];
+    [SFHFKeychainUtils storeUsername:self.username.text andPassword:[self.password.text MD5] forServiceName:self.url.text updateExisting:true error:&keychainError];
     
     /*
      to get it:
     [SFHFKeychainUtils getPasswordForUsername:self.username.text andServiceName: self.url.text error:&keychainError];
      */     
-
+    
+    BOOL accountAlreadyExists = false;
+    for (NSDictionary *account in self.feinduraAccountsFromRootView.dataBase) {
+        NSLog(@"%@",account);
+        if([[[self.feinduraAccountsFromRootView.dataBase objectForKey:account] objectForKey:@"url"] isEqualToString:self.url.text])
+            accountAlreadyExists = true;
+    }
+    
     // if account doesnt already exist OR has a new username
-    if([self.feinduraAccountsFromRootView.dataBase valueForKey:self.url.text] == nil || ([self.feinduraAccountsFromRootView.dataBase valueForKey:self.url.text] != nil && ![[[self.feinduraAccountsFromRootView.dataBase objectForKey:self.url.text] valueForKey:@"username"] isEqualToString: self.username.text])) {
+    if(!accountAlreadyExists) {
         
-        // create dictionaries for storing current feindura account
-        NSMutableDictionary* currentAccount = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                                   self.username.text,@"username",nil];
-                                                //[self.password.text MD5],@"password", nil];
+        // CREATE A NEW ACCOUNT
+        NSDictionary* currentAccount = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                               self.url.text,@"url",
+                                               @"",@"title",
+                                               self.username.text,@"account",nil];
+                                               //[self.password.text MD5],@"password", nil];
+        
+        // generate unique key
+        CFUUIDRef identifier = CFUUIDCreate(NULL);
+        NSString* identifierString = (NSString*)CFUUIDCreateString(NULL, identifier);
+        CFRelease(identifier);
+        
         // add new feindura account to the database
-        [self.feinduraAccountsFromRootView.dataBase setObject: currentAccount forKey:self.url.text];
+        [self.feinduraAccountsFromRootView.dataBase setObject: currentAccount forKey:identifierString];
         //[self.feinduraAccountsFromRootView.dataBase addObject:currentAccount];
         [self.feinduraAccountsFromRootView saveAccounts];
         

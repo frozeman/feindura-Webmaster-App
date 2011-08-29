@@ -111,10 +111,10 @@
     for (UILabel *view in [cell.contentView subviews]) {        
         // set tableRow text
         if(view.tag == 1) {            
-            if([feinduraAccount objectForKey:@"title"] != nil)
+            if([feinduraAccount objectForKey:@"title"] != nil && ![[feinduraAccount objectForKey:@"title"] isEqualToString:@""])
                 [view setText:[feinduraAccount objectForKey:@"title"]];
             else
-                [view setText:aKey];
+                [view setText:[feinduraAccount objectForKey:@"url"]];
         }
         
         // set tableRow userStatistics

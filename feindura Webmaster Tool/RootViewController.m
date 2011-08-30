@@ -9,16 +9,32 @@
 #import "RootViewController.h"
 #import "feinduraDetailStatsViewController.h"
 #import "feindura_Webmaster_ToolAppDelegate.h"
+#import "NSString+MD5.h"
+#import "SFHFKeychainUtils.h"
 
 @implementation RootViewController
 
+@synthesize appDelegate;
 @synthesize feinduraAccounts;
 @synthesize uiTableView;
 @synthesize titleBar;
 
+/*
+- (id)init {
+    if(self = [super init]) {
+  
+    }
+    return self;
+}
+ */
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // -> SET transport this instance of the rootViewController to the AppDelegate
+    self.appDelegate = [[UIApplication sharedApplication] delegate];
+    self.appDelegate.rootViewController = self;
     
     // -> add a title which fits in the navbar
     UILabel *title = [[UILabel alloc] init];
@@ -33,13 +49,23 @@
     [titleBar setTitleView:title];
     [title release];
     
+    
     // LOAD feindura Accounts
     syncFeinduraAccounts *tmp = [[syncFeinduraAccounts alloc] init];
     self.feinduraAccounts = tmp;
     self.feinduraAccounts.delegate = self;
     [tmp release];
     
-    //(feindura_Webmaster_ToolAppDelegate *)([[UIApplication sharedApplication] delegate]).rootViewController = self; 
+    // --------------------------------------------------------------------------------------------
+    // STORE DEFAULT account password (http:/demo.feindura.org)
+    // -> STORE user data
+    NSError *keychainError;
+    
+    // ->> STORE password in keychain
+    [SFHFKeychainUtils storeUsername:@"demo" andPassword:[@"demo" MD5] forServiceName:@"http://demo.feindura.org/cms" updateExisting:true error:&keychainError];
+    // --------------------------------------------------------------------------------------------
+    
+    //(RootViewController *)([[UIApplication sharedApplication] delegate]).rootViewController = self; 
     
 
 }
@@ -94,15 +120,22 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];         
         
         UILabel *cellText;
-        cellText = [[UILabel alloc] initWithFrame:CGRectMake( 45, 11, 165, 20 )];
+        cellText = [[UILabel alloc] initWithFrame:CGRectMake( 45, 5, 165, 20 )];
         [cellText setBackgroundColor:[UIColor clearColor]];
         [cellText setTextColor:[UIColor darkGrayColor]];
         [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15]];
         [cellText setAdjustsFontSizeToFitWidth:true];
         [cellText setMinimumFontSize: 12.0];
         [cellText setTag:1];
-        [cell.contentView addSubview: cellText];
-        [cellText release];
+        
+        UILabel *cellSubText;
+        cellSubText = [[UILabel alloc] initWithFrame:CGRectMake( 45, 22, 165, 20 )];
+        [cellSubText setBackgroundColor:[UIColor clearColor]];
+        [cellSubText setTextColor:[UIColor grayColor]];
+        [cellSubText setFont:[UIFont fontWithName:@"Helvetica" size:10]];
+        [cellSubText setAdjustsFontSizeToFitWidth:true];
+        [cellSubText setMinimumFontSize: 8.0];
+        [cellSubText setTag:2];
         
         UILabel *cellStats;
         cellStats = [[UILabel alloc] initWithFrame:CGRectMake( 220, 11, 65, 20 )];
@@ -112,12 +145,19 @@
         [cellStats setAdjustsFontSizeToFitWidth:true];
         [cellStats setMinimumFontSize: 8.0];
         [cellStats setTextAlignment:UITextAlignmentRight];
-        [cellStats setTag:2];
+        [cellStats setTag:3];
+        
+        // add the subviews in the right order
+        [cell.contentView addSubview: cellSubText];
+        [cell.contentView addSubview: cellText];
         [cell.contentView addSubview: cellStats];
+        [cellSubText release];
+        [cellText release];
         [cellStats release];
         
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-    }    
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // temporary!!!!
+    }
     
     // get feindura account keys from indexPath.row
     NSArray *keys = [self.feinduraAccounts.dataBase allKeys];
@@ -127,15 +167,20 @@
     // add the text to the cells
     for (UILabel *view in [cell.contentView subviews]) {        
         // set tableRow text
-        if(view.tag == 1) {            
+        if(view.tag == 1) {  
             if([feinduraAccount objectForKey:@"title"] != nil && ![[feinduraAccount valueForKey:@"title"] isEqualToString:@""])
                 [view setText:[feinduraAccount valueForKey:@"title"]];
             else
                 [view setText:[feinduraAccount valueForKey:@"url"]];
         }
         
+        // set tableRow subtext
+        if(view.tag == 2) {            
+            [view setText:[feinduraAccount valueForKey:@"url"]];
+        }
+        
         // set tableRow userStatistics
-        if(view.tag == 2 && [feinduraAccount objectForKey:@"statistics"] != nil && [[feinduraAccount objectForKey:@"statistics"] valueForKey:@"userVisitCount"] != nil) {            
+        if(view.tag == 3 && [feinduraAccount objectForKey:@"statistics"] != nil && [[feinduraAccount objectForKey:@"statistics"] valueForKey:@"userVisitCount"] != nil) {            
             [view setText:[[[feinduraAccount objectForKey:@"statistics"] valueForKey:@"userVisitCount"] stringValue]];
         }
     }
@@ -178,21 +223,31 @@
 }
 */
 
-/*
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
+        
+        // get feindura account keys from indexPath.row
+        NSArray *keys = [self.feinduraAccounts.dataBase allKeys];
+        id aKey = [keys objectAtIndex:indexPath.row];
+        
+        // delete account from the database
+        [self.feinduraAccounts.dataBase removeObjectForKey:aKey];
+        [self.feinduraAccounts saveAccounts];
+        
         // Delete the row from the data source.
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        
     }
+    /*
     else if (editingStyle == UITableViewCellEditingStyleInsert)
     {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-    }   
+    } 
+    */
 }
-*/
 
 /*
 // Override to support rearranging the table view.
@@ -214,6 +269,7 @@
     [cell.imageView setHidden:true];
 */
 
+/*
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     feinduraDetailStatsViewController *detailViewController = [[feinduraDetailStatsViewController alloc] initWithNibName:@"feinduraDetailStatsViewController" bundle:nil];
     
@@ -231,6 +287,7 @@
     [self.navigationController pushViewController:detailViewController animated:YES];
     [detailViewController release];
 }
+ */
 
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.

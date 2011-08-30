@@ -113,8 +113,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 
 - (BOOL)updateAccounts {
     
-    if(self.internetActive) {
-        
+    if(self.internetActive) {        
         // -> FETCH NEW ACCOUNT DATA
         NSError *keychainError;
         // get feindura account keys

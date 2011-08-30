@@ -10,12 +10,16 @@
 #import "AddFeinduraViewController.h"
 #import "syncFeinduraAccounts.h"
 
+@class feindura_Webmaster_ToolAppDelegate;
+
 @interface RootViewController : UITableViewController <AddFeinduraViewControllerDelegate> {
+    feindura_Webmaster_ToolAppDelegate *appDelegate;
     syncFeinduraAccounts *feinduraAccounts;
     IBOutlet UITableView *uiTableView;
     IBOutlet UINavigationItem *titleBar;
 }
 
+@property(nonatomic,retain) feindura_Webmaster_ToolAppDelegate *appDelegate;
 @property(nonatomic,retain) syncFeinduraAccounts *feinduraAccounts;
 @property(nonatomic,retain) IBOutlet UITableView *uiTableView;
 @property (nonatomic,retain) UINavigationItem *titleBar;

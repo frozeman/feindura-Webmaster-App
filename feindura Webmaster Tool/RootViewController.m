@@ -65,8 +65,8 @@
     [SFHFKeychainUtils storeUsername:@"demo" andPassword:[@"demo" MD5] forServiceName:@"http://demo.feindura.org/cms" updateExisting:true error:&keychainError];
     // --------------------------------------------------------------------------------------------
     
-    //(RootViewController *)([[UIApplication sharedApplication] delegate]).rootViewController = self; 
-    
+    // -> basic table setup
+    self.uiTableView.allowsSelectionDuringEditing = true;    
 
 }
 
@@ -156,7 +156,8 @@
         [cellStats release];
         
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-        [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // temporary!!!!
+        //[cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // temporary!!!!
+        [cell setSelected:false];
     }
     
     // get feindura account keys from indexPath.row
@@ -269,25 +270,39 @@
     [cell.imageView setHidden:true];
 */
 
-/*
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    feinduraDetailStatsViewController *detailViewController = [[feinduraDetailStatsViewController alloc] initWithNibName:@"feinduraDetailStatsViewController" bundle:nil];
     
-    // get feindura account keys from indexPath.row
-    NSArray *keys = [self.feinduraAccounts.dataBase allKeys];
-    id aKey = [keys objectAtIndex:indexPath.row];
-    id feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:aKey];
-    
-    if([feinduraAccount objectForKey:@"title"] != nil)
-        [detailViewController setTitle:[feinduraAccount objectForKey:@"title"]];
-    else
-        [detailViewController setTitle:aKey];
-    
-    // Pass the selected object to the new view controller.
-    [self.navigationController pushViewController:detailViewController animated:YES];
-    [detailViewController release];
+    // EDIT account
+    if([tableView cellForRowAtIndexPath:indexPath].editing) {
+        
+        // get feindura account keys from indexPath.row
+        NSArray *keys = [self.feinduraAccounts.dataBase allKeys];
+        id aKey = [keys objectAtIndex:indexPath.row];
+        id feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:aKey];
+        
+        [self showEditFeinduraAccountView:feinduraAccount];
+     
+    // SHOW detail
+    } else {
+        /*
+        feinduraDetailStatsViewController *detailViewController = [[feinduraDetailStatsViewController alloc] initWithNibName:@"feinduraDetailStatsViewController" bundle:nil];
+        
+        // get feindura account keys from indexPath.row
+        NSArray *keys = [self.feinduraAccounts.dataBase allKeys];
+        id aKey = [keys objectAtIndex:indexPath.row];
+        id feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:aKey];
+        
+        if([feinduraAccount objectForKey:@"title"] != nil)
+            [detailViewController setTitle:[feinduraAccount objectForKey:@"title"]];
+        else
+            [detailViewController setTitle:aKey];
+        
+        // Pass the selected object to the new view controller.
+        [self.navigationController pushViewController:detailViewController animated:YES];
+        [detailViewController release];
+         */
+    }
 }
- */
 
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
@@ -313,15 +328,28 @@
 
 #pragma mark Methods
 
--(IBAction)showAddFeinduraView:(id)sender {
+-(IBAction)showAddFeinduraAccountView:(id)sender {
     
-    AddFeinduraViewController *modalView = [[AddFeinduraViewController alloc] init];
+    FeinduraAccountViewController *modalView = [[FeinduraAccountViewController alloc] init];
     modalView.delegate = self;
     modalView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
 
 	[self presentModalViewController:modalView animated:YES];
     [modalView release];
     
+}
+
+-(void)showEditFeinduraAccountView:(NSDictionary *)account {
+    
+    FeinduraAccountViewController *modalView = [[FeinduraAccountViewController alloc] init];
+    modalView.delegate = self;
+    modalView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    
+    // transport accunt data
+    modalView.editAccount = account;
+    
+	[self presentModalViewController:modalView animated:YES];
+    [modalView release];
 }
 
 -(IBAction)editFeinduraAccounts:(id)sender {

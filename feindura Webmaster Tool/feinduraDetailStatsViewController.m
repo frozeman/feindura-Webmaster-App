@@ -6,9 +6,9 @@
 //  Copyright 2011 [frozeman.de]. All rights reserved.
 //
 
-#import "feinduraDetailStatsViewController.h"
+#import "FeinduraDetailStatsViewController.h"
 
-@implementation feinduraDetailStatsViewController
+@implementation FeinduraDetailStatsViewController
 
 @synthesize feinduraDetailStats;
 

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface feinduraDetailStatsViewController : UITableViewController {
+@interface FeinduraDetailStatsViewController : UITableViewController {
     NSMutableArray *feinduraDetailStats;
 }
 

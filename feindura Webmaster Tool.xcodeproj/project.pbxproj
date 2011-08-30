@@ -10,8 +10,8 @@
 		A30E74E613A4FD000026ECFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A30E74E513A4FD000026ECFF /* README.md */; };
 		A31BCA49140AD0F600910977 /* failed.icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A31BCA47140AD0F600910977 /* failed.icon.png */; };
 		A31CB23814052FFB001FE17A /* syncFeinduraAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = A31CB23714052FFB001FE17A /* syncFeinduraAccounts.m */; };
-		A3337C1313FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3337C1113FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.m */; };
-		A3337C1413FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3337C1213FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.xib */; };
+		A37DB305140D81D300C3E7D3 /* FeinduraDetailStatsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A37DB302140D81D300C3E7D3 /* FeinduraDetailStatsViewController.xib */; };
+		A37DB306140D81D300C3E7D3 /* FeinduraDetailStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A37DB304140D81D300C3E7D3 /* FeinduraDetailStatsViewController.m */; };
 		A38A212A13ABDB6B00866212 /* settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = A38A212913ABDB6B00866212 /* settings.plist */; };
 		A38FEFED13AF7F4300250641 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = A38FEFEC13AF7F4300250641 /* NSString+MD5.m */; };
 		A390809613B1FE7400F26A6C /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A390809513B1FE7400F26A6C /* SFHFKeychainUtils.m */; };
@@ -44,8 +44,8 @@
 		A3AB895713A4D4300025FE50 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A3AB895513A4D4300025FE50 /* InfoPlist.strings */; };
 		A3AB895A13A4D4300025FE50 /* feindura_Webmaster_ToolTests.h in Resources */ = {isa = PBXBuildFile; fileRef = A3AB895913A4D4300025FE50 /* feindura_Webmaster_ToolTests.h */; };
 		A3AB895C13A4D4300025FE50 /* feindura_Webmaster_ToolTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A3AB895B13A4D4300025FE50 /* feindura_Webmaster_ToolTests.m */; };
-		A3AB896813A4D5750025FE50 /* AddFeinduraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3AB896613A4D5750025FE50 /* AddFeinduraViewController.m */; };
-		A3AB896913A4D5750025FE50 /* AddFeinduraViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3AB896713A4D5750025FE50 /* AddFeinduraViewController.xib */; };
+		A3AB896813A4D5750025FE50 /* FeinduraAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3AB896613A4D5750025FE50 /* FeinduraAccountViewController.m */; };
+		A3AB896913A4D5750025FE50 /* FeinduraAccountViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3AB896713A4D5750025FE50 /* FeinduraAccountViewController.xib */; };
 		A3AB897D13A4DE0E0025FE50 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A3AB897F13A4DE0E0025FE50 /* Localizable.strings */; };
 		A3B2CFB5140AD6EB00B85550 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = A3B2CFB4140AD6EB00B85550 /* Default.png */; };
 		A3B2CFB8140AD76700B85550 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3B2CFB7140AD76700B85550 /* Default@2x.png */; };
@@ -79,9 +79,9 @@
 		A31BCA47140AD0F600910977 /* failed.icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = failed.icon.png; path = Images/failed.icon.png; sourceTree = "<group>"; };
 		A31CB23614052FFB001FE17A /* syncFeinduraAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = syncFeinduraAccounts.h; sourceTree = "<group>"; };
 		A31CB23714052FFB001FE17A /* syncFeinduraAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = syncFeinduraAccounts.m; sourceTree = "<group>"; };
-		A3337C1013FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = feinduraDetailStatsViewController.h; sourceTree = "<group>"; };
-		A3337C1113FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = feinduraDetailStatsViewController.m; sourceTree = "<group>"; };
-		A3337C1213FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = feinduraDetailStatsViewController.xib; sourceTree = "<group>"; };
+		A37DB302140D81D300C3E7D3 /* FeinduraDetailStatsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeinduraDetailStatsViewController.xib; sourceTree = "<group>"; };
+		A37DB303140D81D300C3E7D3 /* FeinduraDetailStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeinduraDetailStatsViewController.h; sourceTree = "<group>"; };
+		A37DB304140D81D300C3E7D3 /* FeinduraDetailStatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeinduraDetailStatsViewController.m; sourceTree = "<group>"; };
 		A38A212913ABDB6B00866212 /* settings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = settings.plist; sourceTree = "<group>"; };
 		A38FEFEB13AF7F4300250641 /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		A38FEFEC13AF7F4300250641 /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
@@ -135,9 +135,9 @@
 		A3AB895813A4D4300025FE50 /* feindura Webmaster ToolTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "feindura Webmaster ToolTests-Prefix.pch"; sourceTree = "<group>"; };
 		A3AB895913A4D4300025FE50 /* feindura_Webmaster_ToolTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = feindura_Webmaster_ToolTests.h; sourceTree = "<group>"; };
 		A3AB895B13A4D4300025FE50 /* feindura_Webmaster_ToolTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = feindura_Webmaster_ToolTests.m; sourceTree = "<group>"; };
-		A3AB896513A4D5750025FE50 /* AddFeinduraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddFeinduraViewController.h; sourceTree = "<group>"; };
-		A3AB896613A4D5750025FE50 /* AddFeinduraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddFeinduraViewController.m; sourceTree = "<group>"; };
-		A3AB896713A4D5750025FE50 /* AddFeinduraViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddFeinduraViewController.xib; sourceTree = "<group>"; };
+		A3AB896513A4D5750025FE50 /* FeinduraAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeinduraAccountViewController.h; sourceTree = "<group>"; };
+		A3AB896613A4D5750025FE50 /* FeinduraAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeinduraAccountViewController.m; sourceTree = "<group>"; };
+		A3AB896713A4D5750025FE50 /* FeinduraAccountViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeinduraAccountViewController.xib; sourceTree = "<group>"; };
 		A3AB897E13A4DE0E0025FE50 /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A3AB898013A4DE360025FE50 /* de */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A3AB898113A4DE3B0025FE50 /* fr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -216,9 +216,9 @@
 				A3AB894113A4D42F0025FE50 /* RootViewController.h */,
 				A3AB894213A4D42F0025FE50 /* RootViewController.m */,
 				A3AB894413A4D42F0025FE50 /* RootViewController.xib */,
-				A3337C1013FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.h */,
-				A3337C1113FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.m */,
-				A3337C1213FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.xib */,
+				A37DB302140D81D300C3E7D3 /* FeinduraDetailStatsViewController.xib */,
+				A37DB303140D81D300C3E7D3 /* FeinduraDetailStatsViewController.h */,
+				A37DB304140D81D300C3E7D3 /* FeinduraDetailStatsViewController.m */,
 			);
 			name = TableViews;
 			sourceTree = "<group>";
@@ -380,9 +380,9 @@
 		A3AB896A13A4D5810025FE50 /* ModalViews */ = {
 			isa = PBXGroup;
 			children = (
-				A3AB896513A4D5750025FE50 /* AddFeinduraViewController.h */,
-				A3AB896613A4D5750025FE50 /* AddFeinduraViewController.m */,
-				A3AB896713A4D5750025FE50 /* AddFeinduraViewController.xib */,
+				A3AB896513A4D5750025FE50 /* FeinduraAccountViewController.h */,
+				A3AB896613A4D5750025FE50 /* FeinduraAccountViewController.m */,
+				A3AB896713A4D5750025FE50 /* FeinduraAccountViewController.xib */,
 			);
 			name = ModalViews;
 			sourceTree = "<group>";
@@ -492,15 +492,15 @@
 				A3AB893713A4D42F0025FE50 /* InfoPlist.strings in Resources */,
 				A3AB894013A4D42F0025FE50 /* MainWindow.xib in Resources */,
 				A3AB894613A4D42F0025FE50 /* RootViewController.xib in Resources */,
-				A3AB896913A4D5750025FE50 /* AddFeinduraViewController.xib in Resources */,
+				A3AB896913A4D5750025FE50 /* FeinduraAccountViewController.xib in Resources */,
 				A3AB897D13A4DE0E0025FE50 /* Localizable.strings in Resources */,
 				A30E74E613A4FD000026ECFF /* README.md in Resources */,
 				A38A212A13ABDB6B00866212 /* settings.plist in Resources */,
-				A3337C1413FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.xib in Resources */,
 				A31BCA49140AD0F600910977 /* failed.icon.png in Resources */,
 				A3B2CFB5140AD6EB00B85550 /* Default.png in Resources */,
 				A3B2CFB8140AD76700B85550 /* Default@2x.png in Resources */,
 				A3B2CFBA140AD9F500B85550 /* default.icon.png in Resources */,
+				A37DB305140D81D300C3E7D3 /* FeinduraDetailStatsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -539,7 +539,7 @@
 				A3AB893A13A4D42F0025FE50 /* main.m in Sources */,
 				A3AB893D13A4D42F0025FE50 /* feindura_Webmaster_ToolAppDelegate.m in Sources */,
 				A3AB894313A4D42F0025FE50 /* RootViewController.m in Sources */,
-				A3AB896813A4D5750025FE50 /* AddFeinduraViewController.m in Sources */,
+				A3AB896813A4D5750025FE50 /* FeinduraAccountViewController.m in Sources */,
 				A38FEFED13AF7F4300250641 /* NSString+MD5.m in Sources */,
 				A393670813B0A37200ADBD73 /* ASIAuthenticationDialog.m in Sources */,
 				A393670913B0A37200ADBD73 /* ASIDataCompressor.m in Sources */,
@@ -551,7 +551,6 @@
 				A393670F13B0A37200ADBD73 /* ASINetworkQueue.m in Sources */,
 				A393671213B0A3A200ADBD73 /* Reachability.m in Sources */,
 				A390809613B1FE7400F26A6C /* SFHFKeychainUtils.m in Sources */,
-				A3337C1313FDCC3E00ABC6B9 /* feinduraDetailStatsViewController.m in Sources */,
 				A31CB23814052FFB001FE17A /* syncFeinduraAccounts.m in Sources */,
 				A3B2CFD6140ADFF300B85550 /* NSObject+SBJson.m in Sources */,
 				A3B2CFD7140ADFF300B85550 /* SBJsonParser.m in Sources */,
@@ -565,6 +564,7 @@
 				A3B2CFDF140ADFF300B85550 /* SBJsonTokeniser.m in Sources */,
 				A3B2CFE0140ADFF300B85550 /* SBJsonUTF8Stream.m in Sources */,
 				A3B2CFE1140ADFF300B85550 /* SBJsonWriter.m in Sources */,
+				A37DB306140D81D300C3E7D3 /* FeinduraDetailStatsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

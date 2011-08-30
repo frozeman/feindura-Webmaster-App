@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AddFeinduraViewController.h"
+#import "FeinduraAccountViewController.h"
 #import "syncFeinduraAccounts.h"
 
 @class feindura_Webmaster_ToolAppDelegate;
@@ -24,7 +24,8 @@
 @property(nonatomic,retain) IBOutlet UITableView *uiTableView;
 @property (nonatomic,retain) UINavigationItem *titleBar;
 
--(IBAction)showAddFeinduraView:(id)sender;
+-(IBAction)showAddFeinduraAccountView:(id)sender;
+-(void)showEditFeinduraAccountView:(NSDictionary *)account;
 -(IBAction)editFeinduraAccounts:(id)sender;
 -(IBAction)refreshFeinduraAccounts:(id)sender;
 

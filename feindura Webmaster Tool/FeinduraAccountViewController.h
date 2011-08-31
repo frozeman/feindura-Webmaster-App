@@ -9,22 +9,24 @@
 #import <UIKit/UIKit.h>
 #import "ASIFormDataRequest.h"
 #import "Reachability.h"
-#import "syncFeinduraAccounts.h"
+
+@class RootViewController;
 
 #pragma mark Protocol
 
-@protocol AddFeinduraViewControllerDelegate <NSObject>
+@protocol FeinduraAccountViewControllerDelegate <NSObject>
 
 -(void)DismissAddFeinduraView;
 
 @end
 
 
+
 #pragma mark Class
 
 @interface FeinduraAccountViewController : UIViewController <UIScrollViewDelegate,UITextFieldDelegate,ASIHTTPRequestDelegate> {
     
-    id<AddFeinduraViewControllerDelegate> delegate;
+    id<FeinduraAccountViewControllerDelegate> delegate;
     IBOutlet UIScrollView *scrollView;
     IBOutlet UINavigationItem *titleBar;
     
@@ -39,11 +41,11 @@
     UIAlertView *wrongFeinduraUrl;
     
     ASIFormDataRequest *request;    
-    syncFeinduraAccounts *feinduraAccountsFromRootView;
+    RootViewController *rootViewController;
     NSDictionary *editAccount;
 }
 
-@property(nonatomic,assign) id<AddFeinduraViewControllerDelegate> delegate;
+@property(nonatomic,assign) id<FeinduraAccountViewControllerDelegate> delegate;
 @property(nonatomic,retain) UIScrollView *scrollView;
 @property(nonatomic,retain) UINavigationItem *titleBar;
 @property(nonatomic,retain) UILabel *urlTitle;
@@ -55,11 +57,11 @@
 @property(nonatomic,retain) UIAlertView *wrongAccount;
 @property(nonatomic,retain) UIAlertView *wrongFeinduraUrl;
 @property(nonatomic,retain) ASIFormDataRequest *request;
-@property(nonatomic,retain) syncFeinduraAccounts *feinduraAccountsFromRootView;
+@property(nonatomic,retain) RootViewController *rootViewController;
 @property(nonatomic,retain) NSDictionary *editAccount;
 
-- (IBAction)buttonCancelAddFeindura:(id)sender;
-- (IBAction)buttonSaveFeinduraAccount:(id)sender;
+- (IBAction)buttonCancel:(id)sender;
+- (IBAction)buttonSave:(id)sender;
 - (void)checkFeinduraAccount;
 - (void)saveFeinduraAccount;
 - (UITextField*)textFieldsAreEmpty;

@@ -22,7 +22,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 @synthesize url, username, password; //TextFields
 @synthesize wrongUrl, wrongAccount, wrongFeinduraUrl; // Alerts
 @synthesize request; // Request
-@synthesize feinduraAccountsFromRootView;
+@synthesize rootViewController;
 @synthesize editAccount;
 
 // METHODS
@@ -50,9 +50,8 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [super viewDidLoad];
     
     // get the feindura accounts form the parentview
-    syncFeinduraAccounts *delagateTemp = ((RootViewController *)self.delegate).feinduraAccounts;
-    self.feinduraAccountsFromRootView = delagateTemp;
-    [delagateTemp release];
+    RootViewController *delagateTemp = ((RootViewController *)self.delegate);
+    self.rootViewController = delagateTemp;
     
     // -> BASIC SETUP
     // -> add a title which fits in the navbar
@@ -112,7 +111,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [request clearDelegatesAndCancel];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    self.feinduraAccountsFromRootView = nil;
+    self.rootViewController = nil;
     self.wrongFeinduraUrl = nil;
     self.wrongAccount = nil;
     self.wrongUrl = nil;
@@ -153,10 +152,10 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 
 #pragma mark Methods
 
-- (IBAction)buttonCancelAddFeindura:(id)sender {
+- (IBAction)buttonCancel:(id)sender {
 	[self.delegate DismissAddFeinduraView];
 }
-- (IBAction)buttonSaveFeinduraAccount:(id)sender {
+- (IBAction)buttonSave:(id)sender {
     
     // repair url
     [self repairURL];
@@ -177,7 +176,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 
 - (void)checkFeinduraAccount {
     
-    if(self.feinduraAccountsFromRootView.internetActive) {
+    if(self.rootViewController.feinduraAccounts.internetActive) {
         NSString *tempUrl = [[NSString stringWithString:self.url.text] stringByAppendingString:feinduraControllerPath];
         NSURL *cmsUrl = [NSURL URLWithString:tempUrl];
         //NSLog(@"FULLURL %@",tempUrl);
@@ -195,8 +194,10 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 
 - (void)saveFeinduraAccount {    
 
-    // -> STORE user data    
+    // vars   
     NSError *keychainError;
+    NSString* accountId;
+    BOOL accountAlreadyExists = false;
     
     // ->> STORE password in keychain
     [SFHFKeychainUtils storeUsername:self.username.text andPassword:[self.password.text MD5] forServiceName:self.url.text updateExisting:true error:&keychainError];
@@ -204,38 +205,55 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     /*
      to get it:
     [SFHFKeychainUtils getPasswordForUsername:self.username.text andServiceName: self.url.text error:&keychainError];
-     */     
+     */
     
-    BOOL accountAlreadyExists = false;
-    for (NSDictionary *account in self.feinduraAccountsFromRootView.dataBase) {
-        NSLog(@"%@",account);
-        if([[[self.feinduraAccountsFromRootView.dataBase objectForKey:account] objectForKey:@"url"] isEqualToString:self.url.text])
+    // STORE entered ACCOUNT DATA
+    NSMutableDictionary* currentAccount = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+                                    self.url.text,@"url",
+                                    @"",@"title",
+                                    self.username.text,@"account",nil];
+    //[self.password.text MD5],@"password", nil];
+    
+    
+    // if EXISTING ACCOUNT (if url matches an existing one)
+    for (NSString *accountKey in [self.rootViewController.feinduraAccounts.dataBase objectForKey:@"sortOrder"]) {
+        if([[[self.rootViewController.feinduraAccounts.dataBase objectForKey:accountKey] objectForKey:@"url"] isEqualToString:self.url.text]) {
             accountAlreadyExists = true;
+            accountId = accountKey;
+            self.editAccount = [self.rootViewController.feinduraAccounts.dataBase objectForKey:accountKey];
+        }
     }
     
-    // if account doesnt already exist OR has a new username
-    if(!accountAlreadyExists) {
+    // if EDIT ACCOUNT
+    if(self.editAccount != NULL) {
+        if(!accountAlreadyExists)
+            accountId = [self.editAccount objectForKey:@"accountId"];
         
-        // CREATE A NEW ACCOUNT
-        NSDictionary* currentAccount = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                               self.url.text,@"url",
-                                               @"",@"title",
-                                               self.username.text,@"account",nil];
-                                               //[self.password.text MD5],@"password", nil];
-        
+        [currentAccount setObject:[self.editAccount objectForKey:@"title"] forKey:@"title"];
+        [currentAccount setObject:[self.editAccount objectForKey:@"statistics"] forKey:@"statistics"];
+    
+    // if NEW ACCOUNT
+    } else {
         // generate unique key
         CFUUIDRef identifier = CFUUIDCreate(NULL);
-        NSString* identifierString = (NSString*)CFUUIDCreateString(NULL, identifier);
+        accountId = (NSString*)CFUUIDCreateString(NULL, identifier);
         CFRelease(identifier);
         
-        // add new feindura account to the database
-        [self.feinduraAccountsFromRootView.dataBase setObject: currentAccount forKey:identifierString];
-        //[self.feinduraAccountsFromRootView.dataBase addObject:currentAccount];
-        [self.feinduraAccountsFromRootView saveAccounts];
-        
-        [currentAccount release];
+        // add new accountId to the order array
+        NSMutableArray *sortOrderArray = [[NSMutableArray alloc] initWithArray:[self.rootViewController.feinduraAccounts.dataBase objectForKey:@"sortOrder"]];
+        [sortOrderArray addObject:accountId];
+        [self.rootViewController.feinduraAccounts.dataBase setObject:sortOrderArray forKey:@"sortOrder"];
+        [sortOrderArray release];
+        [accountId release];
     }
     
+    // add new feindura account to the database
+    [self.rootViewController.feinduraAccounts.dataBase setObject: currentAccount forKey:accountId];
+    [self.rootViewController.feinduraAccounts saveAccounts];
+    
+    [currentAccount release];
+
+    [self.rootViewController.uiTableView setEditing:false animated:false];
 	[delegate DismissAddFeinduraView];
 }
 
@@ -375,8 +393,6 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     
     [self.wrongUrl show];
     [self.url becomeFirstResponder];
-    
-    //NSError *error = [request error];
 
 }
 

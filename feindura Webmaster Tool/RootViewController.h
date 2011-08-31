@@ -12,7 +12,7 @@
 
 @class feindura_Webmaster_ToolAppDelegate;
 
-@interface RootViewController : UITableViewController <AddFeinduraViewControllerDelegate> {
+@interface RootViewController : UITableViewController <FeinduraAccountViewControllerDelegate> {
     feindura_Webmaster_ToolAppDelegate *appDelegate;
     syncFeinduraAccounts *feinduraAccounts;
     IBOutlet UITableView *uiTableView;

@@ -106,8 +106,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSArray *accountNumber = [self.feinduraAccounts.dataBase allKeys];
-    return [accountNumber count];
+    return [[self.feinduraAccounts.dataBase objectForKey:@"sortOrder"] count];
 }
 
 // Customize the appearance of table view cells.
@@ -156,14 +155,12 @@
         [cellStats release];
         
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-        //[cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // temporary!!!!
-        [cell setSelected:false];
+        [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
+        //[cell setSelected:false];
     }
     
     // get feindura account keys from indexPath.row
-    NSArray *keys = [self.feinduraAccounts.dataBase allKeys];
-    id aKey = [keys objectAtIndex:indexPath.row];
-    id feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:aKey];
+    id feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:[[self.feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row]];
     
     // add the text to the cells
     for (UILabel *view in [cell.contentView subviews]) {        
@@ -195,8 +192,7 @@
         NSString *path = [[NSBundle mainBundle] pathForResource:@"default.icon" ofType:@"png"];
         UIImage *theImage = [UIImage imageWithContentsOfFile:path];
         cell.imageView.image = theImage;
-    }
-    
+    }    
 
     return cell;
 }
@@ -215,27 +211,18 @@
     }
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-// Override to support editing the table view.
+// DELETE ROW
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
         
-        // get feindura account keys from indexPath.row
-        NSArray *keys = [self.feinduraAccounts.dataBase allKeys];
-        id aKey = [keys objectAtIndex:indexPath.row];
+        // get current account id
+        id accountKey = [[self.feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
         
         // delete account from the database
-        [self.feinduraAccounts.dataBase removeObjectForKey:aKey];
+        [self.feinduraAccounts.dataBase removeObjectForKey:accountKey]; // delete from the database
+        [[self.feinduraAccounts.dataBase objectForKey:@"sortOrder"] removeObjectAtIndex:indexPath.row]; // delete from the sortorder array
         [self.feinduraAccounts saveAccounts];
         
         // Delete the row from the data source.
@@ -250,35 +237,38 @@
     */
 }
 
-/*
-// Override to support rearranging the table view.
+
+// REARRANGE ROWS
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
+    NSMutableArray* newOrder = [NSMutableArray arrayWithArray:[self.feinduraAccounts.dataBase objectForKey:@"sortOrder"]]; 
+    
+    //NSLog(@"BEFORE %@",tempArray);
+    
+    // rearrange array
+    NSString *key = [newOrder objectAtIndex: fromIndexPath.row];
+    [key retain];  // Let it survive being removed from the array.
+    [newOrder removeObjectAtIndex: fromIndexPath.row];
+    [newOrder insertObject: key  atIndex: toIndexPath.row];
+    [key release];
+    
+    //NSLog(@"AFTER %@",tempArray);
+    
+    [self.feinduraAccounts.dataBase setObject:newOrder forKey:@"sortOrder"];
+    [self.feinduraAccounts saveAccounts];
+    [self.uiTableView reloadData];
 }
-*/
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-
-- (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    [cell.imageView setHidden:true];
-*/
-
+// SELECT ROW
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     // EDIT account
     if([tableView cellForRowAtIndexPath:indexPath].editing) {
         
-        // get feindura account keys from indexPath.row
-        NSArray *keys = [self.feinduraAccounts.dataBase allKeys];
-        id aKey = [keys objectAtIndex:indexPath.row];
-        id feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:aKey];
+        // get selected account dictionary
+        NSString *accountKey = [[self.feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
+        NSMutableDictionary *feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:accountKey];
+        [feinduraAccount setValue:accountKey forKey:@"accountId"];
         
         [self showEditFeinduraAccountView:feinduraAccount];
      
@@ -288,9 +278,8 @@
         feinduraDetailStatsViewController *detailViewController = [[feinduraDetailStatsViewController alloc] initWithNibName:@"feinduraDetailStatsViewController" bundle:nil];
         
         // get feindura account keys from indexPath.row
-        NSArray *keys = [self.feinduraAccounts.dataBase allKeys];
-        id aKey = [keys objectAtIndex:indexPath.row];
-        id feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:aKey];
+        NSString *accountKey = [[self.feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
+        NSDictionary feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:accountKey];
         
         if([feinduraAccount objectForKey:@"title"] != nil)
             [detailViewController setTitle:[feinduraAccount objectForKey:@"title"]];
@@ -330,6 +319,15 @@
 
 -(IBAction)showAddFeinduraAccountView:(id)sender {
     
+    // deactivate editing mode before
+    for (UITableViewCell *cell in self.uiTableView.visibleCells) {
+        for (UILabel *view in [cell.contentView subviews]) {        
+            [view setHidden:false];
+        }
+    }
+    [self.uiTableView setEditing:false animated:true];
+    
+    // instanciate modal view
     FeinduraAccountViewController *modalView = [[FeinduraAccountViewController alloc] init];
     modalView.delegate = self;
     modalView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
@@ -341,6 +339,7 @@
 
 -(void)showEditFeinduraAccountView:(NSDictionary *)account {
     
+    // instanciate modal view
     FeinduraAccountViewController *modalView = [[FeinduraAccountViewController alloc] init];
     modalView.delegate = self;
     modalView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
@@ -353,10 +352,31 @@
 }
 
 -(IBAction)editFeinduraAccounts:(id)sender {
-    if(uiTableView.editing == false)
+    // START editing mode
+    if(uiTableView.editing == false) {
+        
+        // hide the statistics
+        for (UITableViewCell *cell in self.uiTableView.visibleCells) {
+            for (UILabel *view in [cell.contentView subviews]) {
+                if(view.tag == 3) {            
+                    [view setHidden:true];
+                }
+            }
+        }
+        
         [uiTableView setEditing:true animated:true];
-    else
+        
+    // END editing mode
+    } else {
+        
+        for (UITableViewCell *cell in self.uiTableView.visibleCells) {
+            for (UILabel *view in [cell.contentView subviews]) {        
+                [view setHidden:false];
+            }
+        }
+        
         [uiTableView setEditing:false animated:true];
+    }
 }
 
 -(IBAction)refreshFeinduraAccounts:(id)sender {

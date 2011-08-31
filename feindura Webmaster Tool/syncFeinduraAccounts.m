@@ -116,11 +116,9 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     if(self.internetActive) {        
         // -> FETCH NEW ACCOUNT DATA
         NSError *keychainError;
-        // get feindura account keys
-        NSArray *accountIds = [self.dataBase allKeys];
         
         // start loading new data from the servers
-        for (NSString *accountId in accountIds) {
+        for (NSString *accountId in [self.dataBase objectForKey:@"sortOrder"]) {
             
                 // ADD feinduraControllerPath
                 NSURL *cmsUrl = [NSURL URLWithString:[[[self.dataBase objectForKey:accountId] objectForKey:@"url"] stringByAppendingString:feinduraControllerPath]];
@@ -193,11 +191,11 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 - (void)requestFinished:(ASIHTTPRequest *)request {
     NSLog(@"END fetching new account data from server");
     
-    NSMutableDictionary *succedAccount = [self.dataBase objectForKey:[request.userInfo valueForKey:@"id"]];
+    NSMutableDictionary *account = [[NSMutableDictionary alloc] initWithDictionary:[self.dataBase objectForKey:[request.userInfo valueForKey:@"id"]]];
     
     // -> WRONG account
     if([request.responseString isEqualToString:@"FALSE"]) {    
-        [succedAccount setValue:@"FAILED" forKey:@"status"];
+        [account setValue:@"FAILED" forKey:@"status"];
         
     // -> else try to get json data
     } else {    
@@ -205,22 +203,23 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
         NSDictionary *fetchedData = [request.responseString JSONValue];
         
         if([fetchedData valueForKey:@"title"] != nil) {        
-            [succedAccount setValue:[fetchedData valueForKey:@"title"] forKey:@"title"]; // set title
+            [account setValue:[fetchedData valueForKey:@"title"] forKey:@"title"]; // set title
             if([fetchedData objectForKey:@"statistics"] != nil)
-                [succedAccount setObject:[fetchedData objectForKey:@"statistics"] forKey:@"statistics"]; // set statistics
+                [account setObject:[fetchedData objectForKey:@"statistics"] forKey:@"statistics"]; // set statistics
             if([fetchedData objectForKey:@"browser"] != nil)
-                [[succedAccount objectForKey:@"statistics"] setObject:[fetchedData objectForKey:@"browser"] forKey:@"browser"]; // set statistics
-            [succedAccount setValue:@"WORKING" forKey:@"status"];
+                [[account objectForKey:@"statistics"] setObject:[fetchedData objectForKey:@"browser"] forKey:@"browser"]; // set statistics
+            [account setValue:@"WORKING" forKey:@"status"];
         
         // WRONG feindura url
         } else {
-            [succedAccount setValue:@"FAILED" forKey:@"status"];
+            [account setValue:@"FAILED" forKey:@"status"];
         }
     }    
 
     // STORE success status    
-    [self.dataBase setObject:succedAccount forKey:[request.userInfo valueForKey:@"id"]];
-    //NSLog(@"%@",succedAccount);
+    [self.dataBase setObject:account forKey:[request.userInfo valueForKey:@"id"]];
+    [account release];    
+    
     [self saveAccounts];
     [self loadAccounts];
 
@@ -235,9 +234,10 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     NSLog(@"FAILED fetching new account data from server");
     
     // STORE failed status
-    NSMutableDictionary *failedAccount = [self.dataBase objectForKey:[request.userInfo valueForKey:@"id"]];    
+    NSMutableDictionary *failedAccount = [[NSMutableDictionary alloc] initWithDictionary:[self.dataBase objectForKey:[request.userInfo valueForKey:@"id"]]];    
     [failedAccount setValue:@"FAILED" forKey:@"status"];
-    [self.dataBase setObject:failedAccount forKey:[self.dataBase objectForKey:[request.userInfo valueForKey:@"id"]]];
+    [self.dataBase setObject:failedAccount forKey:[request.userInfo valueForKey:@"id"]];
+    [failedAccount release];
     
     [self saveAccounts];
     [self loadAccounts];

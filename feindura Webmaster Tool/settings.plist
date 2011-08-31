@@ -9,5 +9,9 @@
 		<key>url</key>
 		<string>http://demo.feindura.org/cms</string>
 	</dict>
+	<key>sortOrder</key>
+	<array>
+		<string>B599FA35-F342-4152-9C20-648FDCB4172E</string>
+	</array>
 </dict>
 </plist>

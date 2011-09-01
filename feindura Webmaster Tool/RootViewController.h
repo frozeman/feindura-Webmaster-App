@@ -24,10 +24,12 @@
 @property(nonatomic,retain) IBOutlet UITableView *uiTableView;
 @property(nonatomic,retain) IBOutlet UINavigationItem *titleBar;
 
+-(void)changeCellOrientation:(UITableViewCell *)cell;
 -(IBAction)showAddFeinduraAccountView:(id)sender;
 -(void)showEditFeinduraAccountView:(NSDictionary *)account;
 -(IBAction)editFeinduraAccounts:(id)sender;
 -(IBAction)refreshFeinduraAccounts:(id)sender;
+
 
 
 #pragma mark Delegates

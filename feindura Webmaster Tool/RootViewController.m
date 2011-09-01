@@ -108,6 +108,12 @@
     return true;
 }
 
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    for (UITableViewCell *cell in self.uiTableView.visibleCells) {
+        [self changeCellOrientation:cell];
+    }
+}
+
 // Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -129,7 +135,7 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];         
         
         UILabel *cellText;
-        cellText = [[UILabel alloc] initWithFrame:CGRectMake( 45, 5, 165, 20 )];
+        cellText = [[UILabel alloc] init];
         [cellText setBackgroundColor:[UIColor clearColor]];
         [cellText setTextColor:[UIColor darkGrayColor]];
         [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15]];
@@ -138,7 +144,7 @@
         [cellText setTag:1];
         
         UILabel *cellSubText;
-        cellSubText = [[UILabel alloc] initWithFrame:CGRectMake( 45, 22, 165, 20 )];
+        cellSubText = [[UILabel alloc] init];
         [cellSubText setBackgroundColor:[UIColor clearColor]];
         [cellSubText setTextColor:[UIColor grayColor]];
         [cellSubText setFont:[UIFont fontWithName:@"Helvetica" size:10]];
@@ -147,7 +153,7 @@
         [cellSubText setTag:2];
         
         UILabel *cellStats;
-        cellStats = [[UILabel alloc] initWithFrame:CGRectMake( 220, 11, 65, 20 )];
+        cellStats = [[UILabel alloc] init];
         [cellStats setText:@"-"];
         [cellStats setTextColor:[UIColor colorWithRed:0.84 green:0.58 blue:0.23 alpha:1]];
         [cellStats setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15]];
@@ -208,7 +214,8 @@
         cell.imageView.image = theImage;
     }
     
-    feinduraAccount = nil;    
+    [self changeCellOrientation:cell];
+    feinduraAccount = nil;
     return cell;
 }
 
@@ -333,6 +340,29 @@
 
 #pragma mark Methods
 
+-(void)changeCellOrientation:(UITableViewCell *)cell {
+    for (UILabel *view in [cell.contentView subviews]) {
+        // PORTRAIT
+        if(UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation])) {
+            if(view.tag == 1) //text
+                [view setFrame:CGRectMake( 45, 5, 165, 20 )];
+            if(view.tag == 2) //subtext
+                [view setFrame:CGRectMake( 45, 22, 165, 20 )];
+            if(view.tag == 3) //stats
+                [view setFrame:CGRectMake( 220, 11, 65, 20 )];   
+        // LANDSCAPE
+        } else {
+            // TODO: add more stats in this orientation?
+            if(view.tag == 1) // text
+                [view setFrame:CGRectMake( 45, 5, 285, 20 )];
+            if(view.tag == 2) //subtext
+                [view setFrame:CGRectMake( 45, 22, 285, 20 )];
+            if(view.tag == 3) //stats
+                [view setFrame:CGRectMake( 340, 11, 105, 20 )];                
+        }
+    }
+}
+
 -(IBAction)showAddFeinduraAccountView:(id)sender {
     
     [self deactivateTableEditing];
@@ -385,7 +415,6 @@
 -(IBAction)refreshFeinduraAccounts:(id)sender {
     [feinduraAccounts updateAccounts];
 }
-
 
 #pragma mark Delegates
 

@@ -77,6 +77,7 @@
 }
 
 - (void)dealloc {
+    [feinduraDetailStats release];
     [super dealloc];
 }
 

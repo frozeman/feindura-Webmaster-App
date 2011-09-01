@@ -26,7 +26,7 @@
 
 @interface FeinduraAccountViewController : UIViewController <UIScrollViewDelegate,UITextFieldDelegate,ASIHTTPRequestDelegate> {
     
-    id<FeinduraAccountViewControllerDelegate> delegate;
+    RootViewController *delegate;
     IBOutlet UIScrollView *scrollView;
     IBOutlet UINavigationItem *titleBar;
     
@@ -40,12 +40,11 @@
     UIAlertView *wrongAccount;
     UIAlertView *wrongFeinduraUrl;
     
-    ASIFormDataRequest *request;    
-    RootViewController *rootViewController;
+    ASIFormDataRequest *request;
     NSDictionary *editAccount;
 }
 
-@property(nonatomic,assign) id<FeinduraAccountViewControllerDelegate> delegate;
+@property(nonatomic,retain) RootViewController *delegate;
 @property(nonatomic,retain) UIScrollView *scrollView;
 @property(nonatomic,retain) UINavigationItem *titleBar;
 @property(nonatomic,retain) UILabel *urlTitle;
@@ -57,7 +56,6 @@
 @property(nonatomic,retain) UIAlertView *wrongAccount;
 @property(nonatomic,retain) UIAlertView *wrongFeinduraUrl;
 @property(nonatomic,retain) ASIFormDataRequest *request;
-@property(nonatomic,retain) RootViewController *rootViewController;
 @property(nonatomic,retain) NSDictionary *editAccount;
 
 - (IBAction)buttonCancel:(id)sender;

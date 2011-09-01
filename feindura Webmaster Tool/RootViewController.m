@@ -12,6 +12,7 @@
 #import "NSString+MD5.h"
 #import "SFHFKeychainUtils.h"
 
+
 @implementation RootViewController
 
 @synthesize appDelegate;
@@ -19,14 +20,15 @@
 @synthesize uiTableView;
 @synthesize titleBar;
 
-/*
-- (id)init {
-    if(self = [super init]) {
-  
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if(self) {
+ 
     }
     return self;
 }
- */
+
 
 - (void)viewDidLoad
 {
@@ -39,6 +41,7 @@
     RootViewController *tmpRootViewController = self;
     self.appDelegate.rootViewController = tmpRootViewController;
     [tmpRootViewController release];
+
     
     // -> add a title which fits in the navbar
     UILabel *title = [[UILabel alloc] init];    

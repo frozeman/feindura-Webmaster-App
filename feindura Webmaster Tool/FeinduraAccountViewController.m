@@ -22,7 +22,6 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 @synthesize url, username, password; //TextFields
 @synthesize wrongUrl, wrongAccount, wrongFeinduraUrl; // Alerts
 @synthesize request; // Request
-@synthesize rootViewController;
 @synthesize editAccount;
 
 // METHODS
@@ -37,21 +36,10 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 }
 */
 
-- (void)didReceiveMemoryWarning {
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    // get the feindura accounts form the parentview
-    RootViewController *delagateTemp = ((RootViewController *)self.delegate);
-    self.rootViewController = delagateTemp;
     
     // -> BASIC SETUP
     // -> add a title which fits in the navbar
@@ -68,27 +56,27 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     
     // ->> add texts
     //self.titleBar.title = NSLocalizedString(@"ADDFEINDURA_TITLE", nil);
-    self.urlTitle.text = NSLocalizedString(@"ADDFEINDURA_TITLE_URL", nil);
-    self.accountTitle.text = NSLocalizedString(@"ADDFEINDURA_TITLE_ACCOUNT", nil);
-    self.url.placeholder = NSLocalizedString(@"ADDFEINDURA_TEXT_URL", nil);
-    self.url.tag = 1;
-    self.username.placeholder = NSLocalizedString(@"ADDFEINDURA_TEXT_USERNAME", nil);
-    self.username.tag = 2;
-    self.password.placeholder = NSLocalizedString(@"ADDFEINDURA_TEXT_PASSWORD", nil);
-    self.password.tag = 3;
+    [urlTitle setText:NSLocalizedString(@"ADDFEINDURA_TITLE_URL", nil)];
+    [accountTitle setText:NSLocalizedString(@"ADDFEINDURA_TITLE_ACCOUNT", nil)];
+    [url setPlaceholder:NSLocalizedString(@"ADDFEINDURA_TEXT_URL", nil)];
+    [url setTag:1];
+    [username setPlaceholder:NSLocalizedString(@"ADDFEINDURA_TEXT_USERNAME", nil)];
+    [username setTag:2];
+    [password setPlaceholder:NSLocalizedString(@"ADDFEINDURA_TEXT_PASSWORD", nil)];
+    [password setTag:3];
     
-    [self.url becomeFirstResponder];
-    [self.scrollView setContentSize:CGSizeMake(self.scrollView.frame.size.width,
-                                               self.password.frame.origin.y + self.password.frame.size.height + 15)];
+    [url becomeFirstResponder];
+    [scrollView setContentSize:CGSizeMake(self.scrollView.frame.size.width,
+                                          self.password.frame.origin.y + self.password.frame.size.height + 15)];
+    
+    //[scrollView setContentOffset:CGPointMake(0,200)];
     
     // -> ADD ACCOUNT DATA if available
-    if(editAccount != NULL) {
-        self.url.text = [self.editAccount valueForKey:@"url"];
-        self.username.text =[self.editAccount valueForKey:@"account"];
-        //self.password.text;
+    if(self.editAccount != NULL) {
+        [url setText:[editAccount objectForKey:@"url"]];
+        [username setText:[editAccount objectForKey:@"account"]];
+        //[password.text];
     }
-    
-    //[self.scrollView setContentOffset:CGPointMake(0,200)];
     
     // -> set up the ALerts
     UIAlertView *wrongUrlTemp = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ADDFEINDURA_ALERT_TITLE_WRONGURL", nil) message:NSLocalizedString(@"ADDFEINDURA_ALERT_TEXT_WRONGURL", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"ADDFEINDURA_ALERT_BUTTON_OK", nil) otherButtonTitles: nil];
@@ -111,34 +99,50 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [request clearDelegatesAndCancel];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    self.rootViewController = nil;
+    self.editAccount = nil;
+    self.request = nil;
+    
     self.wrongFeinduraUrl = nil;
     self.wrongAccount = nil;
     self.wrongUrl = nil;
-    self.urlTitle = nil;
-    self.accountTitle = nil;
-    self.url = nil;
-    self.username = nil;
+    
     self.password = nil;
+    self.username = nil;
+    self.url = nil;
+    self.accountTitle = nil;
+    self.urlTitle = nil;
+    
     self.titleBar = nil;
     self.scrollView = nil;
+    self.delegate = nil;
+}
+
+- (void)didReceiveMemoryWarning {
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc that aren't in use.
 }
 
 - (void)dealloc {
     
-    //[delegate release];
-    //[feinduraAccountsFromRootView release];
+    [editAccount release];  
     [request release];
+    
     [wrongFeinduraUrl release];
     [wrongAccount release];
     [wrongUrl release];
-    [urlTitle release];
-    [accountTitle release];
-    [url release];
-    [username release];
+    
     [password release];
+    [username release];
+    [url release];
+    [accountTitle release];
+    [urlTitle release];
+    
     [titleBar release];
-    [scrollView release];    
+    [scrollView release];
+    [delegate release];
+    
     [super dealloc];
 }
 
@@ -153,7 +157,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 #pragma mark Methods
 
 - (IBAction)buttonCancel:(id)sender {
-	[self.delegate DismissAddFeinduraView];
+	[delegate DismissAddFeinduraView];
 }
 - (IBAction)buttonSave:(id)sender {
     
@@ -161,32 +165,32 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [self repairURL];
     
     // validate url
-    if(![self validateUrl:self.url.text])                
-        [self.wrongUrl show];
+    if(![self validateUrl:self.url.text])
+        [wrongUrl show];
     
-    else if([self.url.text isEqualToString:@""])
-        [self.url becomeFirstResponder];
-    else if([self.username.text isEqualToString:@""])
-        [self.username becomeFirstResponder];
-    else if([self.password.text isEqualToString:@""])
-        [self.password becomeFirstResponder];
+    else if([url.text isEqualToString:@""])
+        [url becomeFirstResponder];
+    else if([username.text isEqualToString:@""])
+        [username becomeFirstResponder];
+    else if([password.text isEqualToString:@""])
+        [password becomeFirstResponder];
     else
         [self checkFeinduraAccount];
 }
 
 - (void)checkFeinduraAccount {
     
-    if(self.rootViewController.feinduraAccounts.internetActive) {
-        NSString *tempUrl = [[NSString stringWithString:self.url.text] stringByAppendingString:feinduraControllerPath];
-        NSURL *cmsUrl = [NSURL URLWithString:tempUrl];
+    if(self.delegate.feinduraAccounts.internetActive) {
+        NSString *urlString = [[NSString stringWithString:self.url.text] stringByAppendingString:feinduraControllerPath];
+        NSURL *cmsUrl = [NSURL URLWithString:urlString];
         //NSLog(@"FULLURL %@",tempUrl);
         
         self.request = [ASIFormDataRequest requestWithURL:cmsUrl];
-        [self.request setDelegate:self];
-        [self.request setPostValue:@"CHECK" forKey:@"status"];
-        [self.request setPostValue:self.username.text forKey:@"username"];
-        [self.request setPostValue:[self.password.text MD5] forKey:@"password"];
-        [self.request startAsynchronous];
+        [request setDelegate:self];
+        [request setPostValue:@"CHECK" forKey:@"status"];
+        [request setPostValue:self.username.text forKey:@"username"];
+        [request setPostValue:[password.text MD5] forKey:@"password"];
+        [request startAsynchronous];
     } else
         [self saveFeinduraAccount];
     
@@ -216,21 +220,21 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     
     
     // if EXISTING ACCOUNT (if url matches an existing one)
-    for (NSString *accountKey in [self.rootViewController.feinduraAccounts.dataBase objectForKey:@"sortOrder"]) {
-        if([[[self.rootViewController.feinduraAccounts.dataBase objectForKey:accountKey] objectForKey:@"url"] isEqualToString:self.url.text]) {
+    for (NSString *accountKey in [delegate.feinduraAccounts.dataBase objectForKey:@"sortOrder"]) {
+        if([[[delegate.feinduraAccounts.dataBase objectForKey:accountKey] objectForKey:@"url"] isEqualToString:self.url.text]) {
             accountAlreadyExists = true;
             accountId = accountKey;
-            self.editAccount = [self.rootViewController.feinduraAccounts.dataBase objectForKey:accountKey];
+            self.editAccount = [delegate.feinduraAccounts.dataBase objectForKey:accountKey];
         }
     }
     
     // if EDIT ACCOUNT
     if(self.editAccount != NULL) {
         if(!accountAlreadyExists)
-            accountId = [self.editAccount objectForKey:@"accountId"];
+            accountId = [editAccount objectForKey:@"accountId"];
         
-        [currentAccount setObject:[self.editAccount objectForKey:@"title"] forKey:@"title"];
-        [currentAccount setObject:[self.editAccount objectForKey:@"statistics"] forKey:@"statistics"];
+        [currentAccount setObject:[editAccount objectForKey:@"title"] forKey:@"title"];
+        [currentAccount setObject:[editAccount objectForKey:@"statistics"] forKey:@"statistics"];
     
     // if NEW ACCOUNT
     } else {
@@ -240,51 +244,51 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
         CFRelease(identifier);
         
         // add new accountId to the order array
-        NSMutableArray *sortOrderArray = [[NSMutableArray alloc] initWithArray:[self.rootViewController.feinduraAccounts.dataBase objectForKey:@"sortOrder"]];
+        NSMutableArray *sortOrderArray = [[NSMutableArray alloc] initWithArray:[delegate.feinduraAccounts.dataBase objectForKey:@"sortOrder"]];
         [sortOrderArray addObject:accountId];
-        [self.rootViewController.feinduraAccounts.dataBase setObject:sortOrderArray forKey:@"sortOrder"];
+        [delegate.feinduraAccounts.dataBase setObject:sortOrderArray forKey:@"sortOrder"];
+        
         [sortOrderArray release];
         [accountId release];
     }
     
     // add new feindura account to the database
-    [self.rootViewController.feinduraAccounts.dataBase setObject: currentAccount forKey:accountId];
-    [self.rootViewController.feinduraAccounts saveAccounts];
+    [delegate.feinduraAccounts.dataBase setObject: currentAccount forKey:accountId];
+    [delegate.feinduraAccounts saveAccounts];
     
     [currentAccount release];
 
-    [self.rootViewController.uiTableView setEditing:false animated:false];
+    [delegate.uiTableView setEditing:false animated:false];
 	[delegate DismissAddFeinduraView];
 }
 
 - (UITextField*)textFieldsAreEmpty {
-    if([self.url.text isEqualToString:@""])
+    if([url.text isEqualToString:@""])
         return self.url;    
-    else if([self.username.text isEqualToString:@""])
+    else if([username.text isEqualToString:@""])
         return self.username;
-    else if([self.password.text isEqualToString:@""])
+    else if([password.text isEqualToString:@""])
         return self.password;
     else
         return false;
 }
 
 - (BOOL)validateUrl: (NSString *) candidate {
-    NSString *urlRegEx =
-    @"(http|https)://((\\w)*|([0-9]*)|([-|_])*)+([\\.|/]((\\w)*|([0-9]*)|([-|_])*))+";
-    NSPredicate *urlTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", urlRegEx]; 
+    NSString *urlRegEx = [NSString stringWithString:@"(http|https)://((\\w)*|([0-9]*)|([-|_])*)+([\\.|/]((\\w)*|([0-9]*)|([-|_])*))+"];
+    NSPredicate *urlTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", urlRegEx];
     return [urlTest evaluateWithObject:candidate];
 }
 
 - (void)repairURL {
     
     // add a slash on the end of the url
-    self.url.text = [self.url.text stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+    [url setText:[url.text stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]]];
     
     NSURL *cmsURL = [NSURL URLWithString:self.url.text];            
     
     // check if there is a scheme (like http://) in this url string
     if([cmsURL scheme] == nil) {
-        self.url.text = [[NSString stringWithString:@"http://"] stringByAppendingString:self.url.text];	
+        [url setText:[[NSString stringWithString:@"http://"] stringByAppendingString:self.url.text]];
     }
 }
 
@@ -313,8 +317,8 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     // always check url first
     [self repairURL];
     if(![self validateUrl:self.url.text]) {
-        [self.wrongUrl show];
-        [self.url becomeFirstResponder];
+        [wrongUrl show];
+        [url becomeFirstResponder];
         return;
     }
     
@@ -323,10 +327,10 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
         case 1: {
                 // -> JUMP to the next one, if is a valid url
                 if([self validateUrl:self.url.text])                
-                    [self.username becomeFirstResponder];
+                    [username becomeFirstResponder];
                 // -> otherwise throw warning
                 else {
-                    [self.wrongUrl show];
+                    [wrongUrl show];
                 }     
             }
             break;
@@ -334,7 +338,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
         // -> USERNAME TextField
         case 2:
             // -> JUMP to the next one
-            [self.password becomeFirstResponder];
+            [password becomeFirstResponder];
             break;
             
         // -> PASSWORD TextField
@@ -344,15 +348,15 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
                 [[self textFieldsAreEmpty] becomeFirstResponder];
             // -> JUMP to url, if not valid
             if([self validateUrl:self.url.text] == false) {
-                [self.wrongUrl show];
-                [self.url becomeFirstResponder];
+                [wrongUrl show];
+                [url becomeFirstResponder];
             // -> SAVE the data
             } else if([self textFieldsAreEmpty] == false)
                 [self checkFeinduraAccount];
                 
             break;
         default:
-            [[self.scrollView viewWithTag:1] becomeFirstResponder];
+            [url becomeFirstResponder];
             break;
     }
 }
@@ -379,11 +383,11 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     if([responseString isEqualToString:@"TRUE"])
         [self saveFeinduraAccount];
     else if([responseString isEqualToString:@"FALSE"]) {
-        [self.wrongAccount show];
-        [self.username becomeFirstResponder];
+        [wrongAccount show];
+        [username becomeFirstResponder];
     } else {
-        [self.wrongFeinduraUrl show];
-        [self.url becomeFirstResponder];
+        [wrongFeinduraUrl show];
+        [url becomeFirstResponder];
     }
 }
 
@@ -391,8 +395,8 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 - (void)requestFailed:(ASIHTTPRequest *)request {
     NSLog(@"request failed");
     
-    [self.wrongUrl show];
-    [self.url becomeFirstResponder];
+    [wrongUrl show];
+    [url becomeFirstResponder];
 
 }
 

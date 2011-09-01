@@ -22,7 +22,7 @@
 @property(nonatomic,retain) feindura_Webmaster_ToolAppDelegate *appDelegate;
 @property(nonatomic,retain) syncFeinduraAccounts *feinduraAccounts;
 @property(nonatomic,retain) IBOutlet UITableView *uiTableView;
-@property (nonatomic,retain) UINavigationItem *titleBar;
+@property(nonatomic,retain) IBOutlet UINavigationItem *titleBar;
 
 -(IBAction)showAddFeinduraAccountView:(id)sender;
 -(void)showEditFeinduraAccountView:(NSDictionary *)account;

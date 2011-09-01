@@ -33,11 +33,15 @@
     [super viewDidLoad];
     
     // -> SET transport this instance of the rootViewController to the AppDelegate
-    self.appDelegate = [[UIApplication sharedApplication] delegate];
-    self.appDelegate.rootViewController = self;
+    feindura_Webmaster_ToolAppDelegate *tmpDelegate = [[UIApplication sharedApplication] delegate];
+    self.appDelegate = tmpDelegate;
+    [tmpDelegate release];
+    RootViewController *tmpRootViewController = self;
+    self.appDelegate.rootViewController = tmpRootViewController;
+    [tmpRootViewController release];
     
     // -> add a title which fits in the navbar
-    UILabel *title = [[UILabel alloc] init];
+    UILabel *title = [[UILabel alloc] init];    
     [title setBackgroundColor:[UIColor clearColor]];
     [title setTextColor:[UIColor whiteColor]];
     [title setShadowColor:[UIColor darkGrayColor]];
@@ -51,10 +55,12 @@
     
     
     // LOAD feindura Accounts
-    syncFeinduraAccounts *tmp = [[syncFeinduraAccounts alloc] init];
-    self.feinduraAccounts = tmp;
-    self.feinduraAccounts.delegate = self;
-    [tmp release];
+    syncFeinduraAccounts *tmpFa = [[syncFeinduraAccounts alloc] init];
+    self.feinduraAccounts = tmpFa;
+    [tmpFa release];
+    RootViewController *tmpRootView = self;
+    feinduraAccounts.delegate = tmpRootView;
+    [tmpRootView release];
     
     // --------------------------------------------------------------------------------------------
     // STORE DEFAULT account password (http:/demo.feindura.org)
@@ -66,7 +72,7 @@
     // --------------------------------------------------------------------------------------------
     
     // -> basic table setup
-    self.uiTableView.allowsSelectionDuringEditing = true;    
+    uiTableView.allowsSelectionDuringEditing = true;    
 
 }
 
@@ -106,7 +112,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[self.feinduraAccounts.dataBase objectForKey:@"sortOrder"] count];
+    return [[feinduraAccounts.dataBase objectForKey:@"sortOrder"] count];
 }
 
 // Customize the appearance of table view cells.
@@ -160,7 +166,7 @@
     }
     
     // get feindura account keys from indexPath.row
-    id feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:[[self.feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row]];
+    id feinduraAccount = [feinduraAccounts.dataBase objectForKey:[[feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row]];
     
     // add the text to the cells
     for (UILabel *view in [cell.contentView subviews]) {        
@@ -192,8 +198,8 @@
         NSString *path = [[NSBundle mainBundle] pathForResource:@"default.icon" ofType:@"png"];
         UIImage *theImage = [UIImage imageWithContentsOfFile:path];
         cell.imageView.image = theImage;
-    }    
-
+    }
+    
     return cell;
 }
 
@@ -205,7 +211,7 @@
     else
         altCellColor = [UIColor colorWithWhite:0.98 alpha:1];
     
-    cell.backgroundColor = altCellColor;
+    [cell setBackgroundColor:altCellColor];
     for (UIView *view in [cell.contentView subviews]) {
         [view setBackgroundColor:altCellColor];
     }
@@ -218,16 +224,15 @@
     {
         
         // get current account id
-        id accountKey = [[self.feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
+        id accountKey = [[feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
         
         // delete account from the database
-        [self.feinduraAccounts.dataBase removeObjectForKey:accountKey]; // delete from the database
-        [[self.feinduraAccounts.dataBase objectForKey:@"sortOrder"] removeObjectAtIndex:indexPath.row]; // delete from the sortorder array
-        [self.feinduraAccounts saveAccounts];
+        [feinduraAccounts.dataBase removeObjectForKey:accountKey]; // delete from the database
+        [[feinduraAccounts.dataBase objectForKey:@"sortOrder"] removeObjectAtIndex:indexPath.row]; // delete from the sortorder array
+        [feinduraAccounts saveAccounts];
         
         // Delete the row from the data source.
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
-        
     }
     /*
     else if (editingStyle == UITableViewCellEditingStyleInsert)
@@ -241,22 +246,22 @@
 // REARRANGE ROWS
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
-    NSMutableArray* newOrder = [NSMutableArray arrayWithArray:[self.feinduraAccounts.dataBase objectForKey:@"sortOrder"]]; 
+    NSMutableArray* newOrder = [NSMutableArray arrayWithArray:[feinduraAccounts.dataBase objectForKey:@"sortOrder"]]; 
     
     //NSLog(@"BEFORE %@",tempArray);
     
     // rearrange array
     NSString *key = [newOrder objectAtIndex: fromIndexPath.row];
-    [key retain];  // Let it survive being removed from the array.
+    [key retain];
     [newOrder removeObjectAtIndex: fromIndexPath.row];
     [newOrder insertObject: key  atIndex: toIndexPath.row];
     [key release];
-    
+
     //NSLog(@"AFTER %@",tempArray);
     
-    [self.feinduraAccounts.dataBase setObject:newOrder forKey:@"sortOrder"];
-    [self.feinduraAccounts saveAccounts];
-    [self.uiTableView reloadData];
+    [feinduraAccounts.dataBase setObject:newOrder forKey:@"sortOrder"];
+    [feinduraAccounts saveAccounts];
+    [uiTableView reloadData];
 }
 
 // SELECT ROW
@@ -266,9 +271,9 @@
     if([tableView cellForRowAtIndexPath:indexPath].editing) {
         
         // get selected account dictionary
-        NSString *accountKey = [[self.feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
-        NSMutableDictionary *feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:accountKey];
-        [feinduraAccount setValue:accountKey forKey:@"accountId"];
+        NSString *accountKey = [[feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
+        NSMutableDictionary *feinduraAccount = [feinduraAccounts.dataBase objectForKey:accountKey];
+        [feinduraAccount setObject:accountKey forKey:@"accountId"];
         
         [self showEditFeinduraAccountView:feinduraAccount];
      
@@ -305,12 +310,14 @@
     self.feinduraAccounts = nil;
     self.uiTableView = nil;
     self.titleBar = nil;
+    self.appDelegate = nil;
 }
 
 - (void)dealloc {
     [feinduraAccounts release];
     [uiTableView release];
     [titleBar release];
+    [appDelegate release];
     [super dealloc];
 }
 
@@ -320,12 +327,12 @@
 -(IBAction)showAddFeinduraAccountView:(id)sender {
     
     // deactivate editing mode before
-    for (UITableViewCell *cell in self.uiTableView.visibleCells) {
+    for (UITableViewCell *cell in uiTableView.visibleCells) {
         for (UILabel *view in [cell.contentView subviews]) {        
             [view setHidden:false];
         }
     }
-    [self.uiTableView setEditing:false animated:true];
+    [uiTableView setEditing:false animated:true];
     
     // instanciate modal view
     FeinduraAccountViewController *modalView = [[FeinduraAccountViewController alloc] init];
@@ -380,7 +387,7 @@
 }
 
 -(IBAction)refreshFeinduraAccounts:(id)sender {
-    [self.feinduraAccounts updateAccounts];
+    [feinduraAccounts updateAccounts];
 }
 
 
@@ -390,7 +397,7 @@
 	[self dismissModalViewControllerAnimated:YES];
 
     // reload tableView
-    [self.feinduraAccounts updateAccounts];
+    [feinduraAccounts updateAccounts];
     [uiTableView reloadData];
 }
 

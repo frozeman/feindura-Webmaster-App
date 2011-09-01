@@ -57,7 +57,7 @@
      */
 
     
-    //NSLog(@" intet: %@",self.rootViewController.feinduraAccounts.internetActive);
+    // update accounts when become active again
     [rootViewController.feinduraAccounts updateAccounts];
 }
 

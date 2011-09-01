@@ -10,6 +10,8 @@
 #import "ASIFormDataRequest.h"
 #import "Reachability.h"
 
+@class RootViewController;
+
 @interface syncFeinduraAccounts : NSObject {
     NSString *settingsFilePath;
     NSMutableDictionary *dataBase;
@@ -18,7 +20,7 @@
     Reachability *hostReachable;
     BOOL internetActive;
     
-    id delegate;
+    RootViewController *delegate;
 }
 
 #pragma mark Properties
@@ -29,7 +31,7 @@
 @property(nonatomic,retain) Reachability *internetReachable;
 @property(nonatomic,retain) Reachability *hostReachable;
 @property(nonatomic,assign) BOOL internetActive;
-@property(nonatomic,retain) id delegate;
+@property(nonatomic,retain) RootViewController *delegate;
 
 #pragma mark Methods
 

@@ -258,8 +258,8 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     
     [currentAccount release];
 
-    [delegate.uiTableView setEditing:false animated:false];
 	[delegate DismissAddFeinduraView];
+    [delegate deactivateTableEditing];
 }
 
 - (UITextField*)textFieldsAreEmpty {

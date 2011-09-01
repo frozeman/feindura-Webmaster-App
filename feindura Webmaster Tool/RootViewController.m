@@ -62,8 +62,9 @@
     self.feinduraAccounts = tmpFa;
     [tmpFa release];
     RootViewController *tmpRootView = self;
-    feinduraAccounts.delegate = tmpRootView;
+    [feinduraAccounts setDelegate:tmpRootView];
     [tmpRootView release];
+    
     
     // --------------------------------------------------------------------------------------------
     // STORE DEFAULT account password (http:/demo.feindura.org)
@@ -175,25 +176,29 @@
     for (UILabel *view in [cell.contentView subviews]) {        
         // set tableRow text
         if(view.tag == 1) {  
-            if([feinduraAccount objectForKey:@"title"] != nil && ![[feinduraAccount valueForKey:@"title"] isEqualToString:@""])
-                [view setText:[feinduraAccount valueForKey:@"title"]];
+            if([feinduraAccount objectForKey:@"title"] != nil && ![[feinduraAccount objectForKey:@"title"] isEqualToString:@""])
+                [view setText:[feinduraAccount objectForKey:@"title"]];
             else
-                [view setText:[feinduraAccount valueForKey:@"url"]];
+                [view setText:[feinduraAccount objectForKey:@"url"]];
         }
         
         // set tableRow subtext
         if(view.tag == 2) {            
-            [view setText:[feinduraAccount valueForKey:@"url"]];
+            [view setText:[feinduraAccount objectForKey:@"url"]];
         }
         
         // set tableRow userStatistics
-        if(view.tag == 3 && [feinduraAccount objectForKey:@"statistics"] != nil && [[feinduraAccount objectForKey:@"statistics"] valueForKey:@"userVisitCount"] != nil) {            
-            [view setText:[[[feinduraAccount objectForKey:@"statistics"] valueForKey:@"userVisitCount"] stringValue]];
+        if(view.tag == 3 && [feinduraAccount objectForKey:@"statistics"] != nil && [[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCount"] != nil) {
+            // show the number, when hidden and not shown again after removing and adding (hack)
+            if(tableView.editing == false)
+                [view setHidden:false];
+            // add number
+            [view setText:[[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCount"] stringValue]];
         }
     }
     
     // ADD a image
-    if([[feinduraAccount valueForKey:@"status"] isEqualToString:@"FAILED"]) {
+    if([[feinduraAccount objectForKey:@"status"] isEqualToString:@"FAILED"]) {
         NSString *path = [[NSBundle mainBundle] pathForResource:@"failed.icon" ofType:@"png"];
         UIImage *theImage = [UIImage imageWithContentsOfFile:path];
         cell.imageView.image = theImage;
@@ -203,6 +208,7 @@
         cell.imageView.image = theImage;
     }
     
+    feinduraAccount = nil;    
     return cell;
 }
 
@@ -329,13 +335,7 @@
 
 -(IBAction)showAddFeinduraAccountView:(id)sender {
     
-    // deactivate editing mode before
-    for (UITableViewCell *cell in uiTableView.visibleCells) {
-        for (UILabel *view in [cell.contentView subviews]) {        
-            [view setHidden:false];
-        }
-    }
-    [uiTableView setEditing:false animated:true];
+    [self deactivateTableEditing];
     
     // instanciate modal view
     FeinduraAccountViewController *modalView = [[FeinduraAccountViewController alloc] init];
@@ -368,7 +368,7 @@
         // hide the statistics
         for (UITableViewCell *cell in self.uiTableView.visibleCells) {
             for (UILabel *view in [cell.contentView subviews]) {
-                if(view.tag == 3) {            
+                if(view.tag == 3) {
                     [view setHidden:true];
                 }
             }
@@ -377,15 +377,8 @@
         [uiTableView setEditing:true animated:true];
         
     // END editing mode
-    } else {
-        
-        for (UITableViewCell *cell in self.uiTableView.visibleCells) {
-            for (UILabel *view in [cell.contentView subviews]) {        
-                [view setHidden:false];
-            }
-        }
-        
-        [uiTableView setEditing:false animated:true];
+    } else {        
+        [self deactivateTableEditing];
     }
 }
 
@@ -399,9 +392,18 @@
 -(void)DismissAddFeinduraView {
 	[self dismissModalViewControllerAnimated:YES];
 
-    // reload tableView
+    // reload database
     [feinduraAccounts updateAccounts];
-    [uiTableView reloadData];
+}
+
+-(void) deactivateTableEditing {
+    // deactivate editing mode before
+    for (UITableViewCell *cell in uiTableView.visibleCells) {
+        for (UILabel *view in [cell.contentView subviews]) {        
+            [view setHidden:false];
+        }
+    }
+    [uiTableView setEditing:false animated:true];
 }
 
 @end

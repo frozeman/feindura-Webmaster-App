@@ -10,8 +10,11 @@
 
 @implementation FeinduraDetailStatsViewController
 
-@synthesize feinduraDetailStats;
+@synthesize level;
+@synthesize feinduraAccount;
+@synthesize uiTableView;
 
+/*
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -20,6 +23,7 @@
     }
     return self;
 }
+*/
 
 - (void)didReceiveMemoryWarning
 {
@@ -34,7 +38,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -47,7 +51,7 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-    self.feinduraDetailStats = nil;
+    self.feinduraAccount = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -77,7 +81,7 @@
 }
 
 - (void)dealloc {
-    [feinduraDetailStats release];
+    [feinduraAccount release];
     [super dealloc];
 }
 
@@ -86,13 +90,31 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 1;
+    if(level == 1)
+        return 2;
+    else
+        return 1;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if(level == 1) {
+        if(section == 0)
+            return @"Webseiten Statistiken";
+        else
+            return @"Menu";
+    } else
+        return @"";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // Return the number of rows in the section.
-    return [feinduraDetailStats count];
+    if(level == 1) {
+        if(section == 0)
+            return 2;
+        else
+            return 3;
+    } else
+        return [[feinduraAccount objectForKey:@"statistics"] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -101,10 +123,34 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
+        [cell.textLabel setTextColor:[UIColor darkGrayColor]];
+        [cell.detailTextLabel setTextColor:[UIColor colorWithRed:0.84 green:0.58 blue:0.23 alpha:1]];
+        [cell.detailTextLabel setText:@"-"];
+        
     }
     
     
+    // LEVEL 1
+    if(level == 1) {
+        
+        if(indexPath.section == 0) {
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            
+            // VISITORS
+            if(indexPath.row == 0) {
+                [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_VISITORS", nil)];
+                [cell.detailTextLabel setText:[[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCount"] stringValue]];
+            }
+            // WEBCRAWLER
+            if(indexPath.row == 1) {
+                [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_WEBCRAWLER", nil)];
+                [cell.detailTextLabel setText:[[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"robotVisitCount"] stringValue]];
+            }  
+        }
+        
+    
+    }
     
     return cell;
 }

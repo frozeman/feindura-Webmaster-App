@@ -17,12 +17,14 @@
     syncFeinduraAccounts *feinduraAccounts;
     IBOutlet UITableView *uiTableView;
     IBOutlet UINavigationItem *titleBar;
+    IBOutlet UIBarButtonItem *editButton;
 }
 
 @property(nonatomic,retain) feindura_Webmaster_ToolAppDelegate *appDelegate;
 @property(nonatomic,retain) syncFeinduraAccounts *feinduraAccounts;
 @property(nonatomic,retain) IBOutlet UITableView *uiTableView;
 @property(nonatomic,retain) IBOutlet UINavigationItem *titleBar;
+@property(nonatomic,retain) IBOutlet UIBarButtonItem *editButton;
 
 -(void)changeCellOrientation:(UITableViewCell *)cell;
 -(IBAction)showAddFeinduraAccountView:(id)sender;

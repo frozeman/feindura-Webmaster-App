@@ -7,11 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RootViewController.h"
+
 
 @interface FeinduraDetailStatsViewController : UITableViewController {
-    NSMutableArray *feinduraDetailStats;
+    NSInteger level;
+    NSDictionary *feinduraAccount;
+    
+    IBOutlet UITableView *uiTableView;
 }
 
-@property(nonatomic,retain) NSMutableArray *feinduraDetailStats;
+@property(nonatomic,assign) NSInteger level;
+@property(nonatomic,retain) NSDictionary *feinduraAccount;
+@property(nonatomic,retain) IBOutlet UITableView *uiTableView;
 
 @end

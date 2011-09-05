@@ -220,6 +220,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     
     
     // if EXISTING ACCOUNT (if url matches an existing one)
+    // TODO: currently its not possible to save one url twice, with different accounts ()
     for (NSString *accountKey in [delegate.feinduraAccounts.dataBase objectForKey:@"sortOrder"]) {
         if([[[delegate.feinduraAccounts.dataBase objectForKey:accountKey] objectForKey:@"url"] isEqualToString:self.url.text]) {
             accountAlreadyExists = true;
@@ -231,7 +232,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     // if EDIT ACCOUNT
     if(self.editAccount != NULL) {
         if(!accountAlreadyExists)
-            accountId = [editAccount objectForKey:@"accountId"];
+            accountId = [editAccount objectForKey:@"id"];
         
         [currentAccount setObject:[editAccount objectForKey:@"title"] forKey:@"title"];
         [currentAccount setObject:[editAccount objectForKey:@"statistics"] forKey:@"statistics"];
@@ -246,6 +247,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
         // add new accountId to the order array
         NSMutableArray *sortOrderArray = [[NSMutableArray alloc] initWithArray:[delegate.feinduraAccounts.dataBase objectForKey:@"sortOrder"]];
         [sortOrderArray addObject:accountId];
+        [currentAccount setObject:accountId forKey:@"id"];
         [delegate.feinduraAccounts.dataBase setObject:sortOrderArray forKey:@"sortOrder"];
         
         [sortOrderArray release];
@@ -259,7 +261,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [currentAccount release];
 
 	[delegate DismissAddFeinduraView];
-    [delegate deactivateTableEditing];
+    [delegate editFeinduraAccounts:nil];
 }
 
 - (UITextField*)textFieldsAreEmpty {

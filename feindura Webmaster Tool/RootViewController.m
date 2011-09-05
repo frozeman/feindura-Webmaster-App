@@ -7,7 +7,7 @@
 //
 
 #import "RootViewController.h"
-#import "feinduraDetailStatsViewController.h"
+#import "FeinduraDetailStatsViewController.h"
 #import "feindura_Webmaster_ToolAppDelegate.h"
 #import "NSString+MD5.h"
 #import "SFHFKeychainUtils.h"
@@ -18,7 +18,7 @@
 @synthesize appDelegate;
 @synthesize feinduraAccounts;
 @synthesize uiTableView;
-@synthesize titleBar;
+@synthesize titleBar, editButton;
 
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -35,9 +35,7 @@
     [super viewDidLoad];
     
     // -> SET transport this instance of the rootViewController to the AppDelegate
-    feindura_Webmaster_ToolAppDelegate *tmpDelegate = [[UIApplication sharedApplication] delegate];
-    self.appDelegate = tmpDelegate;
-    [tmpDelegate release];
+    self.appDelegate = [[UIApplication sharedApplication] delegate];
     RootViewController *tmpRootViewController = self;
     self.appDelegate.rootViewController = tmpRootViewController;
     [tmpRootViewController release];
@@ -288,29 +286,37 @@
         
         // get selected account dictionary
         NSString *accountKey = [[feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
-        NSMutableDictionary *feinduraAccount = [feinduraAccounts.dataBase objectForKey:accountKey];
-        [feinduraAccount setObject:accountKey forKey:@"accountId"];
+        NSDictionary *feinduraAccount = [feinduraAccounts.dataBase objectForKey:accountKey];
         
         [self showEditFeinduraAccountView:feinduraAccount];
      
     // SHOW detail
     } else {
-        /*
-        feinduraDetailStatsViewController *detailViewController = [[feinduraDetailStatsViewController alloc] initWithNibName:@"feinduraDetailStatsViewController" bundle:nil];
         
         // get feindura account keys from indexPath.row
         NSString *accountKey = [[self.feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
-        NSDictionary feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:accountKey];
+        NSDictionary *feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:accountKey];
+        
+        if([feinduraAccount objectForKey:@"statistics"] == nil) {
+            UITableViewCell *cell = [uiTableView cellForRowAtIndexPath:indexPath];
+            [cell setSelected:false];
+            return;
+        }
+        
+        
+        FeinduraDetailStatsViewController *detailViewController = [[FeinduraDetailStatsViewController alloc] initWithNibName:@"FeinduraDetailStatsViewController" bundle:nil];
+        
+        detailViewController.feinduraAccount = feinduraAccount;
+        detailViewController.level = 1;
         
         if([feinduraAccount objectForKey:@"title"] != nil)
             [detailViewController setTitle:[feinduraAccount objectForKey:@"title"]];
         else
-            [detailViewController setTitle:aKey];
+            [detailViewController setTitle:accountKey];
         
         // Pass the selected object to the new view controller.
         [self.navigationController pushViewController:detailViewController animated:YES];
         [detailViewController release];
-         */
     }
 }
 
@@ -395,6 +401,10 @@
     // START editing mode
     if(uiTableView.editing == false) {
         
+        UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(editFeinduraAccounts:)];
+        self.navigationItem.rightBarButtonItem = backButton;
+        [backButton release];
+        
         // hide the statistics
         for (UITableViewCell *cell in self.uiTableView.visibleCells) {
             for (UILabel *view in [cell.contentView subviews]) {
@@ -407,7 +417,12 @@
         [uiTableView setEditing:true animated:true];
         
     // END editing mode
-    } else {        
+    } else {
+        
+        UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editFeinduraAccounts:)];
+        self.navigationItem.rightBarButtonItem = backButton;
+        [backButton release];
+        
         [self deactivateTableEditing];
     }
 }

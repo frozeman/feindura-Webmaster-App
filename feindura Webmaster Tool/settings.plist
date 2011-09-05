@@ -4,6 +4,8 @@
 <dict>
 	<key>B599FA35-F342-4152-9C20-648FDCB4172E</key>
 	<dict>
+		<key>id</key>
+		<string>B599FA35-F342-4152-9C20-648FDCB4172E</string>
 		<key>account</key>
 		<string>demo</string>
 		<key>url</key>

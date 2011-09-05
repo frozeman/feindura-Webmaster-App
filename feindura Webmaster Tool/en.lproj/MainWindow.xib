@@ -52,6 +52,7 @@
 				<object class="NSPSMatrix" key="NSFrameMatrix"/>
 				<string key="NSFrameSize">{320, 480}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSNextKeyView"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MAA</bytes>
@@ -89,6 +90,7 @@
 					<int key="NSvFlags">256</int>
 					<string key="NSFrame">{{0, 436}, {320, 44}}</string>
 					<reference key="NSSuperview"/>
+					<reference key="NSNextKeyView"/>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">3</int>
 						<bytes key="NSWhite">MQA</bytes>
@@ -111,17 +113,17 @@
 						</object>
 						<object class="IBUINavigationItem" key="IBUINavigationItem" id="394667715">
 							<string key="IBUITitle">Overview</string>
-							<object class="IBUIBarButtonItem" key="IBUILeftBarButtonItem" id="1032859181">
-								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<int key="IBUIStyle">1</int>
-								<reference key="IBUINavigationItem" ref="394667715"/>
-								<int key="IBUISystemItemIdentifier">2</int>
-							</object>
-							<object class="IBUIBarButtonItem" key="IBUIRightBarButtonItem" id="682022623">
+							<object class="IBUIBarButtonItem" key="IBUILeftBarButtonItem" id="682022623">
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIStyle">1</int>
 								<reference key="IBUINavigationItem" ref="394667715"/>
 								<int key="IBUISystemItemIdentifier">4</int>
+							</object>
+							<object class="IBUIBarButtonItem" key="IBUIRightBarButtonItem" id="1032859181">
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<int key="IBUIStyle">1</int>
+								<reference key="IBUINavigationItem" ref="394667715"/>
+								<int key="IBUISystemItemIdentifier">2</int>
 							</object>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						</object>
@@ -199,6 +201,14 @@
 					</object>
 					<int key="connectionID">88</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">editButton</string>
+						<reference key="source" ref="619226028"/>
+						<reference key="destination" ref="1032859181"/>
+					</object>
+					<int key="connectionID">89</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -261,8 +271,8 @@
 						<reference key="object" ref="394667715"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="682022623"/>
 							<reference ref="1032859181"/>
+							<reference ref="682022623"/>
 						</object>
 						<reference key="parent" ref="619226028"/>
 						<string key="objectName">Navigation Item - feindura Webmaster Tool</string>
@@ -283,13 +293,13 @@
 						<reference key="parent" ref="619226028"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">23</int>
-						<reference key="object" ref="1032859181"/>
+						<int key="objectID">17</int>
+						<reference key="object" ref="682022623"/>
 						<reference key="parent" ref="394667715"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">17</int>
-						<reference key="object" ref="682022623"/>
+						<int key="objectID">23</int>
+						<reference key="object" ref="1032859181"/>
 						<reference key="parent" ref="394667715"/>
 					</object>
 				</object>
@@ -353,7 +363,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">88</int>
+			<int key="maxID">91</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>

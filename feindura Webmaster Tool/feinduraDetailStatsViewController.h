@@ -11,14 +11,16 @@
 
 
 @interface FeinduraDetailStatsViewController : UITableViewController {
-    NSInteger level;
-    NSDictionary *feinduraAccount;
+    NSString *level;
+    NSDictionary *data;
+    NSArray *sortedData;
     
     IBOutlet UITableView *uiTableView;
 }
 
-@property(nonatomic,assign) NSInteger level;
-@property(nonatomic,retain) NSDictionary *feinduraAccount;
+@property(nonatomic,retain) NSString *level;
+@property(nonatomic,retain) NSDictionary *data;
+@property(nonatomic,retain) NSArray *sortedData;
 @property(nonatomic,retain) IBOutlet UITableView *uiTableView;
 
 @end

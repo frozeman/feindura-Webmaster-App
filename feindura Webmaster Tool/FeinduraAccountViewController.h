@@ -17,7 +17,6 @@
 @protocol FeinduraAccountViewControllerDelegate <NSObject>
 
 -(void)DismissAddFeinduraView;
--(void)deactivateTableEditing;
 
 @end
 

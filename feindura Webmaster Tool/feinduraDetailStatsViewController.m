@@ -11,7 +11,7 @@
 @implementation FeinduraDetailStatsViewController
 
 @synthesize level;
-@synthesize feinduraAccount;
+@synthesize data, sortedData;
 @synthesize uiTableView;
 
 /*
@@ -44,6 +44,31 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+
+    if(![level isEqualToString:@"MAIN"]) {
+        
+        // CREATE ARRAY
+        NSMutableArray *tempArray = [[NSMutableArray alloc] init];
+        for (NSString *key in data) {
+            [tempArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                   [data objectForKey:key],@"number",
+                                   key,@"data",
+                                   nil]];
+        }
+        
+        // SORT ARRAY
+        self.sortedData = [tempArray sortedArrayUsingComparator:^(id item1, id item2) {
+            NSNumber *value1 = [item1 objectForKey:@"number"];
+            NSNumber *value2 = [item2 objectForKey:@"number"];
+            //NSLog(@"item 1: %@, item 2:%@",value1,value2);
+            return [value1 compare:value2];
+        }];
+        [tempArray release];
+        
+        // REVERSE ARRAY
+        self.sortedData = [[sortedData reverseObjectEnumerator] allObjects];
+        
+    }
 }
 
 - (void)viewDidUnload
@@ -51,7 +76,10 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-    self.feinduraAccount = nil;
+    self.level = nil;
+    self.data = nil;
+    self.sortedData = nil;
+    self.uiTableView = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -81,7 +109,10 @@
 }
 
 - (void)dealloc {
-    [feinduraAccount release];
+    [level release];
+    [data release];
+    [sortedData release];
+    [uiTableView release];
     [super dealloc];
 }
 
@@ -90,31 +121,32 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    if(level == 1)
+    if([level isEqualToString:@"MAIN"])
         return 2;
     else
         return 1;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if(level == 1) {
+    if([level isEqualToString:@"MAIN"]) {
         if(section == 0)
-            return @"Webseiten Statistiken";
+            return @"Details";
         else
             return @"Menu";
     } else
-        return @"";
+        return nil;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(level == 1) {
+    // LEVEL MAIN
+    if([level isEqualToString:@"MAIN"]) {
         if(section == 0)
             return 2;
         else
             return 3;
     } else
-        return [[feinduraAccount objectForKey:@"statistics"] count];
+        return [data count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -126,86 +158,81 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
         [cell.textLabel setTextColor:[UIColor darkGrayColor]];
         [cell.detailTextLabel setTextColor:[UIColor colorWithRed:0.84 green:0.58 blue:0.23 alpha:1]];
-        [cell.detailTextLabel setText:@"-"];
-        
+        [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
     }
     
     
-    // LEVEL 1
-    if(level == 1) {
+    // LEVEL MAIN
+    if([level isEqualToString:@"MAIN"]) {
         
         if(indexPath.section == 0) {
-            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // hide seletion style
+            [cell.detailTextLabel setText:@"-"];
             
             // VISITORS
             if(indexPath.row == 0) {
                 [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_VISITORS", nil)];
-                [cell.detailTextLabel setText:[[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCount"] stringValue]];
+                [cell.detailTextLabel setText:[[[data objectForKey:@"statistics"] objectForKey:@"userVisitCount"] stringValue]];
             }
             // WEBCRAWLER
             if(indexPath.row == 1) {
                 [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_WEBCRAWLER", nil)];
-                [cell.detailTextLabel setText:[[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"robotVisitCount"] stringValue]];
-            }  
+                [cell.detailTextLabel setText:[[[data objectForKey:@"statistics"] objectForKey:@"robotVisitCount"] stringValue]];
+            }
+            
+        } else if(indexPath.section == 1) {
+            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator]; // show selection arrow
+            
+            // SEARCHWORDS
+            if(indexPath.row == 0) {
+                [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_SEARCHWORDS", nil)];
+            }
+            // BROWSER STATISTICS
+            if(indexPath.row == 1) {
+                [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_BROWSERSTATS", nil)];
+            }
+            // PAGE STATISTICS
+            if(indexPath.row == 2) {
+                [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_PAGESTATS", nil)];
+            }
         }
+    } else {
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // hide seletion style
+        [cell.detailTextLabel setText:@"-"];
         
-    
+        NSDictionary *cellData = [sortedData objectAtIndex:indexPath.row];
+        
+        [cell.textLabel setText:[cellData objectForKey:@"data"]];
+        [cell.detailTextLabel setText:[[cellData objectForKey:@"number"] stringValue]];
     }
     
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
 #pragma mark - Table view delegate
 
+// SELECT ROW
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     [detailViewController release];
-     */
+    if(indexPath.section == 0)
+        return;
+    
+    if([level isEqualToString:@"MAIN"]) {
+        FeinduraDetailStatsViewController *detailViewController = [[FeinduraDetailStatsViewController alloc] initWithNibName:@"FeinduraDetailStatsViewController" bundle:nil];
+        
+        // BROWSER STATS
+        if(indexPath.row == 1) {
+            
+            [detailViewController setData: [[data objectForKey:@"statistics"] objectForKey:@"browser"]];
+            [detailViewController setLevel: [NSString stringWithString:@"BROWSER"]];
+            [detailViewController setTitle:NSLocalizedString(@"DETAILVIEWS_BROWSERSTATS", nil)];
+            
+        }
+        
+        // Pass the selected object to the new view controller.
+        [self.navigationController pushViewController:detailViewController animated:YES];
+        [detailViewController release];
+    }
 }
 
 @end

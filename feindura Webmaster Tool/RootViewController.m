@@ -36,9 +36,7 @@
     
     // -> SET transport this instance of the rootViewController to the AppDelegate
     self.appDelegate = [[UIApplication sharedApplication] delegate];
-    RootViewController *tmpRootViewController = self;
-    self.appDelegate.rootViewController = tmpRootViewController;
-    [tmpRootViewController release];
+    self.appDelegate.rootViewController = self;
 
     
     // -> add a title which fits in the navbar
@@ -290,7 +288,7 @@
         
         [self showEditFeinduraAccountView:feinduraAccount];
      
-    // SHOW detail
+    // SHOW DETAIL
     } else {
         
         // get feindura account keys from indexPath.row
@@ -306,8 +304,8 @@
         
         FeinduraDetailStatsViewController *detailViewController = [[FeinduraDetailStatsViewController alloc] initWithNibName:@"FeinduraDetailStatsViewController" bundle:nil];
         
-        detailViewController.feinduraAccount = feinduraAccount;
-        detailViewController.level = 1;
+        [detailViewController setData: feinduraAccount];
+        [detailViewController setLevel: [NSString stringWithString:@"MAIN"]];
         
         if([feinduraAccount objectForKey:@"title"] != nil)
             [detailViewController setTitle:[feinduraAccount objectForKey:@"title"]];
@@ -371,7 +369,7 @@
 
 -(IBAction)showAddFeinduraAccountView:(id)sender {
     
-    [self deactivateTableEditing];
+    [self editFeinduraAccounts:nil];
     
     // instanciate modal view
     FeinduraAccountViewController *modalView = [[FeinduraAccountViewController alloc] init];
@@ -402,7 +400,7 @@
     if(uiTableView.editing == false) {
         
         UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(editFeinduraAccounts:)];
-        self.navigationItem.rightBarButtonItem = backButton;
+        self.navigationItem.leftBarButtonItem = backButton;
         [backButton release];
         
         // hide the statistics
@@ -420,10 +418,15 @@
     } else {
         
         UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editFeinduraAccounts:)];
-        self.navigationItem.rightBarButtonItem = backButton;
+        self.navigationItem.leftBarButtonItem = backButton;
         [backButton release];
         
-        [self deactivateTableEditing];
+        for (UITableViewCell *cell in uiTableView.visibleCells) {
+            for (UILabel *view in [cell.contentView subviews]) {        
+                [view setHidden:false];
+            }
+        }
+        [uiTableView setEditing:false animated:true];
     }
 }
 
@@ -438,16 +441,6 @@
 
     // reload database
     [feinduraAccounts updateAccounts];
-}
-
--(void) deactivateTableEditing {
-    // deactivate editing mode before
-    for (UITableViewCell *cell in uiTableView.visibleCells) {
-        for (UILabel *view in [cell.contentView subviews]) {        
-            [view setHidden:false];
-        }
-    }
-    [uiTableView setEditing:false animated:true];
 }
 
 @end

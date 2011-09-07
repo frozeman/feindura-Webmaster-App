@@ -158,13 +158,25 @@
         [cellStats setTextAlignment:UITextAlignmentRight];
         [cellStats setTag:3];
         
+        UILabel *cellSubStats;
+        cellSubStats = [[UILabel alloc] initWithFrame:CGRectMake( 290, 22, 155, 20 )];
+        [cellSubStats setText:@"-"];
+        [cellSubStats setTextColor:[UIColor grayColor]];
+        [cellSubStats setFont:[UIFont fontWithName:@"Helvetica" size:10]];
+        [cellSubStats setAdjustsFontSizeToFitWidth:true];
+        [cellSubStats setMinimumFontSize: 8.0];
+        [cellSubStats setTextAlignment:UITextAlignmentRight];
+        [cellSubStats setTag:4];
+        
         // add the subviews in the right order
         [cell.contentView addSubview: cellSubText];
         [cell.contentView addSubview: cellText];
-        [cell.contentView addSubview: cellStats];
+        [cell.contentView addSubview: cellSubStats];
+        [cell.contentView addSubview: cellStats];        
         [cellSubText release];
         [cellText release];
         [cellStats release];
+        [cellSubStats release];
         
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
@@ -196,6 +208,19 @@
                 [view setHidden:false];
             // add number
             [view setText:[[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCount"] stringValue]];
+        }
+        
+        // set tableRow statistics subtext
+        if(view.tag == 4) {
+            
+            NSDate *date = [NSDate dateWithTimeIntervalSince1970:[[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"lastVisit"] intValue]];
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+            [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+            [dateFormatter setLocale:[NSLocale autoupdatingCurrentLocale]];
+
+            [view setText:[NSLocalizedString(@"ROOTVIEW_STATSSUBTEXT", nil) stringByAppendingString:[dateFormatter stringFromDate:date]]];
+            [dateFormatter release];
         }
     }
     
@@ -353,16 +378,20 @@
             if(view.tag == 2) //subtext
                 [view setFrame:CGRectMake( 45, 22, 165, 20 )];
             if(view.tag == 3) //stats
-                [view setFrame:CGRectMake( 220, 11, 65, 20 )];   
+                [view setFrame:CGRectMake( 220, 11, 65, 20 )];
+            if(view.tag == 4) //stats subtext
+                [view setHidden:true]; 
         // LANDSCAPE
         } else {
             // TODO: add more stats in this orientation?
             if(view.tag == 1) // text
                 [view setFrame:CGRectMake( 45, 5, 285, 20 )];
             if(view.tag == 2) //subtext
-                [view setFrame:CGRectMake( 45, 22, 285, 20 )];
+                [view setFrame:CGRectMake( 45, 22, 235, 20 )];
             if(view.tag == 3) //stats
-                [view setFrame:CGRectMake( 340, 11, 105, 20 )];                
+                [view setFrame:CGRectMake( 340, 5, 105, 20 )];
+            if(view.tag == 4) //stats subtext
+                [view setHidden:false];
         }
     }
 }

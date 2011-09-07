@@ -197,9 +197,10 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
         [account setObject:@"FAILED" forKey:@"status"];
         
     // -> else try to get json data
-    } else {    
+    } else {
         // CORRECT data fetched
         NSDictionary *fetchedData = [request.responseString JSONValue];
+        //NSLog(@"%@",request.responseString);
         
         if([fetchedData objectForKey:@"title"] != nil) {        
             [account setObject:[fetchedData objectForKey:@"title"] forKey:@"title"]; // set title

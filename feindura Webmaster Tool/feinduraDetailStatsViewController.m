@@ -44,29 +44,33 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    self.navigationController.toolbarHidden = false;
+    
+    UIBarButtonItem            *buttonItem;
+    
+    buttonItem = [[ UIBarButtonItem alloc ] initWithTitle: @"Back"
+                                                    style: UIBarButtonItemStyleBordered
+                                                   target: self
+                                                   action: @selector( goBack: ) ];
+    self.navigationController.toolbarItems = [ NSArray arrayWithObject: buttonItem ];
+    [ buttonItem release ];
 
     if(![level isEqualToString:@"MAIN"]) {
-        
-        // CREATE ARRAY
-        NSMutableArray *tempArray = [[NSMutableArray alloc] init];
-        for (NSString *key in data) {
-            [tempArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-                                   [data objectForKey:key],@"number",
-                                   key,@"data",
-                                   nil]];
-        }
-        
+
         // SORT ARRAY
-        self.sortedData = [tempArray sortedArrayUsingComparator:^(id item1, id item2) {
-            NSNumber *value1 = [item1 objectForKey:@"number"];
-            NSNumber *value2 = [item2 objectForKey:@"number"];
-            //NSLog(@"item 1: %@, item 2:%@",value1,value2);
-            return [value1 compare:value2];
-        }];
-        [tempArray release];
-        
-        // REVERSE ARRAY
-        self.sortedData = [[sortedData reverseObjectEnumerator] allObjects];
+        if(self.sortedData != nil && [sortedData isKindOfClass:[NSArray class]]) {
+            self.sortedData = [sortedData sortedArrayUsingComparator:^(id item1, id item2) {
+                NSNumber *value1 = [item1 objectForKey:@"number"];
+                NSNumber *value2 = [item2 objectForKey:@"number"];
+                //NSLog(@"item 1: %@, item 2:%@",value1,value2);
+                return [value1 compare:value2];
+            }];
+            
+            // REVERSE ARRAY
+            self.sortedData = [[sortedData reverseObjectEnumerator] allObjects];
+            //NSLog(@"%@",sortedData);
+        }
         
     }
 }
@@ -105,7 +109,7 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return true;
 }
 
 - (void)dealloc {
@@ -130,9 +134,9 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if([level isEqualToString:@"MAIN"]) {
         if(section == 0)
-            return @"Details";
+            return NSLocalizedString(@"DETAILVIEWS_HEADER_STATS", nil);
         else
-            return @"Menu";
+            return NSLocalizedString(@"DETAILVIEWS_HEADER_DETAILS", nil);
     } else
         return nil;
 }
@@ -146,7 +150,7 @@
         else
             return 3;
     } else
-        return [data count];
+        return [sortedData count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -196,14 +200,21 @@
                 [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_PAGESTATS", nil)];
             }
         }
-    } else {
+        
+    // SHOW SORTED DATA
+    } else if(self.sortedData != nil) {
+        
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // hide seletion style
         [cell.detailTextLabel setText:@"-"];
         
-        NSDictionary *cellData = [sortedData objectAtIndex:indexPath.row];
+        if([level isEqualToString:@"PAGES"]) {
+            [cell.textLabel setText:[[[sortedData objectAtIndex:indexPath.row] objectForKey:@"data"] objectForKey:@"title"]];
+        } else {
+            [cell.textLabel setText:[[sortedData objectAtIndex:indexPath.row] objectForKey:@"data"]];
+        }       
         
-        [cell.textLabel setText:[cellData objectForKey:@"data"]];
-        [cell.detailTextLabel setText:[[cellData objectForKey:@"number"] stringValue]];
+        [cell.detailTextLabel setText:[[[sortedData objectAtIndex:indexPath.row] objectForKey:@"number"] stringValue]];
+        
     }
     
     return cell;
@@ -220,12 +231,27 @@
     if([level isEqualToString:@"MAIN"]) {
         FeinduraDetailStatsViewController *detailViewController = [[FeinduraDetailStatsViewController alloc] initWithNibName:@"FeinduraDetailStatsViewController" bundle:nil];
         
+        // SEARCHWORDS
+        if(indexPath.row == 0) {
+            [detailViewController setSortedData: [[data objectForKey:@"statistics"] objectForKey:@"searchWords"]];
+            [detailViewController setLevel: [NSString stringWithString:@"SEARCHWORDS"]];
+            [detailViewController setTitle:NSLocalizedString(@"DETAILVIEWS_SEARCHWORDS", nil)];
+            
+        }
+        
         // BROWSER STATS
         if(indexPath.row == 1) {
-            
-            [detailViewController setData: [[data objectForKey:@"statistics"] objectForKey:@"browser"]];
+            [detailViewController setSortedData: [[data objectForKey:@"statistics"] objectForKey:@"browser"]];
             [detailViewController setLevel: [NSString stringWithString:@"BROWSER"]];
             [detailViewController setTitle:NSLocalizedString(@"DETAILVIEWS_BROWSERSTATS", nil)];
+            
+        }
+        
+        // PAGE STATS
+        if(indexPath.row == 2) {
+            [detailViewController setSortedData: [[data objectForKey:@"statistics"] objectForKey:@"pages"]];
+            [detailViewController setLevel: [NSString stringWithString:@"PAGES"]];
+            [detailViewController setTitle:NSLocalizedString(@"DETAILVIEWS_PAGESTATS", nil)];
             
         }
         

@@ -1,4 +1,4 @@
-feindura Webmaster Tool - Version 0.1 Beta
+feindura Webmaster Tool - Version 0.2
 ==============================================
 Copyright (C) Fabian Vogelsteller [frozeman.de]
 published under the GNU General Public License version 3

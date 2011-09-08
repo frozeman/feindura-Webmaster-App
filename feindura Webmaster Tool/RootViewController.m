@@ -398,7 +398,8 @@
 
 -(IBAction)showAddFeinduraAccountView:(id)sender {
     
-    [self editFeinduraAccounts:nil];
+    if(self.uiTableView.editing == true)
+        [self editFeinduraAccounts:nil];
     
     // instanciate modal view
     FeinduraAccountViewController *modalView = [[FeinduraAccountViewController alloc] init];
@@ -426,7 +427,7 @@
 
 -(IBAction)editFeinduraAccounts:(id)sender {
     // START editing mode
-    if(uiTableView.editing == false) {
+    if(self.uiTableView.editing == false) {
         
         UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(editFeinduraAccounts:)];
         self.navigationItem.leftBarButtonItem = backButton;
@@ -435,7 +436,7 @@
         // hide the statistics
         for (UITableViewCell *cell in self.uiTableView.visibleCells) {
             for (UILabel *view in [cell.contentView subviews]) {
-                if(view.tag == 3) {
+                if(view.tag == 3 || view.tag == 4) {
                     [view setHidden:true];
                 }
             }
@@ -451,8 +452,10 @@
         [backButton release];
         
         for (UITableViewCell *cell in uiTableView.visibleCells) {
-            for (UILabel *view in [cell.contentView subviews]) {        
-                [view setHidden:false];
+            for (UILabel *view in [cell.contentView subviews]) {
+                if(view.tag != 4 || (view.tag == 4 && !UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation]))) // prevent stats subtext to become visible in portrait mode
+                    [view setHidden:false];
+                
             }
         }
         [uiTableView setEditing:false animated:true];

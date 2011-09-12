@@ -209,7 +209,13 @@
             if(tableView.editing == false)
                 [view setHidden:false];
             // add number
-            [view setText:[[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCount"] stringValue]];
+            
+            NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
+            [fmt setAlwaysShowsDecimalSeparator:false];
+            [fmt setLocale:[NSLocale autoupdatingCurrentLocale]];
+            [fmt setNumberStyle:NSNumberFormatterDecimalStyle];            
+            [view setText:[fmt stringForObjectValue:[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCount"]]];
+            [fmt release];
         }
         
         // set tableRow statistics subtext

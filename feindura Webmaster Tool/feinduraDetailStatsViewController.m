@@ -162,9 +162,15 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
         [cell.textLabel setTextColor:[UIColor darkGrayColor]];
         [cell.detailTextLabel setTextColor:[UIColor colorWithRed:0.84 green:0.58 blue:0.23 alpha:1]];
+        [cell.detailTextLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15]];
         [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
     }
     
+    // number style
+    NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
+    [fmt setAlwaysShowsDecimalSeparator:false];
+    [fmt setLocale:[NSLocale autoupdatingCurrentLocale]];
+    [fmt setNumberStyle:NSNumberFormatterDecimalStyle];  
     
     // LEVEL MAIN
     if([level isEqualToString:@"MAIN"]) {
@@ -176,12 +182,12 @@
             // VISITORS
             if(indexPath.row == 0) {
                 [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_VISITORS", nil)];
-                [cell.detailTextLabel setText:[[[data objectForKey:@"statistics"] objectForKey:@"userVisitCount"] stringValue]];
+                [cell.detailTextLabel setText:[fmt stringForObjectValue:[[data objectForKey:@"statistics"] objectForKey:@"userVisitCount"]]];
             }
             // WEBCRAWLER
             if(indexPath.row == 1) {
                 [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_WEBCRAWLER", nil)];
-                [cell.detailTextLabel setText:[[[data objectForKey:@"statistics"] objectForKey:@"robotVisitCount"] stringValue]];
+                [cell.detailTextLabel setText:[fmt stringForObjectValue:[[data objectForKey:@"statistics"] objectForKey:@"robotVisitCount"]]];
             }
             
         } else if(indexPath.section == 1) {
@@ -212,11 +218,11 @@
         } else {
             [cell.textLabel setText:[[sortedData objectAtIndex:indexPath.row] objectForKey:@"data"]];
         }
-        
-        [cell.detailTextLabel setText:[[[sortedData objectAtIndex:indexPath.row] objectForKey:@"number"] stringValue]];
-        
+       
+        [cell.detailTextLabel setText:[fmt stringForObjectValue:[[sortedData objectAtIndex:indexPath.row] objectForKey:@"number"]]];
     }
     
+    [fmt release];
     return cell;
 }
 

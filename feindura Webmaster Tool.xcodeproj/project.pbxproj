@@ -62,6 +62,8 @@
 		A3B2CFDF140ADFF300B85550 /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = A3B2CFC5140ADFF300B85550 /* SBJsonTokeniser.m */; };
 		A3B2CFE0140ADFF300B85550 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = A3B2CFC6140ADFF300B85550 /* SBJsonUTF8Stream.m */; };
 		A3B2CFE1140ADFF300B85550 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = A3B2CFC7140ADFF300B85550 /* SBJsonWriter.m */; };
+		A3B9CB2B141DAC5300BE23FB /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3B9CB2A141DAC5300BE23FB /* icon@2x.png */; };
+		A3B9CB2D141DAC5700BE23FB /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A3B9CB2C141DAC5700BE23FB /* icon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -170,6 +172,8 @@
 		A3B2CFD3140ADFF300B85550 /* SBJsonTokeniser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonTokeniser.h; sourceTree = "<group>"; };
 		A3B2CFD4140ADFF300B85550 /* SBJsonUTF8Stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonUTF8Stream.h; sourceTree = "<group>"; };
 		A3B2CFD5140ADFF300B85550 /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
+		A3B9CB2A141DAC5300BE23FB /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		A3B9CB2C141DAC5700BE23FB /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -297,6 +301,8 @@
 		A3AB891D13A4D42F0025FE50 = {
 			isa = PBXGroup;
 			children = (
+				A3B9CB2C141DAC5700BE23FB /* icon.png */,
+				A3B9CB2A141DAC5300BE23FB /* icon@2x.png */,
 				A3B2CFB7140AD76700B85550 /* Default@2x.png */,
 				A3B2CFB4140AD6EB00B85550 /* Default.png */,
 				A3AB893213A4D42F0025FE50 /* feindura Webmaster Tool */,
@@ -501,6 +507,8 @@
 				A3B2CFB8140AD76700B85550 /* Default@2x.png in Resources */,
 				A3B2CFBA140AD9F500B85550 /* default.icon.png in Resources */,
 				A37DB305140D81D300C3E7D3 /* FeinduraDetailStatsViewController.xib in Resources */,
+				A3B9CB2B141DAC5300BE23FB /* icon@2x.png in Resources */,
+				A3B9CB2D141DAC5700BE23FB /* icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -645,6 +653,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				SHARED_PRECOMPS_DIR = "$(CACHE_ROOT)/SharedPrecompiledHeaders";
 			};
@@ -661,6 +670,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				SHARED_PRECOMPS_DIR = "$(CACHE_ROOT)/SharedPrecompiledHeaders";
 			};

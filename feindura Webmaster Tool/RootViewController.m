@@ -72,7 +72,9 @@
     // --------------------------------------------------------------------------------------------
     
     // -> basic table setup
-    uiTableView.allowsSelectionDuringEditing = true;    
+    uiTableView.allowsSelectionDuringEditing = true;
+    
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 
 }
 
@@ -370,19 +372,10 @@
 #pragma mark Methods
 
 -(void)changeCellOrientation:(UITableViewCell *)cell {
+    //NSLog(@"%@",UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation]));
     for (UILabel *view in [cell.contentView subviews]) {
-        // PORTRAIT
-        if(UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation])) {
-            if(view.tag == 1) //text
-                [view setFrame:CGRectMake( 45, 5, 165, 20 )];
-            if(view.tag == 2) //subtext
-                [view setFrame:CGRectMake( 45, 22, 165, 20 )];
-            if(view.tag == 3) //stats
-                [view setFrame:CGRectMake( 220, 11, 65, 20 )];
-            if(view.tag == 4) //stats subtext
-                [view setHidden:true]; 
         // LANDSCAPE
-        } else {
+        if(UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation])) {
             // TODO: add more stats in this orientation?
             if(view.tag == 1) // text
                 [view setFrame:CGRectMake( 45, 5, 285, 20 )];
@@ -392,6 +385,16 @@
                 [view setFrame:CGRectMake( 340, 5, 105, 20 )];
             if(view.tag == 4) //stats subtext
                 [view setHidden:false];
+        // PORTRAIT
+        } else {           
+            if(view.tag == 1) //text
+                [view setFrame:CGRectMake( 45, 5, 165, 20 )];
+            if(view.tag == 2) //subtext
+                [view setFrame:CGRectMake( 45, 22, 165, 20 )];
+            if(view.tag == 3) //stats
+                [view setFrame:CGRectMake( 220, 11, 65, 20 )];
+            if(view.tag == 4) //stats subtext
+                [view setHidden:true]; 
         }
     }
 }

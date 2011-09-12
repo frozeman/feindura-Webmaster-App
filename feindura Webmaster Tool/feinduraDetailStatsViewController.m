@@ -211,7 +211,7 @@
             [cell.textLabel setText:[[[sortedData objectAtIndex:indexPath.row] objectForKey:@"data"] objectForKey:@"title"]];
         } else {
             [cell.textLabel setText:[[sortedData objectAtIndex:indexPath.row] objectForKey:@"data"]];
-        }       
+        }
         
         [cell.detailTextLabel setText:[[[sortedData objectAtIndex:indexPath.row] objectForKey:@"number"] stringValue]];
         

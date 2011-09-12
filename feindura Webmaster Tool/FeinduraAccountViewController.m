@@ -259,9 +259,9 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [delegate.feinduraAccounts saveAccounts];
     
     [currentAccount release];
-
+    
+    if(self.editAccount != NULL) [delegate editFeinduraAccounts:nil]; // turn off the edit mode, only when saving an edit feindura account
 	[delegate DismissAddFeinduraView];
-    [delegate editFeinduraAccounts:nil];
 }
 
 - (UITextField*)textFieldsAreEmpty {

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		A30E74E613A4FD000026ECFF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A30E74E513A4FD000026ECFF /* README.md */; };
 		A31BCA49140AD0F600910977 /* failed.icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A31BCA47140AD0F600910977 /* failed.icon.png */; };
-		A31CB23814052FFB001FE17A /* SyncsFeinduraAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = A31CB23714052FFB001FE17A /* SyncsFeinduraAccounts.m */; };
+		A31CB23814052FFB001FE17A /* SyncFeinduraAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = A31CB23714052FFB001FE17A /* SyncFeinduraAccounts.m */; };
 		A37DB305140D81D300C3E7D3 /* DetailStatsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A37DB302140D81D300C3E7D3 /* DetailStatsViewController.xib */; };
 		A37DB306140D81D300C3E7D3 /* DetailStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A37DB304140D81D300C3E7D3 /* DetailStatsViewController.m */; };
 		A38A212A13ABDB6B00866212 /* settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = A38A212913ABDB6B00866212 /* settings.plist */; };
@@ -80,8 +80,8 @@
 /* Begin PBXFileReference section */
 		A30E74E513A4FD000026ECFF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		A31BCA47140AD0F600910977 /* failed.icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = failed.icon.png; path = Images/failed.icon.png; sourceTree = "<group>"; };
-		A31CB23614052FFB001FE17A /* SyncsFeinduraAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; path = SyncsFeinduraAccounts.h; sourceTree = "<group>"; };
-		A31CB23714052FFB001FE17A /* SyncsFeinduraAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncsFeinduraAccounts.m; sourceTree = "<group>"; };
+		A31CB23614052FFB001FE17A /* SyncFeinduraAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; path = SyncFeinduraAccounts.h; sourceTree = "<group>"; };
+		A31CB23714052FFB001FE17A /* SyncFeinduraAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncFeinduraAccounts.m; sourceTree = "<group>"; };
 		A37DB302140D81D300C3E7D3 /* DetailStatsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailStatsViewController.xib; sourceTree = "<group>"; };
 		A37DB303140D81D300C3E7D3 /* DetailStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; path = DetailStatsViewController.h; sourceTree = "<group>"; };
 		A37DB304140D81D300C3E7D3 /* DetailStatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailStatsViewController.m; sourceTree = "<group>"; };
@@ -244,8 +244,8 @@
 		A38FEFE913AF7ED800250641 /* Helper Classes */ = {
 			isa = PBXGroup;
 			children = (
-				A31CB23614052FFB001FE17A /* SyncsFeinduraAccounts.h */,
-				A31CB23714052FFB001FE17A /* SyncsFeinduraAccounts.m */,
+				A31CB23614052FFB001FE17A /* SyncFeinduraAccounts.h */,
+				A31CB23714052FFB001FE17A /* SyncFeinduraAccounts.m */,
 				A38FEFEB13AF7F4300250641 /* NSString+MD5.h */,
 				A38FEFEC13AF7F4300250641 /* NSString+MD5.m */,
 				A3A49478141FFD42008BAA89 /* TableHelperClass.h */,
@@ -564,7 +564,7 @@
 				A393670F13B0A37200ADBD73 /* ASINetworkQueue.m in Sources */,
 				A393671213B0A3A200ADBD73 /* Reachability.m in Sources */,
 				A390809613B1FE7400F26A6C /* SFHFKeychainUtils.m in Sources */,
-				A31CB23814052FFB001FE17A /* SyncsFeinduraAccounts.m in Sources */,
+				A31CB23814052FFB001FE17A /* SyncFeinduraAccounts.m in Sources */,
 				A3B2CFD6140ADFF300B85550 /* NSObject+SBJson.m in Sources */,
 				A3B2CFD7140ADFF300B85550 /* SBJsonParser.m in Sources */,
 				A3B2CFD8140ADFF300B85550 /* SBJsonStreamParser.m in Sources */,

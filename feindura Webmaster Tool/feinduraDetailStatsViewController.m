@@ -160,9 +160,57 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
-        [cell.textLabel setTextColor:[UIColor darkGrayColor]];
-        [cell.detailTextLabel setTextColor:[UIColor colorWithRed:0.84 green:0.58 blue:0.23 alpha:1]];
-        [cell.detailTextLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15]];
+        [cell.textLabel setTextColor:[UIColor darkGrayColor]];        
+        
+        UILabel *cellText;
+        cellText = [[UILabel alloc] init];
+        [cellText setBackgroundColor:[UIColor clearColor]];
+        [cellText setTextColor:[UIColor darkGrayColor]];
+        [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15]];
+        [cellText setAdjustsFontSizeToFitWidth:true];
+        [cellText setMinimumFontSize: 12.0];
+        [cellText setTag:1];
+        
+        UILabel *cellSubText;
+        cellSubText = [[UILabel alloc] init];
+        [cellSubText setBackgroundColor:[UIColor clearColor]];
+        [cellSubText setTextColor:[UIColor grayColor]];
+        [cellSubText setFont:[UIFont fontWithName:@"Helvetica" size:10]];
+        [cellSubText setAdjustsFontSizeToFitWidth:true];
+        [cellSubText setMinimumFontSize: 8.0];
+        [cellSubText setTag:2];
+        
+        UILabel *cellStats;
+        cellStats = [[UILabel alloc] init];
+        [cellStats setText:@"-"];
+        [cellStats setTextColor:[UIColor colorWithRed:0.84 green:0.58 blue:0.23 alpha:1]];
+        [cellStats setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15]];
+        [cellStats setAdjustsFontSizeToFitWidth:true];
+        [cellStats setMinimumFontSize: 8.0];
+        [cellStats setTextAlignment:UITextAlignmentRight];
+        [cellStats setTag:3];
+        
+        UILabel *cellSubStats;
+        cellSubStats = [[UILabel alloc] initWithFrame:CGRectMake( 290, 22, 155, 20 )];
+        [cellSubStats setText:@"-"];
+        [cellSubStats setTextColor:[UIColor grayColor]];
+        [cellSubStats setFont:[UIFont fontWithName:@"Helvetica" size:10]];
+        [cellSubStats setAdjustsFontSizeToFitWidth:true];
+        [cellSubStats setMinimumFontSize: 8.0];
+        [cellSubStats setTextAlignment:UITextAlignmentRight];
+        [cellSubStats setTag:4];
+        
+        // add the subviews in the right order
+        [cell.contentView addSubview: cellSubText];
+        [cell.contentView addSubview: cellText];
+        [cell.contentView addSubview: cellSubStats];
+        [cell.contentView addSubview: cellStats];        
+        [cellSubText release];
+        [cellText release];
+        [cellStats release];
+        [cellSubStats release];
+        
+        
         [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
     }
     

@@ -185,52 +185,45 @@
         //[cell setSelected:false];
     }
     
-    // get feindura account keys from indexPath.row
+    // number formatter
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setAlwaysShowsDecimalSeparator:false];
+    [numberFormatter setLocale:[NSLocale autoupdatingCurrentLocale]];
+    [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle]; 
+    
+    // date fomatter
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    [dateFormatter setLocale:[NSLocale autoupdatingCurrentLocale]];
+    
+    
+    // GET current feindura account
     id feinduraAccount = [feinduraAccounts.dataBase objectForKey:[[feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row]];
     
-    // add the text to the cells
-    for (UILabel *view in [cell.contentView subviews]) {        
-        // set tableRow text
-        if(view.tag == 1) {  
-            if([feinduraAccount objectForKey:@"title"] != nil && ![[feinduraAccount objectForKey:@"title"] isEqualToString:@""])
-                [view setText:[feinduraAccount objectForKey:@"title"]];
-            else
-                [view setText:[feinduraAccount objectForKey:@"url"]];
-        }
+    // title
+    if([feinduraAccount objectForKey:@"title"] != nil && ![[feinduraAccount objectForKey:@"title"] isEqualToString:@""])
+        [(UILabel *)[cell viewWithTag:1] setText:[feinduraAccount objectForKey:@"title"]];
+    else
+        [(UILabel *)[cell viewWithTag:1] setText:[feinduraAccount objectForKey:@"url"]];
         
-        // set tableRow subtext
-        if(view.tag == 2) {            
-            [view setText:[feinduraAccount objectForKey:@"url"]];
-        }
+    // url           
+    [(UILabel *)[cell viewWithTag:2] setText:[feinduraAccount objectForKey:@"url"]];
         
-        // set tableRow userStatistics
-        if(view.tag == 3 && [feinduraAccount objectForKey:@"statistics"] != nil && [[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCount"] != nil) {
-            // show the number, when hidden and not shown again after removing and adding (hack)
-            if(tableView.editing == false)
-                [view setHidden:false];
-            // add number
-            
-            NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
-            [fmt setAlwaysShowsDecimalSeparator:false];
-            [fmt setLocale:[NSLocale autoupdatingCurrentLocale]];
-            [fmt setNumberStyle:NSNumberFormatterDecimalStyle];            
-            [view setText:[fmt stringForObjectValue:[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCount"]]];
-            [fmt release];
-        }
+    // userStatistics
+    if([feinduraAccount objectForKey:@"statistics"] != nil && [[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCount"] != nil) {
+        // show the number, when hidden and not shown again after removing and adding (hack)
+        if(tableView.editing == false)
+            [(UILabel *)[cell viewWithTag:3] setHidden:false];
         
-        // set tableRow statistics subtext
-        if(view.tag == 4) {
-            
-            NSDate *date = [NSDate dateWithTimeIntervalSince1970:[[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"lastVisit"] intValue]];
-            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-            [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-            [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-            [dateFormatter setLocale:[NSLocale autoupdatingCurrentLocale]];
-
-            [view setText:[NSLocalizedString(@"ROOTVIEW_STATSSUBTEXT", nil) stringByAppendingString:[dateFormatter stringFromDate:date]]];
-            [dateFormatter release];
-        }
+        // add number
+        [(UILabel *)[cell viewWithTag:3] setText:[numberFormatter stringForObjectValue:[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCount"]]];
+        
     }
+        
+    // statistics subtext
+    [(UILabel *)[cell viewWithTag:4] setText:[NSLocalizedString(@"ROOTVIEW_STATSSUBTEXT", nil) stringByAppendingString:[dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:[[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"lastVisit"] intValue]]]]];
+    
     
     // ADD a image
     if([[feinduraAccount objectForKey:@"status"] isEqualToString:@"FAILED"]) {
@@ -244,7 +237,8 @@
     }
     
     [self changeCellOrientation:cell];
-    feinduraAccount = nil;
+    [dateFormatter release];
+    [numberFormatter release];
     return cell;
 }
 

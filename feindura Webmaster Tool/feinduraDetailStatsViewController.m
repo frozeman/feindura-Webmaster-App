@@ -146,7 +146,7 @@
     // LEVEL MAIN
     if([level isEqualToString:@"MAIN"]) {
         if(section == 0)
-            return 2;
+            return 4;
         else
             return 3;
     } else
@@ -167,10 +167,16 @@
     }
     
     // number style
-    NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
-    [fmt setAlwaysShowsDecimalSeparator:false];
-    [fmt setLocale:[NSLocale autoupdatingCurrentLocale]];
-    [fmt setNumberStyle:NSNumberFormatterDecimalStyle];  
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setAlwaysShowsDecimalSeparator:false];
+    [numberFormatter setLocale:[NSLocale autoupdatingCurrentLocale]];
+    [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    
+    // date style
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    [dateFormatter setLocale:[NSLocale autoupdatingCurrentLocale]];
     
     // LEVEL MAIN
     if([level isEqualToString:@"MAIN"]) {
@@ -182,12 +188,27 @@
             // VISITORS
             if(indexPath.row == 0) {
                 [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_VISITORS", nil)];
-                [cell.detailTextLabel setText:[fmt stringForObjectValue:[[data objectForKey:@"statistics"] objectForKey:@"userVisitCount"]]];
+                [cell.detailTextLabel setText:[numberFormatter
+                                               stringForObjectValue:[[data objectForKey:@"statistics"] objectForKey:@"userVisitCount"]]];
             }
             // WEBCRAWLER
             if(indexPath.row == 1) {
                 [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_WEBCRAWLER", nil)];
-                [cell.detailTextLabel setText:[fmt stringForObjectValue:[[data objectForKey:@"statistics"] objectForKey:@"robotVisitCount"]]];
+                [cell.detailTextLabel setText:[numberFormatter
+                                               stringForObjectValue:[[data objectForKey:@"statistics"] objectForKey:@"robotVisitCount"]]];
+            }
+            
+            // FIRST VISIT
+            if(indexPath.row == 2) {
+                [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_FIRSTVISIT", nil)];
+                [cell.detailTextLabel setText:[dateFormatter
+                                               stringFromDate:[NSDate dateWithTimeIntervalSince1970:[[[data objectForKey:@"statistics"] objectForKey:@"firstVisit"] intValue]]]];
+            }
+            // LAST VISIT
+            if(indexPath.row == 3) {
+                [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_LASTVISIT", nil)];
+                [cell.detailTextLabel setText:[dateFormatter
+                                               stringFromDate:[NSDate dateWithTimeIntervalSince1970:[[[data objectForKey:@"statistics"] objectForKey:@"lastVisit"] intValue]]]];
             }
             
         } else if(indexPath.section == 1) {
@@ -219,10 +240,11 @@
             [cell.textLabel setText:[[sortedData objectAtIndex:indexPath.row] objectForKey:@"data"]];
         }
        
-        [cell.detailTextLabel setText:[fmt stringForObjectValue:[[sortedData objectAtIndex:indexPath.row] objectForKey:@"number"]]];
+        [cell.detailTextLabel setText:[numberFormatter stringForObjectValue:[[sortedData objectAtIndex:indexPath.row] objectForKey:@"number"]]];
     }
     
-    [fmt release];
+    [numberFormatter release];
+    [dateFormatter release];
     return cell;
 }
 

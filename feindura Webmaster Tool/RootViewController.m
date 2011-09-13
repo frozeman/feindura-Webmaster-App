@@ -7,7 +7,7 @@
 //
 
 #import "RootViewController.h"
-#import "FeinduraDetailStatsViewController.h"
+#import "DetailStatsViewController.h"
 #import "feindura_Webmaster_ToolAppDelegate.h"
 #import "NSString+MD5.h"
 #import "SFHFKeychainUtils.h"
@@ -54,7 +54,7 @@
     
     
     // LOAD feindura Accounts
-    syncFeinduraAccounts *tmpFa = [[syncFeinduraAccounts alloc] init];
+    SyncFeinduraAccounts *tmpFa = [[SyncFeinduraAccounts alloc] init];
     self.feinduraAccounts = tmpFa;
     [tmpFa release];
     RootViewController *tmpRootView = self;
@@ -81,6 +81,10 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    for (UITableViewCell *cell in uiTableView.visibleCells) {
+        [TableHelperClass changeCellOrientation:cell table:@"RootViewController"];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -98,19 +102,30 @@
 	[super viewDidDisappear:animated];
 }
 
-
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	// Return YES for supported orientations.
-	//return (interfaceOrientation == UIInterfaceOrientationPortrait);
-    return true;
+- (void)didReceiveMemoryWarning {
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Relinquish ownership any cached data, images, etc that aren't in use.
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    for (UITableViewCell *cell in self.uiTableView.visibleCells) {
-        [self changeCellOrientation:cell];
-    }
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    self.feinduraAccounts = nil;
+    self.uiTableView = nil;
+    self.titleBar = nil;
+    self.appDelegate = nil;
 }
+
+- (void)dealloc {
+    [feinduraAccounts release];
+    [uiTableView release];
+    [titleBar release];
+    [appDelegate release];
+    [super dealloc];
+}
+
+#pragma mark - Table view data source
 
 // Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -132,17 +147,15 @@
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];         
         
-        UILabel *cellText;
-        cellText = [[UILabel alloc] init];
+        UILabel *cellText = [[UILabel alloc] init];
         [cellText setBackgroundColor:[UIColor clearColor]];
         [cellText setTextColor:[UIColor darkGrayColor]];
-        [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15]];
+        [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
         [cellText setAdjustsFontSizeToFitWidth:true];
         [cellText setMinimumFontSize: 12.0];
         [cellText setTag:1];
         
-        UILabel *cellSubText;
-        cellSubText = [[UILabel alloc] init];
+        UILabel *cellSubText = [[UILabel alloc] init];
         [cellSubText setBackgroundColor:[UIColor clearColor]];
         [cellSubText setTextColor:[UIColor grayColor]];
         [cellSubText setFont:[UIFont fontWithName:@"Helvetica" size:10]];
@@ -150,18 +163,16 @@
         [cellSubText setMinimumFontSize: 8.0];
         [cellSubText setTag:2];
         
-        UILabel *cellStats;
-        cellStats = [[UILabel alloc] init];
+        UILabel *cellStats = [[UILabel alloc] init];
         [cellStats setText:@"-"];
         [cellStats setTextColor:[UIColor colorWithRed:0.84 green:0.58 blue:0.23 alpha:1]];
-        [cellStats setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15]];
+        [cellStats setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
         [cellStats setAdjustsFontSizeToFitWidth:true];
         [cellStats setMinimumFontSize: 8.0];
         [cellStats setTextAlignment:UITextAlignmentRight];
         [cellStats setTag:3];
         
-        UILabel *cellSubStats;
-        cellSubStats = [[UILabel alloc] initWithFrame:CGRectMake( 290, 22, 155, 20 )];
+        UILabel *cellSubStats = [[UILabel alloc] initWithFrame:CGRectMake( 290, 22, 155, 20 )];
         [cellSubStats setText:@"-"];
         [cellSubStats setTextColor:[UIColor grayColor]];
         [cellSubStats setFont:[UIFont fontWithName:@"Helvetica" size:10]];
@@ -182,7 +193,6 @@
         
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
-        //[cell setSelected:false];
     }
     
     // number formatter
@@ -236,11 +246,13 @@
         cell.imageView.image = theImage;
     }
     
-    [self changeCellOrientation:cell];
+    [TableHelperClass changeCellOrientation:cell table:@"RootViewController"];
     [dateFormatter release];
     [numberFormatter release];
     return cell;
 }
+
+#pragma mark - Table view delegate
 
 // Make Table rows changing color
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -329,7 +341,7 @@
         }
         
         
-        FeinduraDetailStatsViewController *detailViewController = [[FeinduraDetailStatsViewController alloc] initWithNibName:@"FeinduraDetailStatsViewController" bundle:nil];
+        DetailStatsViewController *detailViewController = [[DetailStatsViewController alloc] initWithNibName:@"FeinduraDetailStatsViewController" bundle:nil];
         
         [detailViewController setData: feinduraAccount];
         [detailViewController setLevel: [NSString stringWithString:@"MAIN"]];
@@ -345,59 +357,21 @@
     }
 }
 
-- (void)didReceiveMemoryWarning {
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Relinquish ownership any cached data, images, etc that aren't in use.
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	// Return YES for supported orientations.
+	//return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return true;
 }
 
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    self.feinduraAccounts = nil;
-    self.uiTableView = nil;
-    self.titleBar = nil;
-    self.appDelegate = nil;
-}
-
-- (void)dealloc {
-    [feinduraAccounts release];
-    [uiTableView release];
-    [titleBar release];
-    [appDelegate release];
-    [super dealloc];
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    for (UITableViewCell *cell in self.uiTableView.visibleCells) {
+        [TableHelperClass changeCellOrientation:cell table:@"RootViewController"];
+    }
 }
 
 
 #pragma mark Methods
-
--(void)changeCellOrientation:(UITableViewCell *)cell {
-    //NSLog(@"%@",UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation]));
-    for (UILabel *view in [cell.contentView subviews]) {
-        // LANDSCAPE
-        if(UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation])) {
-            // TODO: add more stats in this orientation?
-            if(view.tag == 1) // text
-                [view setFrame:CGRectMake( 45, 5, 285, 20 )];
-            if(view.tag == 2) //subtext
-                [view setFrame:CGRectMake( 45, 22, 235, 20 )];
-            if(view.tag == 3) //stats
-                [view setFrame:CGRectMake( 340, 5, 105, 20 )];
-            if(view.tag == 4) //stats subtext
-                [view setHidden:false];
-        // PORTRAIT
-        } else {           
-            if(view.tag == 1) //text
-                [view setFrame:CGRectMake( 45, 5, 165, 20 )];
-            if(view.tag == 2) //subtext
-                [view setFrame:CGRectMake( 45, 22, 165, 20 )];
-            if(view.tag == 3) //stats
-                [view setFrame:CGRectMake( 220, 11, 65, 20 )];
-            if(view.tag == 4) //stats subtext
-                [view setHidden:true]; 
-        }
-    }
-}
 
 -(IBAction)showAddFeinduraAccountView:(id)sender {
     

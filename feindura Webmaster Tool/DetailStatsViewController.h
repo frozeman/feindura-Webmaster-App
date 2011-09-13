@@ -10,7 +10,7 @@
 #import "RootViewController.h"
 
 
-@interface FeinduraDetailStatsViewController : UITableViewController {
+@interface DetailStatsViewController : UITableViewController {
     NSString *level;
     NSDictionary *data;
     NSArray *sortedData;

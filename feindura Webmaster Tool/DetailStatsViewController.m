@@ -6,9 +6,9 @@
 //  Copyright 2011 [frozeman.de]. All rights reserved.
 //
 
-#import "FeinduraDetailStatsViewController.h"
+#import "DetailStatsViewController.h"
 
-@implementation FeinduraDetailStatsViewController
+@implementation DetailStatsViewController
 
 @synthesize level;
 @synthesize data, sortedData;
@@ -89,6 +89,10 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    for (UITableViewCell *cell in uiTableView.visibleCells) {
+        [TableHelperClass changeCellOrientation:cell];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -104,12 +108,6 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    return true;
 }
 
 - (void)dealloc {
@@ -159,20 +157,17 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
-        [cell.textLabel setTextColor:[UIColor darkGrayColor]];        
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
         
-        UILabel *cellText;
-        cellText = [[UILabel alloc] init];
+        UILabel *cellText = [[UILabel alloc] init];
         [cellText setBackgroundColor:[UIColor clearColor]];
         [cellText setTextColor:[UIColor darkGrayColor]];
-        [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15]];
+        [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
         [cellText setAdjustsFontSizeToFitWidth:true];
         [cellText setMinimumFontSize: 12.0];
         [cellText setTag:1];
         
-        UILabel *cellSubText;
-        cellSubText = [[UILabel alloc] init];
+        UILabel *cellSubText = [[UILabel alloc] init];
         [cellSubText setBackgroundColor:[UIColor clearColor]];
         [cellSubText setTextColor:[UIColor grayColor]];
         [cellSubText setFont:[UIFont fontWithName:@"Helvetica" size:10]];
@@ -180,19 +175,15 @@
         [cellSubText setMinimumFontSize: 8.0];
         [cellSubText setTag:2];
         
-        UILabel *cellStats;
-        cellStats = [[UILabel alloc] init];
-        [cellStats setText:@"-"];
+        UILabel *cellStats = [[UILabel alloc] init];
         [cellStats setTextColor:[UIColor colorWithRed:0.84 green:0.58 blue:0.23 alpha:1]];
-        [cellStats setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15]];
+        [cellStats setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
         [cellStats setAdjustsFontSizeToFitWidth:true];
         [cellStats setMinimumFontSize: 8.0];
         [cellStats setTextAlignment:UITextAlignmentRight];
         [cellStats setTag:3];
         
-        UILabel *cellSubStats;
-        cellSubStats = [[UILabel alloc] initWithFrame:CGRectMake( 290, 22, 155, 20 )];
-        [cellSubStats setText:@"-"];
+        UILabel *cellSubStats = [[UILabel alloc] initWithFrame:CGRectMake( 290, 22, 155, 20 )];
         [cellSubStats setTextColor:[UIColor grayColor]];
         [cellSubStats setFont:[UIFont fontWithName:@"Helvetica" size:10]];
         [cellSubStats setAdjustsFontSizeToFitWidth:true];
@@ -208,8 +199,7 @@
         [cellSubText release];
         [cellText release];
         [cellStats release];
-        [cellSubStats release];
-        
+        [cellSubStats release];        
         
         [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
     }
@@ -229,33 +219,36 @@
     // LEVEL MAIN
     if([level isEqualToString:@"MAIN"]) {
         
+        // hide the subtexts
+        [[cell viewWithTag:2] setHidden:true];
+        [[cell viewWithTag:4] setHidden:true];
+        
         if(indexPath.section == 0) {
-            [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // hide seletion style
-            [cell.detailTextLabel setText:@"-"];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // hide selection style
             
             // VISITORS
             if(indexPath.row == 0) {
-                [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_VISITORS", nil)];
-                [cell.detailTextLabel setText:[numberFormatter
+                [(UILabel *)[cell viewWithTag:1] setText:NSLocalizedString(@"DETAILVIEWS_VISITORS", nil)];
+                [(UILabel *)[cell viewWithTag:3] setText:[numberFormatter
                                                stringForObjectValue:[[data objectForKey:@"statistics"] objectForKey:@"userVisitCount"]]];
             }
             // WEBCRAWLER
             if(indexPath.row == 1) {
-                [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_WEBCRAWLER", nil)];
-                [cell.detailTextLabel setText:[numberFormatter
+                [(UILabel *)[cell viewWithTag:1] setText:NSLocalizedString(@"DETAILVIEWS_WEBCRAWLER", nil)];
+                [(UILabel *)[cell viewWithTag:3] setText:[numberFormatter
                                                stringForObjectValue:[[data objectForKey:@"statistics"] objectForKey:@"robotVisitCount"]]];
             }
             
             // FIRST VISIT
             if(indexPath.row == 2) {
-                [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_FIRSTVISIT", nil)];
-                [cell.detailTextLabel setText:[dateFormatter
+                [(UILabel *)[cell viewWithTag:1] setText:NSLocalizedString(@"DETAILVIEWS_FIRSTVISIT", nil)];
+                [(UILabel *)[cell viewWithTag:3] setText:[dateFormatter
                                                stringFromDate:[NSDate dateWithTimeIntervalSince1970:[[[data objectForKey:@"statistics"] objectForKey:@"firstVisit"] intValue]]]];
             }
             // LAST VISIT
             if(indexPath.row == 3) {
-                [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_LASTVISIT", nil)];
-                [cell.detailTextLabel setText:[dateFormatter
+                [(UILabel *)[cell viewWithTag:1] setText:NSLocalizedString(@"DETAILVIEWS_LASTVISIT", nil)];
+                [(UILabel *)[cell viewWithTag:3] setText:[dateFormatter
                                                stringFromDate:[NSDate dateWithTimeIntervalSince1970:[[[data objectForKey:@"statistics"] objectForKey:@"lastVisit"] intValue]]]];
             }
             
@@ -264,15 +257,15 @@
             
             // SEARCHWORDS
             if(indexPath.row == 0) {
-                [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_SEARCHWORDS", nil)];
+                [(UILabel *)[cell viewWithTag:1] setText:NSLocalizedString(@"DETAILVIEWS_SEARCHWORDS", nil)];
             }
             // BROWSER STATISTICS
             if(indexPath.row == 1) {
-                [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_BROWSERSTATS", nil)];
+                [(UILabel *)[cell viewWithTag:1] setText:NSLocalizedString(@"DETAILVIEWS_BROWSERSTATS", nil)];
             }
             // PAGE STATISTICS
             if(indexPath.row == 2) {
-                [cell.textLabel setText:NSLocalizedString(@"DETAILVIEWS_PAGESTATS", nil)];
+                [(UILabel *)[cell viewWithTag:1] setText:NSLocalizedString(@"DETAILVIEWS_PAGESTATS", nil)];
             }
         }
         
@@ -280,17 +273,17 @@
     } else if(self.sortedData != nil) {
         
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // hide seletion style
-        [cell.detailTextLabel setText:@"-"];
         
         if([level isEqualToString:@"PAGES"]) {
-            [cell.textLabel setText:[[[sortedData objectAtIndex:indexPath.row] objectForKey:@"data"] objectForKey:@"title"]];
+            [(UILabel *)[cell viewWithTag:1] setText:[[[sortedData objectAtIndex:indexPath.row] objectForKey:@"data"] objectForKey:@"title"]];
         } else {
-            [cell.textLabel setText:[[sortedData objectAtIndex:indexPath.row] objectForKey:@"data"]];
+            [(UILabel *)[cell viewWithTag:1] setText:[[sortedData objectAtIndex:indexPath.row] objectForKey:@"data"]];
         }
        
-        [cell.detailTextLabel setText:[numberFormatter stringForObjectValue:[[sortedData objectAtIndex:indexPath.row] objectForKey:@"number"]]];
+        [(UILabel *)[cell viewWithTag:3] setText:[numberFormatter stringForObjectValue:[[sortedData objectAtIndex:indexPath.row] objectForKey:@"number"]]];
     }
     
+    [TableHelperClass changeCellOrientation:cell];
     [numberFormatter release];
     [dateFormatter release];
     return cell;
@@ -305,7 +298,7 @@
         return;
     
     if([level isEqualToString:@"MAIN"]) {
-        FeinduraDetailStatsViewController *detailViewController = [[FeinduraDetailStatsViewController alloc] initWithNibName:@"FeinduraDetailStatsViewController" bundle:nil];
+        DetailStatsViewController *detailViewController = [[DetailStatsViewController alloc] initWithNibName:@"FeinduraDetailStatsViewController" bundle:nil];
         
         // SEARCHWORDS
         if(indexPath.row == 0) {
@@ -334,6 +327,18 @@
         // Pass the selected object to the new view controller.
         [self.navigationController pushViewController:detailViewController animated:YES];
         [detailViewController release];
+    }
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+    return true;
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    for (UITableViewCell *cell in self.uiTableView.visibleCells) {
+        [TableHelperClass changeCellOrientation:cell];
     }
 }
 

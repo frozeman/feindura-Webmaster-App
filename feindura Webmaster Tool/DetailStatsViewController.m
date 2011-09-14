@@ -39,26 +39,28 @@
 {
     [super viewDidLoad];
     
+    self.uiTableView = (UITableView *)self.view;
+    self.navigationController.toolbarHidden = false;
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    self.navigationController.toolbarHidden = false;
+//    UIBarButtonItem            *buttonItem;
+//    
+//    buttonItem = [[ UIBarButtonItem alloc ] initWithTitle: @"Back"
+//                                                    style: UIBarButtonItemStyleBordered
+//                                                   target: self
+//                                                   action: @selector( goBack: ) ];
+//    self.navigationController.toolbarItems = [ NSArray arrayWithObject: buttonItem ];
+//    [ buttonItem release ];
     
-    UIBarButtonItem            *buttonItem;
-    
-    buttonItem = [[ UIBarButtonItem alloc ] initWithTitle: @"Back"
-                                                    style: UIBarButtonItemStyleBordered
-                                                   target: self
-                                                   action: @selector( goBack: ) ];
-    self.navigationController.toolbarItems = [ NSArray arrayWithObject: buttonItem ];
-    [ buttonItem release ];
-
+    // SORT SORTED DATA
     if(![level isEqualToString:@"MAIN"]) {
 
-        // SORT ARRAY
+        
         if(self.sortedData != nil && [sortedData isKindOfClass:[NSArray class]]) {
             self.sortedData = [sortedData sortedArrayUsingComparator:^(id item1, id item2) {
                 NSNumber *value1 = [item1 objectForKey:@"number"];
@@ -69,7 +71,6 @@
             
             // REVERSE ARRAY
             self.sortedData = [[sortedData reverseObjectEnumerator] allObjects];
-            //NSLog(@"%@",sortedData);
         }
         
     }
@@ -91,7 +92,7 @@
     [super viewWillAppear:animated];
     
     for (UITableViewCell *cell in uiTableView.visibleCells) {
-        [TableHelperClass changeCellOrientation:cell];
+        [TableHelperClass changeCellOrientation:cell toOrientation:self.interfaceOrientation];
     }
 }
 
@@ -162,7 +163,7 @@
         UILabel *cellText = [[UILabel alloc] init];
         [cellText setBackgroundColor:[UIColor clearColor]];
         [cellText setTextColor:[UIColor darkGrayColor]];
-        [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
+        [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:17]];
         [cellText setAdjustsFontSizeToFitWidth:true];
         [cellText setMinimumFontSize: 12.0];
         [cellText setTag:1];
@@ -177,7 +178,7 @@
         
         UILabel *cellStats = [[UILabel alloc] init];
         [cellStats setTextColor:[UIColor colorWithRed:0.84 green:0.58 blue:0.23 alpha:1]];
-        [cellStats setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
+        [cellStats setFont:[UIFont fontWithName:@"Helvetica-Bold" size:17]];
         [cellStats setAdjustsFontSizeToFitWidth:true];
         [cellStats setMinimumFontSize: 8.0];
         [cellStats setTextAlignment:UITextAlignmentRight];
@@ -211,17 +212,19 @@
     [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
     
     // date style
+    NSDateFormatterStyle timeStyle;
+    NSDateFormatterStyle dateStyle;
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
     [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-    [dateFormatter setLocale:[NSLocale autoupdatingCurrentLocale]];
-    
+
+    NSLog(@"CELL");
+
     // LEVEL MAIN
     if([level isEqualToString:@"MAIN"]) {
         
         // hide the subtexts
         [[cell viewWithTag:2] setHidden:true];
-        [[cell viewWithTag:4] setHidden:true];
         
         if(indexPath.section == 0) {
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // hide selection style
@@ -239,17 +242,34 @@
                                                stringForObjectValue:[[data objectForKey:@"statistics"] objectForKey:@"robotVisitCount"]]];
             }
             
-            // FIRST VISIT
-            if(indexPath.row == 2) {
-                [(UILabel *)[cell viewWithTag:1] setText:NSLocalizedString(@"DETAILVIEWS_FIRSTVISIT", nil)];
-                [(UILabel *)[cell viewWithTag:3] setText:[dateFormatter
-                                               stringFromDate:[NSDate dateWithTimeIntervalSince1970:[[[data objectForKey:@"statistics"] objectForKey:@"firstVisit"] intValue]]]];
-            }
-            // LAST VISIT
-            if(indexPath.row == 3) {
-                [(UILabel *)[cell viewWithTag:1] setText:NSLocalizedString(@"DETAILVIEWS_LASTVISIT", nil)];
-                [(UILabel *)[cell viewWithTag:3] setText:[dateFormatter
-                                               stringFromDate:[NSDate dateWithTimeIntervalSince1970:[[[data objectForKey:@"statistics"] objectForKey:@"lastVisit"] intValue]]]];
+            // FIRST VISIT / LAST VISIT
+            if(indexPath.row == 2 || indexPath.row == 3) {
+                
+//                [(UILabel *)[cell viewWithTag:3] setTextColor:[UIColor grayColor]];
+                
+                NSDate *visitDate;
+                NSString *visitDateText;
+                if(indexPath.row == 2) {
+                    visitDateText = NSLocalizedString(@"DETAILVIEWS_FIRSTVISIT", nil);
+                    visitDate = [NSDate dateWithTimeIntervalSince1970:[[[data objectForKey:@"statistics"] objectForKey:@"firstVisit"] intValue]];
+                }
+                if(indexPath.row == 3) {
+                    visitDateText = NSLocalizedString(@"DETAILVIEWS_LASTVISIT", nil);
+                    visitDate = [NSDate dateWithTimeIntervalSince1970:[[[data objectForKey:@"statistics"] objectForKey:@"lastVisit"] intValue]];
+                }                
+                
+                [(UILabel *)[cell viewWithTag:1] setText:visitDateText];
+                
+                timeStyle = dateFormatter.timeStyle;
+                [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+                [(UILabel *)[cell viewWithTag:3] setText:[dateFormatter stringFromDate:visitDate]];
+                [dateFormatter setTimeStyle:timeStyle];
+                
+                dateStyle = dateFormatter.dateStyle;
+                [dateFormatter setDateStyle:NSDateFormatterNoStyle];
+                [(UILabel *)[cell viewWithTag:4] setText:[dateFormatter stringFromDate:visitDate]];
+                [dateFormatter setDateStyle:dateStyle];
+                
             }
             
         } else if(indexPath.section == 1) {
@@ -272,6 +292,10 @@
     // SHOW SORTED DATA
     } else if(self.sortedData != nil) {
         
+        // hide the subtexts
+        [[cell viewWithTag:2] setHidden:true];
+        [[cell viewWithTag:4] setHidden:true];
+        
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // hide seletion style
         
         if([level isEqualToString:@"PAGES"]) {
@@ -283,7 +307,6 @@
         [(UILabel *)[cell viewWithTag:3] setText:[numberFormatter stringForObjectValue:[[sortedData objectAtIndex:indexPath.row] objectForKey:@"number"]]];
     }
     
-    [TableHelperClass changeCellOrientation:cell];
     [numberFormatter release];
     [dateFormatter release];
     return cell;
@@ -338,7 +361,7 @@
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     for (UITableViewCell *cell in self.uiTableView.visibleCells) {
-        [TableHelperClass changeCellOrientation:cell];
+        [TableHelperClass changeCellOrientation:cell toOrientation:toInterfaceOrientation];
     }
 }
 

@@ -10,7 +10,7 @@
 
 @interface TableHelperClass : NSObject
 
-+(void)changeCellOrientation:(UITableViewCell *)cell;
-+(void)changeCellOrientation:(UITableViewCell *)cell table:(NSString *)type;
++(void)changeCellOrientation:(UITableViewCell *)cell toOrientation:(UIInterfaceOrientation)orientation;
++(void)changeCellOrientation:(UITableViewCell *)cell toOrientation:(UIInterfaceOrientation)orientation inTable:(NSString *)name;
 
 @end

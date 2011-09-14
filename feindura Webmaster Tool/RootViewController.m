@@ -83,7 +83,7 @@
     [super viewWillAppear:animated];
     
     for (UITableViewCell *cell in uiTableView.visibleCells) {
-        [TableHelperClass changeCellOrientation:cell table:@"RootViewController"];
+        [TableHelperClass changeCellOrientation:cell toOrientation:self.interfaceOrientation inTable:@"RootViewController"];
     }
 }
 
@@ -150,7 +150,7 @@
         UILabel *cellText = [[UILabel alloc] init];
         [cellText setBackgroundColor:[UIColor clearColor]];
         [cellText setTextColor:[UIColor darkGrayColor]];
-        [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
+        [cellText setFont:[UIFont fontWithName:@"Helvetica-Bold" size:17]];
         [cellText setAdjustsFontSizeToFitWidth:true];
         [cellText setMinimumFontSize: 12.0];
         [cellText setTag:1];
@@ -166,7 +166,7 @@
         UILabel *cellStats = [[UILabel alloc] init];
         [cellStats setText:@"-"];
         [cellStats setTextColor:[UIColor colorWithRed:0.84 green:0.58 blue:0.23 alpha:1]];
-        [cellStats setFont:[UIFont fontWithName:@"Helvetica-Bold" size:18]];
+        [cellStats setFont:[UIFont fontWithName:@"Helvetica-Bold" size:17]];
         [cellStats setAdjustsFontSizeToFitWidth:true];
         [cellStats setMinimumFontSize: 8.0];
         [cellStats setTextAlignment:UITextAlignmentRight];
@@ -199,13 +199,7 @@
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
     [numberFormatter setAlwaysShowsDecimalSeparator:false];
     [numberFormatter setLocale:[NSLocale autoupdatingCurrentLocale]];
-    [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle]; 
-    
-    // date fomatter
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-    [dateFormatter setLocale:[NSLocale autoupdatingCurrentLocale]];
+    [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
     
     
     // GET current feindura account
@@ -232,7 +226,7 @@
     }
         
     // statistics subtext
-    [(UILabel *)[cell viewWithTag:4] setText:[NSLocalizedString(@"ROOTVIEW_STATSSUBTEXT", nil) stringByAppendingString:[dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:[[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"lastVisit"] intValue]]]]];
+    [(UILabel *)[cell viewWithTag:4] setText:[NSLocalizedString(@"ROOTVIEW_STATSSUBTEXT", nil) stringByAppendingString:[NSDateFormatter localizedStringFromDate:[NSDate dateWithTimeIntervalSince1970:[[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"lastVisit"] intValue]] dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterShortStyle]]];
     
     
     // ADD a image
@@ -246,8 +240,6 @@
         cell.imageView.image = theImage;
     }
     
-    [TableHelperClass changeCellOrientation:cell table:@"RootViewController"];
-    [dateFormatter release];
     [numberFormatter release];
     return cell;
 }
@@ -366,7 +358,7 @@
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     for (UITableViewCell *cell in self.uiTableView.visibleCells) {
-        [TableHelperClass changeCellOrientation:cell table:@"RootViewController"];
+        [TableHelperClass changeCellOrientation:cell toOrientation:toInterfaceOrientation inTable:@"RootViewController"];
     }
 }
 
@@ -412,11 +404,8 @@
         
         // hide the statistics
         for (UITableViewCell *cell in self.uiTableView.visibleCells) {
-            for (UILabel *view in [cell.contentView subviews]) {
-                if(view.tag == 3 || view.tag == 4) {
-                    [view setHidden:true];
-                }
-            }
+            [[cell viewWithTag:3] setHidden:true];
+            [[cell viewWithTag:4] setHidden:true];
         }
         
         [uiTableView setEditing:true animated:true];
@@ -430,7 +419,7 @@
         
         for (UITableViewCell *cell in uiTableView.visibleCells) {
             for (UILabel *view in [cell.contentView subviews]) {
-                if(view.tag != 4 || (view.tag == 4 && !UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation]))) // prevent stats subtext to become visible in portrait mode
+                if(view.tag != 4 || (view.tag == 4 && !UIInterfaceOrientationIsPortrait(self.interfaceOrientation))) // prevent stats subtext to become visible in portrait mode
                     [view setHidden:false];
                 
             }

@@ -19,6 +19,7 @@
     IBOutlet UITableView *uiTableView;
     IBOutlet UINavigationItem *titleBar;
     IBOutlet UIBarButtonItem *editButton;
+
 }
 
 @property(nonatomic,retain) feindura_Webmaster_ToolAppDelegate *appDelegate;

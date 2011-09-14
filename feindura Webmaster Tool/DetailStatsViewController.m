@@ -232,14 +232,16 @@
                 [(UILabel *)[cell viewWithTag:1] setText:NSLocalizedString(@"DETAILVIEWS_VISITORS", nil)];
                 [(UILabel *)[cell viewWithTag:3] setText:[numberFormatter
                                                stringForObjectValue:[[data objectForKey:@"statistics"] objectForKey:@"userVisitCount"]]];
-                [(UILabel *)[cell viewWithTag:4] setText:[@"+" stringByAppendingString:[[[data objectForKey:@"statistics"] objectForKey:@"userVisitCountAdd"] stringValue]]];
+                if([[data objectForKey:@"statistics"] objectForKey:@"userVisitCountAdd"] != nil)
+                    [(UILabel *)[cell viewWithTag:4] setText:[@"+" stringByAppendingString:[[[data objectForKey:@"statistics"] objectForKey:@"userVisitCountAdd"] stringValue]]];
             }
             // WEBCRAWLER
             if(indexPath.row == 1) {
                 [(UILabel *)[cell viewWithTag:1] setText:NSLocalizedString(@"DETAILVIEWS_WEBCRAWLER", nil)];
                 [(UILabel *)[cell viewWithTag:3] setText:[numberFormatter
                                                stringForObjectValue:[[data objectForKey:@"statistics"] objectForKey:@"robotVisitCount"]]];
-                [(UILabel *)[cell viewWithTag:4] setText:[@"+" stringByAppendingString:[[[data objectForKey:@"statistics"] objectForKey:@"robotVisitCountAdd"] stringValue]]];
+                if([[data objectForKey:@"statistics"] objectForKey:@"robotVisitCountAdd"] != nil)
+                    [(UILabel *)[cell viewWithTag:4] setText:[@"+" stringByAppendingString:[[[data objectForKey:@"statistics"] objectForKey:@"robotVisitCountAdd"] stringValue]]];
             }
             
             // FIRST VISIT / LAST VISIT

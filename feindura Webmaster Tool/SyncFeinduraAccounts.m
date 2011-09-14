@@ -196,19 +196,47 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     if([request.responseString isEqualToString:@"FALSE"]) {    
         [account setObject:@"FAILED" forKey:@"status"];
         
-    // -> else try to get json data
+    // -> TRY TO GET JSON DATA
     } else {
         // CORRECT data fetched
         NSDictionary *fetchedData = [request.responseString JSONValue];
         //NSLog(@"%@",request.responseString);
         
-        if([fetchedData objectForKey:@"title"] != nil) {        
+        if([fetchedData objectForKey:@"title"] != nil) {
+            
+            NSNumber *oldUserVisitCountAdd = [[account objectForKey:@"statistics"] objectForKey:@"userVisitCountAdd"];
+            NSNumber *userVisitCountBefore = [[account objectForKey:@"statistics"] objectForKey:@"userVisitCount"];
+            NSNumber *userVisitCountNow = [[fetchedData objectForKey:@"statistics"] objectForKey:@"userVisitCount"];
+            NSNumber *userVisitCountAdd =  [NSNumber numberWithInt:[userVisitCountNow intValue] - [userVisitCountBefore intValue]];
+            
+            NSNumber *oldRobotVisitCountAdd = [[account objectForKey:@"statistics"] objectForKey:@"robotVisitCountAdd"];
+            NSNumber *robotVisitCountBefore = [[account objectForKey:@"statistics"] objectForKey:@"robotVisitCount"];
+            NSNumber *robotVisitCountNow = [[fetchedData objectForKey:@"statistics"] objectForKey:@"robotVisitCount"];
+            NSNumber *robotVisitCountAdd =  [NSNumber numberWithInt:[robotVisitCountNow intValue] - [robotVisitCountBefore intValue]];
+            
             [account setObject:[fetchedData objectForKey:@"title"] forKey:@"title"]; // set title
             if([fetchedData objectForKey:@"statistics"] != nil)
                 [account setObject:[fetchedData objectForKey:@"statistics"] forKey:@"statistics"]; // set statistics
             if([fetchedData objectForKey:@"browser"] != nil)
-                [[account objectForKey:@"statistics"] setObject:[fetchedData objectForKey:@"browser"] forKey:@"browser"]; // set statistics
+                [[account objectForKey:@"statistics"] setObject:[fetchedData objectForKey:@"browser"] forKey:@"browser"]; // set browser
             [account setObject:@"WORKING" forKey:@"status"];
+
+            // add userVisitCountAdd
+            if(![userVisitCountAdd isEqualToNumber:[NSNumber numberWithInt:0]])
+                [[account objectForKey:@"statistics"] setObject:userVisitCountAdd forKey:@"userVisitCountAdd"];
+            else if(oldUserVisitCountAdd != nil)
+                [[account objectForKey:@"statistics"] setObject:oldUserVisitCountAdd forKey:@"userVisitCountAdd"];
+            else
+                [[account objectForKey:@"statistics"] setObject:[NSNumber numberWithInt:0] forKey:@"userVisitCountAdd"];
+            
+            // add robotVisitCountAdd
+            if(![robotVisitCountAdd isEqualToNumber:[NSNumber numberWithInt:0]])
+                [[account objectForKey:@"statistics"] setObject:robotVisitCountAdd forKey:@"robotVisitCountAdd"];
+            else if(oldRobotVisitCountAdd != nil)
+                [[account objectForKey:@"statistics"] setObject:oldRobotVisitCountAdd forKey:@"robotVisitCountAdd"];
+            else
+                [[account objectForKey:@"statistics"] setObject:[NSNumber numberWithInt:0] forKey:@"robotVisitCountAdd"];
+                
         
         // WRONG feindura url
         } else {

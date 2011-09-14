@@ -18,7 +18,7 @@
 }
 
 +(void)changeCellOrientation:(UITableViewCell *)cell toOrientation:(UIInterfaceOrientation)orientation inTable:(NSString *)name {
-    NSLog(@"CHANGE ORIENTATION");
+    //NSLog(@"CHANGE ORIENTATION");
     
     int leftPadding = 11;
     int statsWidthLandscape = 125;

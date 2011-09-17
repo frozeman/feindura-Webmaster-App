@@ -86,14 +86,6 @@
 					</object>
 					<int key="connectionID">5</int>
 				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">uiTableView</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="709618507"/>
-					</object>
-					<int key="connectionID">6</int>
-				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -206,13 +198,11 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>editButton</string>
 							<string>titleBar</string>
-							<string>uiTableView</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>UIBarButtonItem</string>
 							<string>UINavigationItem</string>
-							<string>UITableView</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -221,7 +211,6 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>editButton</string>
 							<string>titleBar</string>
-							<string>uiTableView</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -232,10 +221,6 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">titleBar</string>
 								<string key="candidateClassName">UINavigationItem</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">uiTableView</string>
-								<string key="candidateClassName">UITableView</string>
 							</object>
 						</object>
 					</object>

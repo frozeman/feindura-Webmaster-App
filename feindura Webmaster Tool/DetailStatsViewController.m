@@ -178,7 +178,7 @@
         [cellStats setTextAlignment:UITextAlignmentRight];
         [cellStats setTag:3];
         
-        UILabel *cellSubStats = [[UILabel alloc] initWithFrame:CGRectMake( 290, 22, 155, 20 )];
+        UILabel *cellSubStats = [[UILabel alloc] init];
         [cellSubStats setTextColor:[UIColor grayColor]];
         [cellSubStats setFont:[UIFont fontWithName:@"Helvetica" size:10]];
         [cellSubStats setAdjustsFontSizeToFitWidth:true];
@@ -196,11 +196,24 @@
         [cellStats release];
         [cellSubStats release];        
         
-        [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
+        // selection styles
+        if([level isEqualToString:@"MAIN"]) {
+            if(indexPath.section == 0) {
+                [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // hide selection style
+                [cell setAccessoryType:UITableViewCellAccessoryNone]; // hide selection arrow
+            } else if(indexPath.section == 1) {
+                [cell setSelectionStyle:UITableViewCellSelectionStyleGray]; // show selection style
+                [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator]; // show selection arrow
+            }
+        } else {
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // hide selection style
+            [cell setAccessoryType:UITableViewCellAccessoryNone]; // hide selection arrow
+        }
         
-        NSLog (@"CREATE NEW CELL");
+        
+        NSLog (@"CREATE NEW CELL section: %d row: %d",indexPath.section,indexPath.row);
     } else {
-        NSLog (@"LOAD DEQUE CELL");
+        NSLog (@"LOAD DEQUE CELL section: %d row: %d",indexPath.section,indexPath.row);
     }
     
     // number style
@@ -223,7 +236,6 @@
         [[cell viewWithTag:2] setHidden:true];
         
         if(indexPath.section == 0) {
-            [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // hide selection style
             
             // VISITORS
             if(indexPath.row == 0) {
@@ -244,8 +256,6 @@
             
             // FIRST VISIT / LAST VISIT
             else if(indexPath.row == 2 || indexPath.row == 3) {
-                
-//                [(UILabel *)[cell viewWithTag:3] setTextColor:[UIColor grayColor]];
                 
                 NSDate *visitDate;
                 NSString *visitDateText;
@@ -273,7 +283,6 @@
             }
             
         } else if(indexPath.section == 1) {
-            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator]; // show selection arrow
             
             // SEARCHWORDS
             if(indexPath.row == 0) {
@@ -296,8 +305,6 @@
         [[cell viewWithTag:2] setHidden:true];
         [[cell viewWithTag:4] setHidden:true];
         
-        [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // hide seletion style
-        
         if([level isEqualToString:@"PAGES"]) {
             [(UILabel *)[cell viewWithTag:1] setText:[[[sortedData objectAtIndex:indexPath.row] objectForKey:@"data"] objectForKey:@"title"]];
         } else {
@@ -309,6 +316,7 @@
     
     [numberFormatter release];
     [dateFormatter release];
+    [TableHelperClass changeCellOrientation:cell toOrientation:self.interfaceOrientation];
     return cell;
 }
 

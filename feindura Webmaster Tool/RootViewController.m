@@ -17,7 +17,6 @@
 
 @synthesize appDelegate;
 @synthesize feinduraAccounts;
-@synthesize uiTableView;
 @synthesize titleBar, editButton;
 
 
@@ -72,7 +71,7 @@
     // --------------------------------------------------------------------------------------------
     
     // -> basic table setup
-    uiTableView.allowsSelectionDuringEditing = true;
+    self.tableView.allowsSelectionDuringEditing = true;
     
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 
@@ -82,7 +81,7 @@
 {
     [super viewWillAppear:animated];
     
-    for (UITableViewCell *cell in uiTableView.visibleCells) {
+    for (UITableViewCell *cell in self.tableView.visibleCells) {
         [TableHelperClass changeCellOrientation:cell toOrientation:self.interfaceOrientation inTable:@"RootViewController"];
     }
 }
@@ -112,14 +111,12 @@
 - (void)viewDidUnload {
     [super viewDidUnload];
     self.feinduraAccounts = nil;
-    self.uiTableView = nil;
     self.titleBar = nil;
     self.appDelegate = nil;
 }
 
 - (void)dealloc {
     [feinduraAccounts release];
-    [uiTableView release];
     [titleBar release];
     [appDelegate release];
     [super dealloc];
@@ -172,7 +169,7 @@
         [cellStats setTextAlignment:UITextAlignmentRight];
         [cellStats setTag:3];
         
-        UILabel *cellSubStats = [[UILabel alloc] initWithFrame:CGRectMake( 290, 22, 155, 20 )];
+        UILabel *cellSubStats = [[UILabel alloc] init];
         [cellSubStats setText:@"-"];
         [cellSubStats setTextColor:[UIColor grayColor]];
         [cellSubStats setFont:[UIFont fontWithName:@"Helvetica" size:10]];
@@ -241,6 +238,7 @@
     }
     
     [numberFormatter release];
+    [TableHelperClass changeCellOrientation:cell toOrientation:self.interfaceOrientation inTable:@"RootViewController"];
     return cell;
 }
 
@@ -304,7 +302,7 @@
     
     [feinduraAccounts.dataBase setObject:newOrder forKey:@"sortOrder"];
     [feinduraAccounts saveAccounts];
-    [uiTableView reloadData];
+    [self.tableView reloadData];
 }
 
 // SELECT ROW
@@ -327,7 +325,7 @@
         NSDictionary *feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:accountKey];
         
         if([feinduraAccount objectForKey:@"statistics"] == nil) {
-            UITableViewCell *cell = [uiTableView cellForRowAtIndexPath:indexPath];
+            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
             [cell setSelected:false];
             return;
         }
@@ -357,7 +355,7 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    for (UITableViewCell *cell in self.uiTableView.visibleCells) {
+    for (UITableViewCell *cell in self.tableView.visibleCells) {
         [TableHelperClass changeCellOrientation:cell toOrientation:toInterfaceOrientation inTable:@"RootViewController"];
     }
 }
@@ -367,7 +365,7 @@
 
 -(IBAction)showAddFeinduraAccountView:(id)sender {
     
-    if(self.uiTableView.editing == true)
+    if(self.tableView.editing == true)
         [self editFeinduraAccounts:nil];
     
     // instanciate modal view
@@ -396,19 +394,19 @@
 
 -(IBAction)editFeinduraAccounts:(id)sender {
     // START editing mode
-    if(self.uiTableView.editing == false) {
+    if(self.tableView.editing == false) {
         
         UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(editFeinduraAccounts:)];
         self.navigationItem.leftBarButtonItem = backButton;
         [backButton release];
         
         // hide the statistics
-        for (UITableViewCell *cell in self.uiTableView.visibleCells) {
+        for (UITableViewCell *cell in self.tableView.visibleCells) {
             [[cell viewWithTag:3] setHidden:true];
             [[cell viewWithTag:4] setHidden:true];
         }
         
-        [uiTableView setEditing:true animated:true];
+        [self.tableView setEditing:true animated:true];
         
     // END editing mode
     } else {
@@ -417,14 +415,14 @@
         self.navigationItem.leftBarButtonItem = backButton;
         [backButton release];
         
-        for (UITableViewCell *cell in uiTableView.visibleCells) {
+        for (UITableViewCell *cell in self.tableView.visibleCells) {
             for (UILabel *view in [cell.contentView subviews]) {
                 if(view.tag != 4 || (view.tag == 4 && !UIInterfaceOrientationIsPortrait(self.interfaceOrientation))) // prevent stats subtext to become visible in portrait mode
                     [view setHidden:false];
                 
             }
         }
-        [uiTableView setEditing:false animated:true];
+        [self.tableView setEditing:false animated:true];
     }
 }
 

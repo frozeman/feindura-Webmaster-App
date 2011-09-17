@@ -82,7 +82,7 @@
     [super viewWillAppear:animated];
     
     for (UITableViewCell *cell in self.tableView.visibleCells) {
-        [TableHelperClass changeCellOrientation:cell toOrientation:self.interfaceOrientation inTable:@"RootViewController"];
+        [TableHelperClass changeCellOrientation:cell toOrientation:self.interfaceOrientation inTable:self];
     }
 }
 
@@ -190,6 +190,12 @@
         
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
+    } else {
+        // clean up the reused cell
+        [(UILabel *)[cell viewWithTag:1] setText:nil];
+        [(UILabel *)[cell viewWithTag:2] setText:nil];
+        [(UILabel *)[cell viewWithTag:3] setText:nil];
+        [(UILabel *)[cell viewWithTag:4] setText:nil];
     }
     
     // number formatter
@@ -223,7 +229,7 @@
     }
         
     // statistics subtext
-    [(UILabel *)[cell viewWithTag:4] setText:[NSLocalizedString(@"ROOTVIEW_STATSSUBTEXT", nil) stringByAppendingString:[NSDateFormatter localizedStringFromDate:[NSDate dateWithTimeIntervalSince1970:[[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"lastVisit"] intValue]] dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterShortStyle]]];
+    [(UILabel *)[cell viewWithTag:4] setText:[NSLocalizedString(@"STATSSUBTEXT_LASTVISIT", nil) stringByAppendingString:[NSDateFormatter localizedStringFromDate:[NSDate dateWithTimeIntervalSince1970:[[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"lastVisit"] intValue]] dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterShortStyle]]];
     
     
     // ADD a image
@@ -238,7 +244,7 @@
     }
     
     [numberFormatter release];
-    [TableHelperClass changeCellOrientation:cell toOrientation:self.interfaceOrientation inTable:@"RootViewController"];
+    [TableHelperClass changeCellOrientation:cell toOrientation:self.interfaceOrientation inTable:self];
     return cell;
 }
 
@@ -356,7 +362,7 @@
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     for (UITableViewCell *cell in self.tableView.visibleCells) {
-        [TableHelperClass changeCellOrientation:cell toOrientation:toInterfaceOrientation inTable:@"RootViewController"];
+        [TableHelperClass changeCellOrientation:cell toOrientation:toInterfaceOrientation inTable:self];
     }
 }
 

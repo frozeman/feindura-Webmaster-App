@@ -80,10 +80,10 @@
 /* Begin PBXFileReference section */
 		A30E74E513A4FD000026ECFF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		A31BCA47140AD0F600910977 /* failed.icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = failed.icon.png; path = Images/failed.icon.png; sourceTree = "<group>"; };
-		A31CB23614052FFB001FE17A /* SyncFeinduraAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; path = SyncFeinduraAccounts.h; sourceTree = "<group>"; };
+		A31CB23614052FFB001FE17A /* SyncFeinduraAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncFeinduraAccounts.h; sourceTree = "<group>"; };
 		A31CB23714052FFB001FE17A /* SyncFeinduraAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncFeinduraAccounts.m; sourceTree = "<group>"; };
 		A37DB302140D81D300C3E7D3 /* DetailStatsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailStatsViewController.xib; sourceTree = "<group>"; };
-		A37DB303140D81D300C3E7D3 /* DetailStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; path = DetailStatsViewController.h; sourceTree = "<group>"; };
+		A37DB303140D81D300C3E7D3 /* DetailStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailStatsViewController.h; sourceTree = "<group>"; };
 		A37DB304140D81D300C3E7D3 /* DetailStatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailStatsViewController.m; sourceTree = "<group>"; };
 		A38A212913ABDB6B00866212 /* settings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = settings.plist; sourceTree = "<group>"; };
 		A38FEFEB13AF7F4300250641 /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
@@ -118,7 +118,7 @@
 		A393671713B0A78B00ADBD73 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		A393671913B0A79800ADBD73 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		A393671A13B0A7C700ADBD73 /* libz.1.2.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.3.dylib; path = usr/lib/libz.1.2.3.dylib; sourceTree = SDKROOT; };
-		A3A49478141FFD42008BAA89 /* TableHelperClass.h */ = {isa = PBXFileReference; fileEncoding = 4; path = TableHelperClass.h; sourceTree = "<group>"; };
+		A3A49478141FFD42008BAA89 /* TableHelperClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableHelperClass.h; sourceTree = "<group>"; };
 		A3A49479141FFD42008BAA89 /* TableHelperClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableHelperClass.m; sourceTree = "<group>"; };
 		A3AB892813A4D42F0025FE50 /* feindura Webmaster Tool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "feindura Webmaster Tool.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3AB892C13A4D42F0025FE50 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };

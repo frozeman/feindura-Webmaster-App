@@ -11,6 +11,6 @@
 @interface TableHelperClass : NSObject
 
 +(void)changeCellOrientation:(UITableViewCell *)cell toOrientation:(UIInterfaceOrientation)orientation;
-+(void)changeCellOrientation:(UITableViewCell *)cell toOrientation:(UIInterfaceOrientation)orientation inTable:(NSString *)name;
++(void)changeCellOrientation:(UITableViewCell *)cell toOrientation:(UIInterfaceOrientation)orientation inTable:(id)tableViewController;
 
 @end

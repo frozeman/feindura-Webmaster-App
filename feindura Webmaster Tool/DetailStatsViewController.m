@@ -196,24 +196,28 @@
         [cellStats release];
         [cellSubStats release];        
         
-        // selection styles
-        if([level isEqualToString:@"MAIN"]) {
-            if(indexPath.section == 0) {
-                [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // hide selection style
-                [cell setAccessoryType:UITableViewCellAccessoryNone]; // hide selection arrow
-            } else if(indexPath.section == 1) {
-                [cell setSelectionStyle:UITableViewCellSelectionStyleGray]; // show selection style
-                [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator]; // show selection arrow
-            }
-        } else {
+        [[cell viewWithTag:2] setHidden:true];
+
+    } else {
+        // clean up the reused cell
+        [(UILabel *)[cell viewWithTag:1] setText:nil];
+        [(UILabel *)[cell viewWithTag:2] setText:nil];
+        [(UILabel *)[cell viewWithTag:3] setText:nil];
+        [(UILabel *)[cell viewWithTag:4] setText:nil];
+    }
+    
+    // selection styles
+    if([level isEqualToString:@"MAIN"]) {
+        if(indexPath.section == 0) {
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // hide selection style
             [cell setAccessoryType:UITableViewCellAccessoryNone]; // hide selection arrow
+        } else if(indexPath.section == 1) {
+            [cell setSelectionStyle:UITableViewCellSelectionStyleGray]; // show selection style
+            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator]; // show selection arrow
         }
-        
-        
-        NSLog (@"CREATE NEW CELL section: %d row: %d",indexPath.section,indexPath.row);
     } else {
-        NSLog (@"LOAD DEQUE CELL section: %d row: %d",indexPath.section,indexPath.row);
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // hide selection style
+        [cell setAccessoryType:UITableViewCellAccessoryNone]; // hide selection arrow
     }
     
     // number style
@@ -233,7 +237,7 @@
     if([level isEqualToString:@"MAIN"]) {
         
         // hide the subtexts
-        [[cell viewWithTag:2] setHidden:true];
+//        [[cell viewWithTag:2] setHidden:true];
         
         if(indexPath.section == 0) {
             
@@ -302,7 +306,6 @@
     } else if(self.sortedData != nil) {
         
         // hide the subtexts
-        [[cell viewWithTag:2] setHidden:true];
         [[cell viewWithTag:4] setHidden:true];
         
         if([level isEqualToString:@"PAGES"]) {
@@ -312,6 +315,17 @@
         }
        
         [(UILabel *)[cell viewWithTag:3] setText:[numberFormatter stringForObjectValue:[[sortedData objectAtIndex:indexPath.row] objectForKey:@"number"]]];
+        
+        if([[[sortedData objectAtIndex:indexPath.row] objectForKey:@"data"] isKindOfClass:[NSDictionary class]] && [[[sortedData objectAtIndex:indexPath.row] objectForKey:@"data"] objectForKey:@"lastVisit"] != nil) {
+            
+            // first visit
+            [(UILabel *)[cell viewWithTag:2] setText:[NSLocalizedString(@"STATSSUBTEXT_FIRSTVISIT", nil) stringByAppendingString:[dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:[[[[sortedData objectAtIndex:indexPath.row] objectForKey:@"data"] objectForKey:@"firstVisit"] intValue]]]]];
+            
+            
+            // last visit
+            [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+            [(UILabel *)[cell viewWithTag:4] setText:[NSLocalizedString(@"STATSSUBTEXT_LASTVISIT", nil) stringByAppendingString:[dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:[[[[sortedData objectAtIndex:indexPath.row] objectForKey:@"data"] objectForKey:@"lastVisit"] intValue]]]]];
+        }
     }
     
     [numberFormatter release];

@@ -7,6 +7,7 @@
 //
 
 #import "TableHelperClass.h"
+#import "RootViewController.h"
 
 @implementation TableHelperClass
 
@@ -14,21 +15,23 @@
 
 
 +(void)changeCellOrientation:(UITableViewCell *)cell toOrientation:(UIInterfaceOrientation)orientation {
-    [self changeCellOrientation:cell  toOrientation:orientation inTable:@"Default"];
+    [self changeCellOrientation:cell  toOrientation:orientation inTable:nil];
 }
 
-+(void)changeCellOrientation:(UITableViewCell *)cell toOrientation:(UIInterfaceOrientation)orientation inTable:(NSString *)name {
++(void)changeCellOrientation:(UITableViewCell *)cell toOrientation:(UIInterfaceOrientation)orientation inTable:(id)tableViewController {
     //NSLog(@"CHANGE ORIENTATION");
     
     int leftPadding = 11;
     int statsWidthLandscape = 125;
     int statsWidthPortrait = 85;    
     
-    if([name isEqualToString:@"RootViewController"]) {
+    if([tableViewController isKindOfClass:[RootViewController class]]) {
         leftPadding = 45;
         statsWidthLandscape = 105;
         statsWidthPortrait = 65;
     }
+    
+    UILabel *label;
     
     // LANDSCAPE
     if(UIInterfaceOrientationIsLandscape(orientation)) {
@@ -36,6 +39,9 @@
         
         // subtext
         [[cell viewWithTag:2] setFrame:CGRectMake( leftPadding, 22, 235, 20 )];
+        label = (UILabel *)[cell viewWithTag:2];
+        if(label.text != nil)
+            [label setHidden:false];
         
         // text
         if([cell viewWithTag:2].hidden == true)
@@ -45,7 +51,9 @@
         
         // stats subtext
         [[cell viewWithTag:4] setFrame:CGRectMake( 290, 22, statsWidthLandscape + 50, 20 )];
-        [[cell viewWithTag:4] setHidden:false];
+        label = (UILabel *)[cell viewWithTag:4];
+        if(label.text != nil)
+            [label setHidden:false];
         
         // stats
         if([cell viewWithTag:4].hidden == true)
@@ -58,6 +66,9 @@
         
         // subtext
         [[cell viewWithTag:2] setFrame:CGRectMake( leftPadding, 22, 165, 20 )];
+        label = (UILabel *)[cell viewWithTag:2];
+        if(label.text != nil)
+            [label setHidden:false];
         
         // text
         if([cell viewWithTag:2].hidden == true)

@@ -30,8 +30,6 @@
         statsWidthPortrait = 65;
     }
     
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-    
     // LANDSCAPE
     if(UIInterfaceOrientationIsLandscape(orientation)) {
         // TODO: add more stats in this orientation?
@@ -77,7 +75,6 @@
         else
             [[cell viewWithTag:3] setFrame:CGRectMake( 220, 5, statsWidthPortrait, 20 )];
     }
-    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 }
 
 #pragma mark Lifecycle

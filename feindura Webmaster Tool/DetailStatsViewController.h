@@ -14,13 +14,10 @@
     NSString *level;
     NSDictionary *data;
     NSArray *sortedData;
-    
-    IBOutlet UITableView *uiTableView;
 }
 
 @property(nonatomic,retain) NSString *level;
 @property(nonatomic,retain) NSDictionary *data;
 @property(nonatomic,retain) NSArray *sortedData;
-@property(nonatomic,retain) IBOutlet UITableView *uiTableView;
 
 @end

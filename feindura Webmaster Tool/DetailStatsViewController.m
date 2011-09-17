@@ -12,7 +12,6 @@
 
 @synthesize level;
 @synthesize data, sortedData;
-@synthesize uiTableView;
 
 /*
 - (id)initWithStyle:(UITableViewStyle)style
@@ -39,7 +38,6 @@
 {
     [super viewDidLoad];
     
-    self.uiTableView = (UITableView *)self.view;
     self.navigationController.toolbarHidden = false;
     
     // Uncomment the following line to preserve selection between presentations.
@@ -79,19 +77,16 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
     self.level = nil;
     self.data = nil;
     self.sortedData = nil;
-    self.uiTableView = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    for (UITableViewCell *cell in uiTableView.visibleCells) {
+    for (UITableViewCell *cell in self.tableView.visibleCells) {
         [TableHelperClass changeCellOrientation:cell toOrientation:self.interfaceOrientation];
     }
 }
@@ -115,7 +110,6 @@
     [level release];
     [data release];
     [sortedData release];
-    [uiTableView release];
     [super dealloc];
 }
 
@@ -154,7 +148,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"DetailCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -203,6 +197,10 @@
         [cellSubStats release];        
         
         [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
+        
+        NSLog (@"CREATE NEW CELL");
+    } else {
+        NSLog (@"LOAD DEQUE CELL");
     }
     
     // number style
@@ -236,7 +234,7 @@
                     [(UILabel *)[cell viewWithTag:4] setText:[@"+" stringByAppendingString:[[[data objectForKey:@"statistics"] objectForKey:@"userVisitCountAdd"] stringValue]]];
             }
             // WEBCRAWLER
-            if(indexPath.row == 1) {
+            else if(indexPath.row == 1) {
                 [(UILabel *)[cell viewWithTag:1] setText:NSLocalizedString(@"DETAILVIEWS_WEBCRAWLER", nil)];
                 [(UILabel *)[cell viewWithTag:3] setText:[numberFormatter
                                                stringForObjectValue:[[data objectForKey:@"statistics"] objectForKey:@"robotVisitCount"]]];
@@ -245,7 +243,7 @@
             }
             
             // FIRST VISIT / LAST VISIT
-            if(indexPath.row == 2 || indexPath.row == 3) {
+            else if(indexPath.row == 2 || indexPath.row == 3) {
                 
 //                [(UILabel *)[cell viewWithTag:3] setTextColor:[UIColor grayColor]];
                 
@@ -282,11 +280,11 @@
                 [(UILabel *)[cell viewWithTag:1] setText:NSLocalizedString(@"DETAILVIEWS_SEARCHWORDS", nil)];
             }
             // BROWSER STATISTICS
-            if(indexPath.row == 1) {
+            else if(indexPath.row == 1) {
                 [(UILabel *)[cell viewWithTag:1] setText:NSLocalizedString(@"DETAILVIEWS_BROWSERSTATS", nil)];
             }
             // PAGE STATISTICS
-            if(indexPath.row == 2) {
+            else if(indexPath.row == 2) {
                 [(UILabel *)[cell viewWithTag:1] setText:NSLocalizedString(@"DETAILVIEWS_PAGESTATS", nil)];
             }
         }
@@ -362,7 +360,7 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    for (UITableViewCell *cell in self.uiTableView.visibleCells) {
+    for (UITableViewCell *cell in self.tableView.visibleCells) {
         [TableHelperClass changeCellOrientation:cell toOrientation:toInterfaceOrientation];
     }
 }

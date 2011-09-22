@@ -233,15 +233,16 @@
     
     
     // ADD a image
-    if([[feinduraAccount objectForKey:@"status"] isEqualToString:@"FAILED"]) {
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"failed.icon" ofType:@"png"];
-        UIImage *theImage = [UIImage imageWithContentsOfFile:path];
-        cell.imageView.image = theImage;
-    } else {
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"default.icon" ofType:@"png"];
-        UIImage *theImage = [UIImage imageWithContentsOfFile:path];
-        cell.imageView.image = theImage;
-    }
+    NSString *imagePath;
+    if([[feinduraAccount objectForKey:@"status"] isEqualToString:@"FAILED"])
+        imagePath = [[NSBundle mainBundle] pathForResource:@"failed.icon" ofType:@"png"];
+    else if([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@.png", feinduraAccounts.imagesPath,[feinduraAccount objectForKey:@"id"]]])
+        imagePath = [NSString stringWithFormat:@"%@/%@.png", feinduraAccounts.imagesPath,[feinduraAccount objectForKey:@"id"]];
+    else
+        imagePath = [[NSBundle mainBundle] pathForResource:@"default.icon" ofType:@"png"];
+        
+    UIImage *iconImage = [UIImage imageWithContentsOfFile:imagePath];
+    cell.imageView.image = iconImage;
     
     [numberFormatter release];
     [TableHelperClass changeCellOrientation:cell toOrientation:self.interfaceOrientation inTable:self];
@@ -269,9 +270,19 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
+        // vars
+        NSError *error;
         
         // get current account id
         id accountKey = [[feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
+        
+        // delete images
+        if([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@.png", feinduraAccounts.imagesPath,accountKey]]) {
+            if (![[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@.png", feinduraAccounts.imagesPath,accountKey] error:&error]) {	//Delete it
+                NSLog(@"Delete file error: %@", error);
+            }
+            
+        }
         
         // delete account from the database
         [feinduraAccounts.dataBase removeObjectForKey:accountKey]; // delete from the database

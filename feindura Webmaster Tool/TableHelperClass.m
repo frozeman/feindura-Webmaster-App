@@ -26,9 +26,9 @@
     int statsWidthPortrait = 85;    
     
     if([tableViewController isKindOfClass:[RootViewController class]]) {
-        leftPadding = 45;
-        statsWidthLandscape = 105;
-        statsWidthPortrait = 65;
+        leftPadding = 50;
+        statsWidthLandscape = 100;
+        statsWidthPortrait = 60;
     }
     
     UILabel *label;

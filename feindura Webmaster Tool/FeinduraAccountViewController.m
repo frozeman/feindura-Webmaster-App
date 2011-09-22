@@ -11,9 +11,10 @@
 #import "SFHFKeychainUtils.h"
 #import "RootViewController.h"
 
-static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmasterTool.controller.php";
-
 @implementation FeinduraAccountViewController
+
+// STATIC
+static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmasterTool-0.2.controller.php";
 
 // PROPERTIES
 @synthesize delegate;

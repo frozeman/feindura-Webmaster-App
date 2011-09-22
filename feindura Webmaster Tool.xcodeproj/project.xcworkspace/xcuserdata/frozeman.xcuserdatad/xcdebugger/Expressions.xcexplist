@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[AddFeinduraViewController viewDidLoad]:AddFeinduraViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "(NSMutableDictionary *)(test)-&gt;feinduraDataBases">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

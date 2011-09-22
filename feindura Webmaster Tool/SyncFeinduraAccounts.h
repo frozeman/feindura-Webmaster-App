@@ -8,12 +8,15 @@
 
 #import <Foundation/Foundation.h>
 #import "ASIFormDataRequest.h"
+#import "ASIDownloadCache.h"
 #import "Reachability.h"
 
 @class RootViewController;
 
 @interface SyncFeinduraAccounts : NSObject {
     NSString *settingsFilePath;
+    NSString *imagesPath;
+    
     NSMutableDictionary *dataBase;
     ASIFormDataRequest *httpRequest;
     Reachability *internetReachable;
@@ -26,6 +29,7 @@
 #pragma mark Properties
 
 @property(nonatomic,retain) NSString *settingsFilePath;
+@property(nonatomic,retain) NSString *imagesPath;
 @property(nonatomic,retain) NSMutableDictionary *dataBase;
 @property(nonatomic,retain) ASIFormDataRequest *httpRequest;
 @property(nonatomic,retain) Reachability *internetReachable;
@@ -35,12 +39,13 @@
 
 #pragma mark Methods
 
--(SyncFeinduraAccounts *)initWithoutInternet;
--(BOOL)setSettingsPath;
+-(BOOL)createSettingsFile;
+-(void)createImagesDirectory;
 
 -(void)loadAccounts;
 -(void)saveAccounts;
 -(BOOL)updateAccounts;
+-(void)saveFavicon:(NSDictionary *)account;
 
 #pragma mark Delegates
 

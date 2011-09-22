@@ -11,11 +11,14 @@
 #import "SBJson.h"
 #import "SFHFKeychainUtils.h"
 
-static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmasterTool.controller.php";
 
 @implementation SyncFeinduraAccounts
 
-@synthesize settingsFilePath;
+// STATIC
+static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmasterTool-0.2.controller.php";
+
+// PROPERTIES
+@synthesize settingsFilePath,imagesPath;
 @synthesize dataBase;
 @synthesize httpRequest;
 @synthesize internetReachable, hostReachable, internetActive; // Check Network
@@ -34,23 +37,10 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
         self.hostReachable = [Reachability reachabilityWithHostName: @"www.google.com"];
         [hostReachable startNotifier];
         
-        // -> load account database
-        if([self setSettingsPath]) {
-            [self loadAccounts];
-        } else
-            return false;
-    }
-    
-    return self;
-}
-
-- (id)initWithoutInternet
-{
-    self = [super init];
-    if (self) {
+        [self createImagesDirectory];
         
         // -> load account database
-        if([self setSettingsPath]) {
+        if([self createSettingsFile]) {
             [self loadAccounts];
         } else
             return false;
@@ -59,7 +49,24 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     return self;
 }
 
--(BOOL)setSettingsPath {
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [hostReachable stopNotifier];
+    [internetReachable stopNotifier];
+    
+    [settingsFilePath release];
+    [imagesPath release];
+    [dataBase release];
+    [httpRequest release];
+    [internetReachable release];
+    [hostReachable release];
+    [delegate release];
+    [super dealloc];
+}
+
+#pragma mark Methods
+
+-(BOOL)createSettingsFile {
     BOOL settingsFileExist;
     NSError *fileError;
     
@@ -75,25 +82,31 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
         NSString *path = [[NSBundle mainBundle] pathForResource:@"settings" ofType:@"plist"]; // use default settings.plist
         settingsFileExist = [fileManager copyItemAtPath:path toPath:self.settingsFilePath error:&fileError];
     }
-
+    
     return settingsFileExist;
 }
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [hostReachable stopNotifier];
-    [internetReachable stopNotifier];
+-(void)createImagesDirectory {
     
-    [settingsFilePath release];
-    [dataBase release];
-    [httpRequest release];
-    [internetReachable release];
-    [hostReachable release];
-    [delegate release];
-    [super dealloc];
+    // vars
+    NSError *error;    
+    
+    // ->> GET settings.plist PATH
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    
+    // CREATE IMAGE DIR
+    self.imagesPath = [documentsDirectory stringByAppendingPathComponent:@"/Images"];
+    if (![fileManager fileExistsAtPath:self.imagesPath]) {	//Does directory already exist?
+		if (![fileManager createDirectoryAtPath:self.imagesPath
+									   withIntermediateDirectories:NO
+														attributes:nil
+															 error:&error]) {
+			NSLog(@"Couldn't create Image directory: %@", error);
+		}
+	}
 }
-
-#pragma mark Methods
 
 - (void)loadAccounts {
     NSMutableDictionary *tmp = [[NSMutableDictionary alloc] initWithContentsOfFile:self.settingsFilePath];
@@ -102,7 +115,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     //NSLog(@"DB %@",self.dataBase);
     
     // reload table
-    [delegate.uiTableView reloadData];
+    [delegate.tableView reloadData];
 }
 
 - (void)saveAccounts {
@@ -142,6 +155,23 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
         [self loadAccounts];
         return false;
     }    
+}
+
+-(void)saveFavicon:(NSDictionary *)account {
+    
+    NSString *imageUrlString = [NSString stringWithFormat:@"%@apple-touch-icon.png", [account objectForKey:@"websiteUrl"]];
+    
+    NSURL *url = [NSURL URLWithString:imageUrlString];
+    UIImage *downloadedImage = [[UIImage alloc] initWithContentsOfFile:[[ASIDownloadCache sharedCache] pathToCachedResponseDataForURL:url]];
+    if([downloadedImage CGImage] != nil) {        
+        NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@.png", self.imagesPath,[account objectForKey:@"id"]];
+        NSData *imageData = [NSData dataWithData:UIImagePNGRepresentation(downloadedImage)];
+        [imageData writeToFile:pngFilePath atomically:YES];
+    }
+    [downloadedImage release];
+    
+    // reload the tableList 
+    [delegate.tableView reloadData];
 }
 
 #pragma mark Selectors
@@ -192,6 +222,12 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     
     NSMutableDictionary *account = [[NSMutableDictionary alloc] initWithDictionary:[dataBase objectForKey:[request.userInfo objectForKey:@"id"]]];
     
+    // if favicon request SAVE FAVICON
+    if([request.userInfo objectForKey:@"type"] != nil && [[request.userInfo objectForKey:@"type"] isEqualToString:@"favicon"]) {
+        [self saveFavicon:account];
+        return;
+    }
+    
     // -> WRONG account
     if([request.responseString isEqualToString:@"FALSE"]) {    
         [account setObject:@"FAILED" forKey:@"status"];
@@ -200,7 +236,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     } else {
         // CORRECT data fetched
         NSDictionary *fetchedData = [request.responseString JSONValue];
-        //NSLog(@"%@",request.responseString);
+//        NSLog(@"%@",request.responseString);
         
         if([fetchedData objectForKey:@"title"] != nil) {
             
@@ -215,6 +251,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
             NSNumber *robotVisitCountAdd =  [NSNumber numberWithInt:[robotVisitCountNow intValue] - [robotVisitCountBefore intValue]];
             
             [account setObject:[fetchedData objectForKey:@"title"] forKey:@"title"]; // set title
+            [account setObject:[fetchedData objectForKey:@"websiteUrl"] forKey:@"websiteUrl"]; // set websiteUrl
             if([fetchedData objectForKey:@"statistics"] != nil)
                 [account setObject:[fetchedData objectForKey:@"statistics"] forKey:@"statistics"]; // set statistics
             if([fetchedData objectForKey:@"browser"] != nil)
@@ -236,8 +273,22 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
                 [[account objectForKey:@"statistics"] setObject:oldRobotVisitCountAdd forKey:@"robotVisitCountAdd"];
             else
                 [[account objectForKey:@"statistics"] setObject:[NSNumber numberWithInt:0] forKey:@"robotVisitCountAdd"];
-                
-        
+            
+            
+            // DOWNLOAD IMAGE
+            if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@.png", self.imagesPath,[request.userInfo objectForKey:@"id"]]]) {
+                NSString *imageUrlString = [NSString stringWithFormat:@"%@apple-touch-icon.png", [account objectForKey:@"websiteUrl"]];
+                NSURL *imageUrl = [NSURL URLWithString:imageUrlString];
+                __block ASIHTTPRequest *imageRequest = [ASIHTTPRequest requestWithURL:imageUrl];
+                [imageRequest setDownloadCache:[ASIDownloadCache sharedCache]];
+                [imageRequest setCachePolicy:ASIAskServerIfModifiedCachePolicy|ASIFallbackToCacheIfLoadFailsCachePolicy];
+                [imageRequest setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
+                [imageRequest setSecondsToCache:86400];
+                [imageRequest setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:[request.userInfo objectForKey:@"id"],@"id",@"favicon",@"type",nil]]; // set id to identify request
+                [imageRequest setDelegate:self];
+                [imageRequest startAsynchronous];
+            }
+            
         // WRONG feindura url
         } else {
             [account setObject:@"FAILED" forKey:@"status"];
@@ -246,13 +297,13 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 
     // STORE success status    
     [dataBase setObject:account forKey:[request.userInfo objectForKey:@"id"]];
-    [account release];    
+    [account release];
     
     [self saveAccounts];
     [self loadAccounts];
 
     // reload the tableList 
-    //[delegate.uiTableView reloadData];
+    //[delegate.tableView reloadData];
     self.httpRequest = nil;
 }
 
@@ -270,7 +321,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [self loadAccounts];
     
     // reload the tableList
-    //[delegate.uiTableView reloadData];
+    //[delegate.tableView reloadData];
     self.httpRequest = nil;
 }
 

@@ -351,7 +351,7 @@
         }
         
         
-        DetailStatsViewController *detailViewController = [[DetailStatsViewController alloc] initWithNibName:@"FeinduraDetailStatsViewController" bundle:nil];
+        DetailStatsViewController *detailViewController = [[DetailStatsViewController alloc] initWithNibName:@"DetailStatsViewController" bundle:nil];
         
         [detailViewController setData: feinduraAccount];
         [detailViewController setLevel: [NSString stringWithString:@"MAIN"]];

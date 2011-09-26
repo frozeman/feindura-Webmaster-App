@@ -105,7 +105,10 @@
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     
-    // Relinquish ownership any cached data, images, etc that aren't in use.
+    // releases the images in the cells
+    for (UITableViewCell *cell in self.tableView.visibleCells) {
+        cell.imageView.image = nil;
+    }
 }
 
 - (void)viewDidUnload {

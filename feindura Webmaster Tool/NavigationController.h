@@ -7,9 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SyncFeinduraAccounts.h"
 
-@interface NavigationController : UINavigationController
+@interface NavigationController : UINavigationController {
 
--(void)test;
+    SyncFeinduraAccounts *accounts;
+}
+
+@property(nonatomic,retain) SyncFeinduraAccounts *accounts;
+
+-(void)reloadData;
 
 @end

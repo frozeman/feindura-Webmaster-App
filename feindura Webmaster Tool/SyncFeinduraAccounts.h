@@ -11,7 +11,7 @@
 #import "ASIDownloadCache.h"
 #import "Reachability.h"
 
-@class RootViewController;
+@class NavigationController;
 
 @interface SyncFeinduraAccounts : NSObject {
     NSString *settingsFilePath;
@@ -23,7 +23,7 @@
     Reachability *hostReachable;
     BOOL internetActive;
     
-    RootViewController *delegate;
+    NavigationController *delegate;
     
     int countRequests;
 }
@@ -37,7 +37,7 @@
 @property(nonatomic,retain) Reachability *internetReachable;
 @property(nonatomic,retain) Reachability *hostReachable;
 @property(nonatomic,assign) BOOL internetActive;
-@property(nonatomic,retain) RootViewController *delegate;
+@property(nonatomic,retain) NavigationController *delegate;
 @property(nonatomic,assign) int countRequests;
 
 #pragma mark Methods

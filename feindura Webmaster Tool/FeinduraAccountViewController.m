@@ -17,7 +17,7 @@
 static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmasterTool-0.2.controller.php";
 
 // PROPERTIES
-@synthesize delegate;
+@synthesize delegate,navController;
 @synthesize scrollView, titleBar; // TopBar
 @synthesize urlTitle, accountTitle; // Labels
 @synthesize url, username, password; //TextFields
@@ -181,7 +181,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 
 - (void)checkFeinduraAccount {
     
-    if(self.delegate.feinduraAccounts.internetActive) {
+    if(self.navController.accounts.internetActive) {
         NSString *urlString = [[NSString stringWithString:self.url.text] stringByAppendingString:feinduraControllerPath];
         NSURL *cmsUrl = [NSURL URLWithString:urlString];
         //NSLog(@"FULLURL %@",tempUrl);
@@ -222,11 +222,11 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     
     // if EXISTING ACCOUNT (if url matches an existing one)
     // TODO: currently its not possible to save one url twice, with different accounts ()
-    for (NSString *accountKey in [delegate.feinduraAccounts.dataBase objectForKey:@"sortOrder"]) {
-        if([[[delegate.feinduraAccounts.dataBase objectForKey:accountKey] objectForKey:@"url"] isEqualToString:self.url.text]) {
+    for (NSString *accountKey in [navController.accounts.dataBase objectForKey:@"sortOrder"]) {
+        if([[[navController.accounts.dataBase objectForKey:accountKey] objectForKey:@"url"] isEqualToString:self.url.text]) {
             accountAlreadyExists = true;
             accountId = accountKey;
-            self.editAccount = [delegate.feinduraAccounts.dataBase objectForKey:accountKey];
+            self.editAccount = [navController.accounts.dataBase objectForKey:accountKey];
         }
     }
     
@@ -246,18 +246,18 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
         CFRelease(identifier);
         
         // add new accountId to the order array
-        NSMutableArray *sortOrderArray = [[NSMutableArray alloc] initWithArray:[delegate.feinduraAccounts.dataBase objectForKey:@"sortOrder"]];
+        NSMutableArray *sortOrderArray = [[NSMutableArray alloc] initWithArray:[navController.accounts.dataBase objectForKey:@"sortOrder"]];
         [sortOrderArray addObject:accountId];
         [currentAccount setObject:accountId forKey:@"id"];
-        [delegate.feinduraAccounts.dataBase setObject:sortOrderArray forKey:@"sortOrder"];
+        [navController.accounts.dataBase setObject:sortOrderArray forKey:@"sortOrder"];
         
         [sortOrderArray release];
         [accountId release];
     }
     
     // add new feindura account to the database
-    [delegate.feinduraAccounts.dataBase setObject: currentAccount forKey:accountId];
-    [delegate.feinduraAccounts saveAccounts];
+    [navController.accounts.dataBase setObject: currentAccount forKey:accountId];
+    [navController.accounts saveAccounts];
     
     [currentAccount release];
     

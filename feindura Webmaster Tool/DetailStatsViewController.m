@@ -10,6 +10,7 @@
 
 @implementation DetailStatsViewController
 
+@synthesize navController;
 @synthesize level;
 @synthesize data, sortedData;
 
@@ -37,6 +38,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // -> setting the nav controller
+    navController = (NavigationController *)self.navigationController;
     
     self.navigationController.toolbarHidden = false;
     
@@ -68,13 +72,6 @@
         }
         
     }
-}
-
--(void)reloadData {
-    NSLog(@"%@",self.parentViewController);
-    NavigationController *tmp = (NavigationController *)self.parentViewController;
-    
-    [tmp test];
 }
 
 - (void)viewDidUnload
@@ -388,6 +385,12 @@
     for (UITableViewCell *cell in self.tableView.visibleCells) {
         [TableHelperClass changeCellOrientation:cell toOrientation:toInterfaceOrientation];
     }
+}
+
+#pragma mark Methods
+
+-(void)reloadData {
+    [navController.accounts updateAccounts];
 }
 
 @end

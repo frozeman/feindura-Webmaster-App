@@ -58,7 +58,7 @@
 
     
     // update accounts when become active again
-    [rootViewController.feinduraAccounts updateAccounts];
+    [navigationController.accounts updateAccounts];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

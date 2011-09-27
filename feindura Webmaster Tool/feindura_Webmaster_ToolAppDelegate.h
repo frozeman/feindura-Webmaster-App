@@ -14,12 +14,12 @@
 @interface feindura_Webmaster_ToolAppDelegate : NSObject <UIApplicationDelegate> {
 
     UIWindow *window;
-    IBOutlet UINavigationController *navigationController;
+    IBOutlet NavigationController *navigationController;
 	IBOutlet RootViewController *rootViewController;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet UINavigationController *navigationController;
+@property (nonatomic, retain) IBOutlet NavigationController *navigationController;
 @property (nonatomic, retain) IBOutlet RootViewController *rootViewController;
 
 @end

@@ -8,15 +8,13 @@
 
 #import "RootViewController.h"
 #import "DetailStatsViewController.h"
-#import "feindura_Webmaster_ToolAppDelegate.h"
 #import "NSString+MD5.h"
 #import "SFHFKeychainUtils.h"
 
 
 @implementation RootViewController
 
-@synthesize appDelegate;
-@synthesize feinduraAccounts;
+@synthesize navController;
 @synthesize titleBar, editButton;
 
 
@@ -33,10 +31,8 @@
 {
     [super viewDidLoad];
     
-    // -> SET transport this instance of the rootViewController to the AppDelegate
-    self.appDelegate = [[UIApplication sharedApplication] delegate];
-    self.appDelegate.rootViewController = self;
-
+    // -> setting the nav controller
+    navController = (NavigationController *)self.navigationController;
     
     // -> add a title which fits in the navbar
     UILabel *title = [[UILabel alloc] init];    
@@ -50,15 +46,6 @@
     [titleBar setTitle:NSLocalizedString(@"OVERVIEW_TITLE", nil)];
     [titleBar setTitleView:title];
     [title release];
-    
-    
-    // LOAD feindura Accounts
-    SyncFeinduraAccounts *tmpFa = [[SyncFeinduraAccounts alloc] init];
-    self.feinduraAccounts = tmpFa;
-    [tmpFa release];
-    RootViewController *tmpRootView = self;
-    [feinduraAccounts setDelegate:tmpRootView];
-    [tmpRootView release];
     
     
     // --------------------------------------------------------------------------------------------
@@ -113,15 +100,11 @@
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-    self.feinduraAccounts = nil;
     self.titleBar = nil;
-    self.appDelegate = nil;
 }
 
 - (void)dealloc {
-    [feinduraAccounts release];
     [titleBar release];
-    [appDelegate release];
     [super dealloc];
 }
 
@@ -135,7 +118,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[feinduraAccounts.dataBase objectForKey:@"sortOrder"] count];
+    return [[navController.accounts.dataBase objectForKey:@"sortOrder"] count];
 }
 
 // Customize the appearance of table view cells.
@@ -209,7 +192,7 @@
     
     
     // GET current feindura account
-    id feinduraAccount = [feinduraAccounts.dataBase objectForKey:[[feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row]];
+    id feinduraAccount = [navController.accounts.dataBase objectForKey:[[navController.accounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row]];
     
     // title
     if([feinduraAccount objectForKey:@"title"] != nil && ![[feinduraAccount objectForKey:@"title"] isEqualToString:@""])
@@ -239,8 +222,8 @@
     NSString *imagePath;
     if([[feinduraAccount objectForKey:@"status"] isEqualToString:@"FAILED"])
         imagePath = [[NSBundle mainBundle] pathForResource:@"failed.icon" ofType:@"png"];
-    else if([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@.png", feinduraAccounts.imagesPath,[feinduraAccount objectForKey:@"id"]]])
-        imagePath = [NSString stringWithFormat:@"%@/%@.png", feinduraAccounts.imagesPath,[feinduraAccount objectForKey:@"id"]];
+    else if([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@.png", self.navController.accounts.imagesPath,[feinduraAccount objectForKey:@"id"]]])
+        imagePath = [NSString stringWithFormat:@"%@/%@.png", self.navController.accounts.imagesPath,[feinduraAccount objectForKey:@"id"]];
     else
         imagePath = [[NSBundle mainBundle] pathForResource:@"default.icon" ofType:@"png"];
         
@@ -277,20 +260,20 @@
         NSError *error;
         
         // get current account id
-        id accountKey = [[feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
+        id accountKey = [[self.navController.accounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
         
         // delete images
-        if([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@.png", feinduraAccounts.imagesPath,accountKey]]) {
-            if (![[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@.png", feinduraAccounts.imagesPath,accountKey] error:&error]) {	//Delete it
+        if([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@.png", self.navController.accounts.imagesPath,accountKey]]) {
+            if (![[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@.png", self.navController.accounts.imagesPath,accountKey] error:&error]) {	//Delete it
                 NSLog(@"Delete file error: %@", error);
             }
             
         }
         
         // delete account from the database
-        [feinduraAccounts.dataBase removeObjectForKey:accountKey]; // delete from the database
-        [[feinduraAccounts.dataBase objectForKey:@"sortOrder"] removeObjectAtIndex:indexPath.row]; // delete from the sortorder array
-        [feinduraAccounts saveAccounts];
+        [self.navController.accounts.dataBase removeObjectForKey:accountKey]; // delete from the database
+        [[self.navController.accounts.dataBase objectForKey:@"sortOrder"] removeObjectAtIndex:indexPath.row]; // delete from the sortorder array
+        [self.navController.accounts saveAccounts];
         
         // Delete the row from the data source.
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
@@ -307,7 +290,7 @@
 // REARRANGE ROWS
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
-    NSMutableArray* newOrder = [NSMutableArray arrayWithArray:[feinduraAccounts.dataBase objectForKey:@"sortOrder"]]; 
+    NSMutableArray* newOrder = [NSMutableArray arrayWithArray:[self.navController.accounts.dataBase objectForKey:@"sortOrder"]]; 
     
     //NSLog(@"BEFORE %@",tempArray);
     
@@ -320,8 +303,8 @@
 
     //NSLog(@"AFTER %@",tempArray);
     
-    [feinduraAccounts.dataBase setObject:newOrder forKey:@"sortOrder"];
-    [feinduraAccounts saveAccounts];
+    [self.navController.accounts.dataBase setObject:newOrder forKey:@"sortOrder"];
+    [self.navController.accounts saveAccounts];
 }
 
 // SELECT ROW
@@ -331,8 +314,8 @@
     if([tableView cellForRowAtIndexPath:indexPath].editing) {
         
         // get selected account dictionary
-        NSString *accountKey = [[feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
-        NSDictionary *feinduraAccount = [feinduraAccounts.dataBase objectForKey:accountKey];
+        NSString *accountKey = [[self.navController.accounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
+        NSDictionary *feinduraAccount = [self.navController.accounts.dataBase objectForKey:accountKey];
         
         [self showEditFeinduraAccountView:feinduraAccount];
      
@@ -340,8 +323,8 @@
     } else {
         
         // get feindura account keys from indexPath.row
-        NSString *accountKey = [[self.feinduraAccounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
-        NSDictionary *feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:accountKey];
+        NSString *accountKey = [[self.navController.accounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
+        NSDictionary *feinduraAccount = [self.navController.accounts.dataBase objectForKey:accountKey];
         
         if([feinduraAccount objectForKey:@"statistics"] == nil) {
             UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
@@ -445,27 +428,8 @@
     }
 }
 
--(IBAction)refreshFeinduraAccounts:(id)sender {
-    [feinduraAccounts updateAccounts];
-}
-
--(void)reloadData {
-    // RootViewController
-    if([self.navigationController.visibleViewController isKindOfClass:[RootViewController class]]) {
-        RootViewController *tmpController = (RootViewController *)self.navigationController.visibleViewController;
-        [tmpController.tableView reloadData];
-    }
-    // DetailStatsViewController
-    if([self.navigationController.visibleViewController isKindOfClass:[DetailStatsViewController class]]) {
-        DetailStatsViewController *tmpController = (DetailStatsViewController *)self.navigationController.visibleViewController;
-        
-        // get feindura account id from the current detail viewcontroller
-        NSString *accountKey = [tmpController.data objectForKey:@"id"];
-        NSDictionary *feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:accountKey];
-        [tmpController setData: feinduraAccount];
-        
-        [tmpController.tableView reloadData];
-    }    
+-(IBAction)reloadData:(id)sender {
+    [navController.accounts updateAccounts];
 }
 
 #pragma mark Delegates
@@ -474,7 +438,7 @@
 	[self dismissModalViewControllerAnimated:YES];
 
     // reload database
-    [feinduraAccounts updateAccounts];
+    [navController.accounts updateAccounts];
 }
 
 @end

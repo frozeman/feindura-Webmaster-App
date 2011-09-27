@@ -11,6 +11,7 @@
 #import "Reachability.h"
 
 @class RootViewController;
+@class NavigationController;
 
 #pragma mark Protocol
 
@@ -26,7 +27,9 @@
 
 @interface FeinduraAccountViewController : UIViewController <UIScrollViewDelegate,UITextFieldDelegate,ASIHTTPRequestDelegate> {
     
+    NavigationController *navController;
     RootViewController *delegate;
+    
     IBOutlet UIScrollView *scrollView;
     IBOutlet UINavigationItem *titleBar;
     
@@ -44,6 +47,7 @@
     NSDictionary *editAccount;
 }
 
+@property(nonatomic,retain) NavigationController *navController;
 @property(nonatomic,retain) RootViewController *delegate;
 @property(nonatomic,retain) UIScrollView *scrollView;
 @property(nonatomic,retain) UINavigationItem *titleBar;

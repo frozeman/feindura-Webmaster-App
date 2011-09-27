@@ -11,13 +11,17 @@
 
 
 @interface DetailStatsViewController : UITableViewController {
+    NavigationController *navController;
     NSString *level;
     NSDictionary *data;
     NSArray *sortedData;
 }
 
+@property(nonatomic,retain) NavigationController *navController;
 @property(nonatomic,retain) NSString *level;
 @property(nonatomic,retain) NSDictionary *data;
 @property(nonatomic,retain) NSArray *sortedData;
+
+-(void)reloadData;
 
 @end

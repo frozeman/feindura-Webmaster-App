@@ -9,29 +9,26 @@
 #import <UIKit/UIKit.h>
 #import "NavigationController.h"
 #import "FeinduraAccountViewController.h"
-#import "SyncFeinduraAccounts.h"
 #import "TableHelperClass.h"
 
 @class feindura_Webmaster_ToolAppDelegate;
 
 @interface RootViewController : UITableViewController <FeinduraAccountViewControllerDelegate> {
-    feindura_Webmaster_ToolAppDelegate *appDelegate;
-    SyncFeinduraAccounts *feinduraAccounts;
+    NavigationController *navController;
+    
     IBOutlet UINavigationItem *titleBar;
     IBOutlet UIBarButtonItem *editButton;
 
 }
 
-@property(nonatomic,retain) feindura_Webmaster_ToolAppDelegate *appDelegate;
-@property(nonatomic,retain) SyncFeinduraAccounts *feinduraAccounts;
+@property(nonatomic,retain) NavigationController *navController;
 @property(nonatomic,retain) IBOutlet UINavigationItem *titleBar;
 @property(nonatomic,retain) IBOutlet UIBarButtonItem *editButton;
 
 -(IBAction)showAddFeinduraAccountView:(id)sender;
 -(void)showEditFeinduraAccountView:(NSDictionary *)account;
 -(IBAction)editFeinduraAccounts:(id)sender;
--(IBAction)refreshFeinduraAccounts:(id)sender;
--(void)reloadData;
+-(IBAction)reloadData:(id)sender;
 
 
 #pragma mark Delegates

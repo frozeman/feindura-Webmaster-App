@@ -7,14 +7,23 @@
 //
 
 #import "NavigationController.h"
+#import "RootViewController.h"
+#import "DetailStatsViewController.h"
 
 @implementation NavigationController
 
-- (id)init
+@synthesize accounts;
+
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    self = [super init];
+    self = [super initWithCoder:aDecoder];
     if (self) {
-        // Custom initialization
+        // LOAD feindura Accounts
+        SyncFeinduraAccounts *tmpAccounts = [[SyncFeinduraAccounts alloc] init];
+        self.accounts = tmpAccounts;
+        [tmpAccounts release];
+        
+        [self.accounts setDelegate:self];
     }
     return self;
 }
@@ -36,30 +45,56 @@
 }
 */
 
-/*
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
 }
-*/
+
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    self.accounts = nil;
 }
+
+- (void)dealloc {
+    [accounts release];
+    [super dealloc];
+}
+
+#pragma marks Delegates
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return true;
 }
 
 
--(void) test {
-    NSLog(@"DDD");
+#pragma mark Methods
+
+-(void)reloadData {
+    // RootViewController
+    if([self.visibleViewController isKindOfClass:[RootViewController class]]) {
+        RootViewController *tmpController = (RootViewController *)self.visibleViewController;
+        
+        [tmpController.tableView reloadData];
+    }
+    // DetailStatsViewController
+    if([self.visibleViewController isKindOfClass:[DetailStatsViewController class]]) {
+        DetailStatsViewController *tmpController = (DetailStatsViewController *)self.visibleViewController;
+        
+        // get feindura account id from the current detail viewcontroller
+        NSString *accountKey = [tmpController.data objectForKey:@"id"];
+        NSDictionary *feinduraAccount = [self.accounts.dataBase objectForKey:accountKey];
+        [tmpController setData: feinduraAccount];
+        
+        [tmpController.tableView reloadData];
+    } 
 }
 
 @end

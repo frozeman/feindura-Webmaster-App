@@ -23,6 +23,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 @synthesize httpRequest;
 @synthesize internetReachable, hostReachable, internetActive; // Check Network
 @synthesize delegate;
+@synthesize countRequests;
 
 - (id)init
 {
@@ -112,15 +113,15 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     NSMutableDictionary *tmp = [[NSMutableDictionary alloc] initWithContentsOfFile:self.settingsFilePath];
     self.dataBase = tmp;
     [tmp release];
-    //NSLog(@"DB %@",self.dataBase);
     
     // reload table
-    [delegate.tableView reloadData];
+    [delegate reloadData];
 }
 
 - (void)saveAccounts {
     [dataBase writeToFile:self.settingsFilePath atomically: YES];
-
+    // reload table
+    [delegate reloadData];
 }
 
 - (BOOL)updateAccounts {
@@ -129,26 +130,27 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
         // -> FETCH NEW ACCOUNT DATA
         NSError *keychainError;
         
+        self.countRequests = 0;
+        
         // start loading new data from the servers
         for (NSString *accountId in [dataBase objectForKey:@"sortOrder"]) {
             
-                // ADD feinduraControllerPath
-                NSURL *cmsUrl = [NSURL URLWithString:[[[dataBase objectForKey:accountId] objectForKey:@"url"] stringByAppendingString:feinduraControllerPath]];
-                //NSLog(@"FULLURL %@",cmsUrl.absoluteURL);
-                
-                // START REQUEST
-                // username,password,status=fetch,id
-                self.httpRequest = [ASIFormDataRequest requestWithURL:cmsUrl];
-                [httpRequest setDelegate:self];
-                [httpRequest setPostValue:[[dataBase objectForKey:accountId] objectForKey:@"account"] forKey:@"username"];
-                [httpRequest setPostValue:[SFHFKeychainUtils getPasswordForUsername:[[dataBase objectForKey:accountId] objectForKey:@"account"]
-                                                                  andServiceName: [[dataBase objectForKey:accountId] objectForKey:@"url"]
-                                                                  error:&keychainError]
-                                  forKey:@"password"];
-                [httpRequest setPostValue:@"FETCH" forKey:@"status"];
-                [httpRequest setUserInfo:[NSDictionary dictionaryWithObject:accountId forKey:@"id"]]; // set id to identify request
-                [httpRequest startAsynchronous];
+            // ADD feinduraControllerPath
+            NSURL *cmsUrl = [NSURL URLWithString:[[[dataBase objectForKey:accountId] objectForKey:@"url"] stringByAppendingString:feinduraControllerPath]];
+            //NSLog(@"FULLURL %@",cmsUrl.absoluteURL);
             
+            // START REQUEST
+            // username,password,status=fetch,id
+            self.httpRequest = [ASIFormDataRequest requestWithURL:cmsUrl];
+            [httpRequest setDelegate:self];
+            [httpRequest setPostValue:[[dataBase objectForKey:accountId] objectForKey:@"account"] forKey:@"username"];
+            [httpRequest setPostValue:[SFHFKeychainUtils getPasswordForUsername:[[dataBase objectForKey:accountId] objectForKey:@"account"]
+                                                              andServiceName: [[dataBase objectForKey:accountId] objectForKey:@"url"]
+                                                              error:&keychainError]
+                              forKey:@"password"];
+            [httpRequest setPostValue:@"FETCH" forKey:@"status"];
+            [httpRequest setUserInfo:[NSDictionary dictionaryWithObject:accountId forKey:@"id"]]; // set id to identify request
+            [httpRequest startAsynchronous];
         }
         return true;
     } else {
@@ -171,7 +173,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [downloadedImage release];
     
     // reload the tableList 
-    [delegate.tableView reloadData];
+    [delegate reloadData];
 }
 
 #pragma mark Selectors
@@ -211,14 +213,17 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 
 // -> START
 - (void)requestStarted:(ASIHTTPRequest *)request {
-    NSLog(@"START fetching new account data from server");
+    self.countRequests++;
+    NSLog(@"START fetching new account data from server (REQUEST #%d)",self.countRequests);
     // TODO: change status bar text
+    
 }
 - (void)request:(ASIHTTPRequest *)request didReceiveResponseHeaders:(NSDictionary *)responseHeaders {}
 
 // -> FINISHED
 - (void)requestFinished:(ASIHTTPRequest *)request {
-    NSLog(@"END fetching new account data from server");
+    NSLog(@"END fetching new account data from server (REQUEST #%d)",self.countRequests);
+    self.countRequests--;
     
     NSMutableDictionary *account = [[NSMutableDictionary alloc] initWithDictionary:[dataBase objectForKey:[request.userInfo objectForKey:@"id"]]];
     
@@ -287,6 +292,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
                 [imageRequest setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:[request.userInfo objectForKey:@"id"],@"id",@"favicon",@"type",nil]]; // set id to identify request
                 [imageRequest setDelegate:self];
                 [imageRequest startAsynchronous];
+                //NSLog(@"START fetching Icon Image for id: %@",[request.userInfo objectForKey:@"id"]);
             }
             
         // WRONG feindura url
@@ -299,17 +305,18 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [dataBase setObject:account forKey:[request.userInfo objectForKey:@"id"]];
     [account release];
     
-    [self saveAccounts];
-    [self loadAccounts];
+    if(self.countRequests <= 0) {
+        NSLog(@"SAVE");
+        [self saveAccounts];
+    }
 
-    // reload the tableList 
-    //[delegate.tableView reloadData];
     self.httpRequest = nil;
 }
 
 // -> FAILED
 - (void)requestFailed:(ASIHTTPRequest *)request {
     NSLog(@"FAILED fetching new account data from server");
+    self.countRequests--;
     
     // STORE failed status
     NSMutableDictionary *failedAccount = [[NSMutableDictionary alloc] initWithDictionary:[dataBase objectForKey:[request.userInfo objectForKey:@"id"]]];    
@@ -317,11 +324,11 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [dataBase setObject:failedAccount forKey:[request.userInfo objectForKey:@"id"]];
     [failedAccount release];
     
-    [self saveAccounts];
-    [self loadAccounts];
-    
-    // reload the tableList
-    //[delegate.tableView reloadData];
+    if(self.countRequests <= 0) {
+        NSLog(@"SAVE");
+        [self saveAccounts];
+    }
+
     self.httpRequest = nil;
 }
 

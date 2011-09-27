@@ -322,7 +322,6 @@
     
     [feinduraAccounts.dataBase setObject:newOrder forKey:@"sortOrder"];
     [feinduraAccounts saveAccounts];
-    [self.tableView reloadData];
 }
 
 // SELECT ROW
@@ -448,6 +447,25 @@
 
 -(IBAction)refreshFeinduraAccounts:(id)sender {
     [feinduraAccounts updateAccounts];
+}
+
+-(void)reloadData {
+    // RootViewController
+    if([self.navigationController.visibleViewController isKindOfClass:[RootViewController class]]) {
+        RootViewController *tmpController = (RootViewController *)self.navigationController.visibleViewController;
+        [tmpController.tableView reloadData];
+    }
+    // DetailStatsViewController
+    if([self.navigationController.visibleViewController isKindOfClass:[DetailStatsViewController class]]) {
+        DetailStatsViewController *tmpController = (DetailStatsViewController *)self.navigationController.visibleViewController;
+        
+        // get feindura account id from the current detail viewcontroller
+        NSString *accountKey = [tmpController.data objectForKey:@"id"];
+        NSDictionary *feinduraAccount = [self.feinduraAccounts.dataBase objectForKey:accountKey];
+        [tmpController setData: feinduraAccount];
+        
+        [tmpController.tableView reloadData];
+    }    
 }
 
 #pragma mark Delegates

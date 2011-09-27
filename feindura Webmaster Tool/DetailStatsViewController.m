@@ -46,14 +46,10 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-//    UIBarButtonItem            *buttonItem;
-//    
-//    buttonItem = [[ UIBarButtonItem alloc ] initWithTitle: @"Back"
-//                                                    style: UIBarButtonItemStyleBordered
-//                                                   target: self
-//                                                   action: @selector( goBack: ) ];
-//    self.navigationController.toolbarItems = [ NSArray arrayWithObject: buttonItem ];
-//    [ buttonItem release ];
+    // add refresh button
+    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(reloadData)];
+    self.toolbarItems = [ NSArray arrayWithObject: refreshButton ];
+    [refreshButton release];
     
     // SORT SORTED DATA
     if(![level isEqualToString:@"MAIN"]) {
@@ -72,6 +68,13 @@
         }
         
     }
+}
+
+-(void)reloadData {
+    NSLog(@"%@",self.parentViewController);
+    NavigationController *tmp = (NavigationController *)self.parentViewController;
+    
+    [tmp test];
 }
 
 - (void)viewDidUnload

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NavigationController.h"
 #import "FeinduraAccountViewController.h"
 #import "SyncFeinduraAccounts.h"
 #import "TableHelperClass.h"
@@ -30,6 +31,7 @@
 -(void)showEditFeinduraAccountView:(NSDictionary *)account;
 -(IBAction)editFeinduraAccounts:(id)sender;
 -(IBAction)refreshFeinduraAccounts:(id)sender;
+-(void)reloadData;
 
 
 #pragma mark Delegates

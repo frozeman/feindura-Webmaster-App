@@ -24,6 +24,8 @@
     BOOL internetActive;
     
     RootViewController *delegate;
+    
+    int countRequests;
 }
 
 #pragma mark Properties
@@ -31,11 +33,12 @@
 @property(nonatomic,retain) NSString *settingsFilePath;
 @property(nonatomic,retain) NSString *imagesPath;
 @property(nonatomic,retain) NSMutableDictionary *dataBase;
-@property(nonatomic,retain) ASIFormDataRequest *httpRequest;
+@property(retain) ASIFormDataRequest *httpRequest;
 @property(nonatomic,retain) Reachability *internetReachable;
 @property(nonatomic,retain) Reachability *hostReachable;
 @property(nonatomic,assign) BOOL internetActive;
 @property(nonatomic,retain) RootViewController *delegate;
+@property(nonatomic,assign) int countRequests;
 
 #pragma mark Methods
 

@@ -20,7 +20,6 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 // PROPERTIES
 @synthesize settingsFilePath,imagesPath;
 @synthesize dataBase;
-@synthesize httpRequest;
 @synthesize internetReachable, hostReachable, internetActive; // Check Network
 @synthesize delegate;
 @synthesize countRequests;
@@ -58,7 +57,6 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [settingsFilePath release];
     [imagesPath release];
     [dataBase release];
-    [httpRequest release];
     [internetReachable release];
     [hostReachable release];
     [delegate release];
@@ -141,16 +139,16 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
             
             // START REQUEST
             // username,password,status=fetch,id
-            self.httpRequest = [ASIFormDataRequest requestWithURL:cmsUrl];
-            [httpRequest setDelegate:self];
-            [httpRequest setPostValue:[[dataBase objectForKey:accountId] objectForKey:@"account"] forKey:@"username"];
-            [httpRequest setPostValue:[SFHFKeychainUtils getPasswordForUsername:[[dataBase objectForKey:accountId] objectForKey:@"account"]
+            ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:cmsUrl];
+            [request setDelegate:self];
+            [request setPostValue:[[dataBase objectForKey:accountId] objectForKey:@"account"] forKey:@"username"];
+            [request setPostValue:[SFHFKeychainUtils getPasswordForUsername:[[dataBase objectForKey:accountId] objectForKey:@"account"]
                                                               andServiceName: [[dataBase objectForKey:accountId] objectForKey:@"url"]
                                                               error:&keychainError]
                               forKey:@"password"];
-            [httpRequest setPostValue:@"FETCH" forKey:@"status"];
-            [httpRequest setUserInfo:[NSDictionary dictionaryWithObject:accountId forKey:@"id"]]; // set id to identify request
-            [httpRequest startAsynchronous];
+            [request setPostValue:@"FETCH" forKey:@"status"];
+            [request setUserInfo:[NSDictionary dictionaryWithObject:accountId forKey:@"id"]]; // set id to identify request
+            [request startAsynchronous];
         }
         return true;
     } else {
@@ -284,7 +282,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
             if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@.png", self.imagesPath,[request.userInfo objectForKey:@"id"]]]) {
                 NSString *imageUrlString = [NSString stringWithFormat:@"%@apple-touch-icon.png", [account objectForKey:@"websiteUrl"]];
                 NSURL *imageUrl = [NSURL URLWithString:imageUrlString];
-                __block ASIHTTPRequest *imageRequest = [ASIHTTPRequest requestWithURL:imageUrl];
+                ASIHTTPRequest *imageRequest = [ASIHTTPRequest requestWithURL:imageUrl];
                 [imageRequest setDownloadCache:[ASIDownloadCache sharedCache]];
                 [imageRequest setCachePolicy:ASIAskServerIfModifiedCachePolicy|ASIFallbackToCacheIfLoadFailsCachePolicy];
                 [imageRequest setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
@@ -309,8 +307,6 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
         NSLog(@"SAVE");
         [self saveAccounts];
     }
-
-    self.httpRequest = nil;
 }
 
 // -> FAILED
@@ -328,8 +324,6 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
         NSLog(@"SAVE");
         [self saveAccounts];
     }
-
-    self.httpRequest = nil;
 }
 
 @end

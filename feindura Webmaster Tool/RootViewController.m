@@ -215,7 +215,8 @@
     }
         
     // statistics subtext
-    [(UILabel *)[cell viewWithTag:4] setText:[NSLocalizedString(@"STATSSUBTEXT_LASTVISIT", nil) stringByAppendingString:[NSDateFormatter localizedStringFromDate:[NSDate dateWithTimeIntervalSince1970:[[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"lastVisit"] intValue]] dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterShortStyle]]];
+    [(UILabel *)[cell viewWithTag:4] setText:[NSString stringWithFormat:@"+%@", [[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCountAdd"] stringValue]]];
+//    [(UILabel *)[cell viewWithTag:4] setText:[NSString stringWithFormat:@"+%@ %@%@", [[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"userVisitCountAdd"] stringValue],NSLocalizedString(@"STATSSUBTEXT_LASTVISIT", nil),[NSDateFormatter localizedStringFromDate:[NSDate dateWithTimeIntervalSince1970:[[[feinduraAccount objectForKey:@"statistics"] objectForKey:@"lastVisit"] intValue]] dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterShortStyle]]];
     
     
     // ADD a image

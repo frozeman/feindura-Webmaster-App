@@ -22,12 +22,12 @@
     //NSLog(@"CHANGE ORIENTATION");
     
     int leftPadding = 11;
-    int statsWidthLandscape = 125;
+    int statsWidthLandscape = 130;
     int statsWidthPortrait = 85;    
     
     if([tableViewController isKindOfClass:[RootViewController class]]) {
         leftPadding = 50;
-        statsWidthLandscape = 100;
+        statsWidthLandscape = 105;
         statsWidthPortrait = 60;
     }
     
@@ -38,7 +38,7 @@
         // TODO: add more stats in this orientation?
         
         // subtext
-        [[cell viewWithTag:2] setFrame:CGRectMake( leftPadding, 22, 235, 20 )];
+        [[cell viewWithTag:2] setFrame:CGRectMake( leftPadding, 22, 230, 20 )];
         label = (UILabel *)[cell viewWithTag:2];
         if(label.text != nil)
             [label setHidden:false];
@@ -50,7 +50,7 @@
             [[cell viewWithTag:1] setFrame:CGRectMake( leftPadding, 5, 285, 20 )];
         
         // stats subtext
-        [[cell viewWithTag:4] setFrame:CGRectMake( 290, 22, statsWidthLandscape + 50, 20 )];
+        [[cell viewWithTag:4] setFrame:CGRectMake( 285, 22, statsWidthLandscape + 50, 20 )];
         label = (UILabel *)[cell viewWithTag:4];
         if(label.text != nil)
             [label setHidden:false];

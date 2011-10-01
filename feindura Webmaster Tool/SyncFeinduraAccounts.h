@@ -14,6 +14,8 @@
 @class NavigationController;
 
 @interface SyncFeinduraAccounts : NSObject {
+    NavigationController *navController;
+    
     NSString *settingsFilePath;
     NSString *imagesPath;
     
@@ -22,20 +24,18 @@
     Reachability *hostReachable;
     BOOL internetActive;
     
-    NavigationController *delegate;
-    
     int countRequests;
 }
 
 #pragma mark Properties
 
+@property(nonatomic,retain) NavigationController *navController;
 @property(nonatomic,retain) NSString *settingsFilePath;
 @property(nonatomic,retain) NSString *imagesPath;
 @property(nonatomic,retain) NSMutableDictionary *dataBase;
 @property(nonatomic,retain) Reachability *internetReachable;
 @property(nonatomic,retain) Reachability *hostReachable;
 @property(nonatomic,assign) BOOL internetActive;
-@property(nonatomic,retain) NavigationController *delegate;
 @property(nonatomic,assign) int countRequests;
 
 #pragma mark Methods
@@ -45,6 +45,7 @@
 
 -(void)loadAccounts;
 -(void)saveAccounts;
+-(void)saveAccountsWithoutReloadTable;
 -(BOOL)updateAccounts;
 -(void)saveFavicon:(NSDictionary *)account;
 

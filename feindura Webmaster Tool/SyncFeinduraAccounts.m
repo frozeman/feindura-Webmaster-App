@@ -21,7 +21,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 @synthesize settingsFilePath,imagesPath;
 @synthesize dataBase;
 @synthesize internetReachable, hostReachable, internetActive; // Check Network
-@synthesize delegate;
+@synthesize navController;
 @synthesize countRequests;
 
 - (id)init
@@ -59,7 +59,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [dataBase release];
     [internetReachable release];
     [hostReachable release];
-    [delegate release];
+    [navController release];
     [super dealloc];
 }
 
@@ -113,13 +113,16 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [tmp release];
     
     // reload table
-    [delegate reloadData];
+    [navController reloadData];
 }
 
 - (void)saveAccounts {
     [dataBase writeToFile:self.settingsFilePath atomically: YES];
     // reload table
-    [delegate reloadData];
+    [navController reloadData];
+}
+- (void)saveAccountsWithoutReloadTable {
+    [dataBase writeToFile:self.settingsFilePath atomically: YES];
 }
 
 - (BOOL)updateAccounts {
@@ -171,7 +174,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [downloadedImage release];
     
     // reload the tableList 
-    [delegate reloadData];
+    [navController reloadData];
 }
 
 #pragma mark Selectors
@@ -212,7 +215,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 // -> START
 - (void)requestStarted:(ASIHTTPRequest *)request {
     self.countRequests++;
-    NSLog(@"START fetching new account data from server (REQUEST #%d)",self.countRequests);
+    NSLog(@"START REQUEST #%d: %@",self.countRequests,[request.userInfo objectForKey:@"id"]);
     // TODO: change status bar text
     
 }
@@ -220,7 +223,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 
 // -> FINISHED
 - (void)requestFinished:(ASIHTTPRequest *)request {
-    NSLog(@"END fetching new account data from server (REQUEST #%d)",self.countRequests);
+    NSLog(@"END REQUEST #%d: %@",self.countRequests,[request.userInfo objectForKey:@"id"]);
     self.countRequests--;
     
     NSMutableDictionary *account = [[NSMutableDictionary alloc] initWithDictionary:[dataBase objectForKey:[request.userInfo objectForKey:@"id"]]];
@@ -303,7 +306,8 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [dataBase setObject:account forKey:[request.userInfo objectForKey:@"id"]];
     [account release];
     
-    if(self.countRequests <= 0) {
+    [navController reloadData];
+    if(self.countRequests <= 1) {
         NSLog(@"SAVE");
         [self saveAccounts];
     }
@@ -311,7 +315,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 
 // -> FAILED
 - (void)requestFailed:(ASIHTTPRequest *)request {
-    NSLog(@"FAILED fetching new account data from server");
+    NSLog(@"FAILED REQUEST #%d: %@",self.countRequests,[request.userInfo objectForKey:@"id"]);
     self.countRequests--;
     
     // STORE failed status
@@ -320,7 +324,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [dataBase setObject:failedAccount forKey:[request.userInfo objectForKey:@"id"]];
     [failedAccount release];
     
-    if(self.countRequests <= 0) {
+    if(self.countRequests <= 1) {
         NSLog(@"SAVE");
         [self saveAccounts];
     }

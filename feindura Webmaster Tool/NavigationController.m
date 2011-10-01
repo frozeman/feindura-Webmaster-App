@@ -23,7 +23,7 @@
         self.accounts = tmpAccounts;
         [tmpAccounts release];
         
-        [self.accounts setDelegate:self];
+        [self.accounts setNavController:self];
     }
     return self;
 }
@@ -68,9 +68,7 @@
 
 #pragma marks Delegates
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return true;
 }
 
@@ -78,12 +76,8 @@
 #pragma mark Methods
 
 -(void)reloadData {
-    // RootViewController
-    if([self.visibleViewController isKindOfClass:[RootViewController class]]) {
-        RootViewController *tmpController = (RootViewController *)self.visibleViewController;
-        
-        [tmpController.tableView reloadData];
-    }
+    NSLog(@"RELOAD TABLE");
+    
     // DetailStatsViewController
     if([self.visibleViewController isKindOfClass:[DetailStatsViewController class]]) {
         DetailStatsViewController *tmpController = (DetailStatsViewController *)self.visibleViewController;
@@ -94,7 +88,16 @@
         [tmpController setData: feinduraAccount];
         
         [tmpController.tableView reloadData];
-    } 
+    } else {
+        for (UIViewController *view in self.viewControllers) {
+            // RootViewController
+            if([view isKindOfClass:[RootViewController class]]) {
+                RootViewController *tmpController = (RootViewController *)view;
+                
+                [tmpController.tableView reloadData];
+            }
+        }
+    }
 }
 
 @end

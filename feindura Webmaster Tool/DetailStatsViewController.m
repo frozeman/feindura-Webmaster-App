@@ -40,7 +40,7 @@
     [super viewDidLoad];
     
     // -> setting the nav controller
-    navController = (NavigationController *)self.navigationController;
+    self.navController = (NavigationController *)self.navigationController;
     
     self.navigationController.toolbarHidden = false;
     
@@ -77,6 +77,8 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    [navController reloadData];
+    self.navController = nil;
     self.level = nil;
     self.data = nil;
     self.sortedData = nil;
@@ -107,6 +109,7 @@
 }
 
 - (void)dealloc {
+    [navController release];
     [level release];
     [data release];
     [sortedData release];

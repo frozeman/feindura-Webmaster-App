@@ -42,6 +42,9 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // -> setting the nav controller
+    self.navController = (NavigationController *)self.parentViewController;
+    
     // -> BASIC SETUP
     // -> add a title which fits in the navbar
     UILabel *title = [[UILabel alloc] init];
@@ -116,6 +119,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     self.titleBar = nil;
     self.scrollView = nil;
     self.delegate = nil;
+    self.navController = nil;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -143,6 +147,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [titleBar release];
     [scrollView release];
     [delegate release];
+    [navController release];
     
     [super dealloc];
 }

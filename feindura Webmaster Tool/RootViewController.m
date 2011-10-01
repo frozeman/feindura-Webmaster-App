@@ -32,7 +32,7 @@
     [super viewDidLoad];
     
     // -> setting the nav controller
-    navController = (NavigationController *)self.navigationController;
+    self.navController = (NavigationController *)self.navigationController;
     
     // -> add a title which fits in the navbar
     UILabel *title = [[UILabel alloc] init];    
@@ -101,10 +101,12 @@
 - (void)viewDidUnload {
     [super viewDidUnload];
     self.titleBar = nil;
+    self.navController = nil;
 }
 
 - (void)dealloc {
     [titleBar release];
+    [navController release];
     [super dealloc];
 }
 
@@ -259,7 +261,7 @@
     {
         // vars
         NSError *error;
-        
+
         // get current account id
         id accountKey = [[self.navController.accounts.dataBase objectForKey:@"sortOrder"] objectAtIndex:indexPath.row];
         
@@ -268,16 +270,16 @@
             if (![[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@.png", self.navController.accounts.imagesPath,accountKey] error:&error]) {	//Delete it
                 NSLog(@"Delete file error: %@", error);
             }
-            
         }
         
         // delete account from the database
         [self.navController.accounts.dataBase removeObjectForKey:accountKey]; // delete from the database
         [[self.navController.accounts.dataBase objectForKey:@"sortOrder"] removeObjectAtIndex:indexPath.row]; // delete from the sortorder array
-        [self.navController.accounts saveAccounts];
-        
+        [self.navController.accounts saveAccountsWithoutReloadTable]; 
+
         // Delete the row from the data source.
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        
     }
     /*
     else if (editingStyle == UITableViewCellEditingStyleInsert)

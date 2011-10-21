@@ -33,6 +33,7 @@
     
     // -> setting the nav controller
     self.navController = (NavigationController *)self.navigationController;
+    self.navController.rootView = self;
     
     // -> add a title which fits in the navbar
     UILabel *title = [[UILabel alloc] init];    

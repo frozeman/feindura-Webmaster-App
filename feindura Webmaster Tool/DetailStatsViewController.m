@@ -77,7 +77,6 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    [navController reloadData];
     self.navController = nil;
     self.level = nil;
     self.data = nil;

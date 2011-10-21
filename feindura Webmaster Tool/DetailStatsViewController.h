@@ -22,6 +22,6 @@
 @property(nonatomic,retain) NSDictionary *data;
 @property(nonatomic,retain) NSArray *sortedData;
 
--(void)reloadData;
+-(void)reloadData; // for the reload button
 
 @end

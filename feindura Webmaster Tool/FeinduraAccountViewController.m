@@ -101,7 +101,6 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
     [super viewDidUnload];
     
     [request clearDelegatesAndCancel];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     self.editAccount = nil;
     self.request = nil;

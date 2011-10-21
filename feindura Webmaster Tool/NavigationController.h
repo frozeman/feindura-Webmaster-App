@@ -7,15 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SyncFeinduraAccounts.h"
+#import "FeinduraAccounts.h"
+
+@class RootViewController;
 
 @interface NavigationController : UINavigationController {
 
-    SyncFeinduraAccounts *accounts;
+    FeinduraAccounts *accounts;
+    RootViewController *rootView;
 }
 
-@property(nonatomic,retain) SyncFeinduraAccounts *accounts;
+@property(nonatomic,retain) FeinduraAccounts *accounts;
+@property(nonatomic,retain) RootViewController *rootView;
 
--(void)reloadData;
+-(void)reloadCell:(NSString *)accountId;
 
 @end

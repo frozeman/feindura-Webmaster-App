@@ -7,19 +7,19 @@
 //
 
 #import "NavigationController.h"
-#import "RootViewController.h"
 #import "DetailStatsViewController.h"
+#import "RootViewController.h"
 
 @implementation NavigationController
 
-@synthesize accounts;
+@synthesize accounts,rootView;
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
         // LOAD feindura Accounts
-        SyncFeinduraAccounts *tmpAccounts = [[SyncFeinduraAccounts alloc] init];
+        FeinduraAccounts *tmpAccounts = [[FeinduraAccounts alloc] init];
         self.accounts = tmpAccounts;
         [tmpAccounts release];
         
@@ -59,10 +59,12 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     self.accounts = nil;
+    self.rootView = nil;
 }
 
 - (void)dealloc {
     [accounts release];
+    [rootView release];
     [super dealloc];
 }
 
@@ -75,29 +77,33 @@
 
 #pragma mark Methods
 
--(void)reloadData {
-    NSLog(@"RELOAD TABLE");
+-(void)reloadCell:(NSString *)accountId {
+    NSLog(@"RELOAD CELL: %@",accountId);
     
-    // DetailStatsViewController
+    // -> DetailStatsViewController
     if([self.visibleViewController isKindOfClass:[DetailStatsViewController class]]) {
-        DetailStatsViewController *tmpController = (DetailStatsViewController *)self.visibleViewController;
+        DetailStatsViewController *detailView = (DetailStatsViewController *)self.visibleViewController;
         
-        // get feindura account id from the current detail viewcontroller
-        NSString *accountKey = [tmpController.data objectForKey:@"id"];
-        NSDictionary *feinduraAccount = [self.accounts.dataBase objectForKey:accountKey];
-        [tmpController setData: feinduraAccount];
+        // get feindura account id from the current detail view controller
+        NSString *accountKey = [detailView.data objectForKey:@"id"];
         
-        [tmpController.tableView reloadData];
-    } else {
-        for (UIViewController *view in self.viewControllers) {
-            // RootViewController
-            if([view isKindOfClass:[RootViewController class]]) {
-                RootViewController *tmpController = (RootViewController *)view;
-                
-                [tmpController.tableView reloadData];
-            }
+        if([accountKey isEqualToString:accountId]) {
+            NSDictionary *feinduraAccount = [self.accounts.dataBase objectForKey:accountKey];
+            [detailView setData: feinduraAccount];
+            [detailView.tableView reloadData];
         }
-    }
+    
+    
+    } 
+    
+    // -> RootViewController
+    // get the cell row
+    NSArray *sortOrder = [accounts.dataBase objectForKey:@"sortOrder"];
+    NSUInteger indexRow = [sortOrder indexOfObject:accountId];  
+    
+    // reload the cell
+    [self.rootView.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:indexRow inSection:0],nil] withRowAnimation:UITableViewRowAnimationFade];
+    
 }
 
 @end

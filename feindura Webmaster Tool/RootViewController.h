@@ -33,7 +33,7 @@
 
 #pragma mark Delegates
 
--(void)DismissAddFeinduraView;
+-(void)DismissAddFeinduraView;  // for the reload button
 
 
 @end

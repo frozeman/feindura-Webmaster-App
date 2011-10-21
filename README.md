@@ -1,4 +1,4 @@
-feindura Webmaster Tool - Version 0.2
+feindura Webmaster Tool - Version 0.3
 ==============================================
 Copyright (C) Fabian Vogelsteller [frozeman.de]
 published under the GNU General Public License version 3
@@ -25,4 +25,4 @@ Fabian Vogelsteller <http://frozeman.de>
 iPhone app for feindura webmasters, to view multiple feindura cms statistics at once.
 
 ### FEATURES
-* displays statistics of multiple feindura CMS's
+* displays statistics of multiple feindura driven websites

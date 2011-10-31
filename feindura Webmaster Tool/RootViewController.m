@@ -276,7 +276,7 @@
         // delete account from the database
         [self.navController.accounts.dataBase removeObjectForKey:accountKey]; // delete from the database
         [[self.navController.accounts.dataBase objectForKey:@"sortOrder"] removeObjectAtIndex:indexPath.row]; // delete from the sortorder array
-        [self.navController.accounts saveAccountsWithoutReloadTable]; 
+        [self.navController.accounts saveAccounts]; 
 
         // Delete the row from the data source.
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
@@ -442,6 +442,7 @@
 	[self dismissModalViewControllerAnimated:YES];
 
     // reload database
+    [self.tableView reloadData];
     [navController.accounts updateAccounts];
 }
 

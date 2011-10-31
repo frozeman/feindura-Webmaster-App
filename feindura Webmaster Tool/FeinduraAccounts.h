@@ -20,6 +20,8 @@
     NSString *imagesPath;
     
     NSMutableDictionary *dataBase;
+    
+    ASIFormDataRequest *httpRequest;
     Reachability *internetReachable;
     Reachability *hostReachable;
     BOOL internetActive;
@@ -33,6 +35,7 @@
 @property(nonatomic,retain) NSString *settingsFilePath;
 @property(nonatomic,retain) NSString *imagesPath;
 @property(nonatomic,retain) NSMutableDictionary *dataBase;
+@property(retain) ASIFormDataRequest *httpRequest;
 @property(nonatomic,retain) Reachability *internetReachable;
 @property(nonatomic,retain) Reachability *hostReachable;
 @property(nonatomic,assign) BOOL internetActive;
@@ -45,7 +48,6 @@
 
 -(void)loadAccounts;
 -(void)saveAccounts;
--(void)saveAccountsWithoutReloadTable;
 -(BOOL)updateAccounts;
 -(void)saveFavicon:(NSDictionary *)account;
 

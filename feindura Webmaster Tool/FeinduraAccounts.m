@@ -20,7 +20,7 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 // PROPERTIES
 @synthesize settingsFilePath,imagesPath;
 @synthesize dataBase;
-@synthesize internetReachable, hostReachable, internetActive; // Check Network
+@synthesize httpRequest, internetReachable, hostReachable, internetActive; // Check Network
 @synthesize navController;
 @synthesize countRequests;
 
@@ -116,9 +116,6 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
 - (void)saveAccounts {
     [dataBase writeToFile:self.settingsFilePath atomically: YES];
 }
-- (void)saveAccountsWithoutReloadTable {
-    [dataBase writeToFile:self.settingsFilePath atomically: YES];
-}
 
 - (BOOL)updateAccounts {
     
@@ -137,16 +134,15 @@ static NSString *feinduraControllerPath = @"/library/controllers/feinduraWebmast
             
             // START REQUEST
             // username,password,status=fetch,id
-            ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:cmsUrl];
-            [request setDelegate:self];
-            [request setPostValue:[[dataBase objectForKey:accountId] objectForKey:@"account"] forKey:@"username"];
-            [request setPostValue:[SFHFKeychainUtils getPasswordForUsername:[[dataBase objectForKey:accountId] objectForKey:@"account"]
+            self.httpRequest = [ASIFormDataRequest requestWithURL:cmsUrl];
+            [httpRequest setDelegate:self];
+            [httpRequest setPostValue:[[dataBase objectForKey:accountId] objectForKey:@"account"] forKey:@"username"];
+            [httpRequest setPostValue:[SFHFKeychainUtils getPasswordForUsername:[[dataBase objectForKey:accountId] objectForKey:@"account"]
                                                               andServiceName: [[dataBase objectForKey:accountId] objectForKey:@"url"]
-                                                              error:&keychainError]
-                              forKey:@"password"];
-            [request setPostValue:@"FETCH" forKey:@"status"];
-            [request setUserInfo:[NSDictionary dictionaryWithObject:accountId forKey:@"id"]]; // set id to identify request
-            [request startAsynchronous];
+                                                              error:&keychainError] forKey:@"password"];
+            [httpRequest setPostValue:@"FETCH" forKey:@"status"];
+            [httpRequest setUserInfo:[NSDictionary dictionaryWithObject:accountId forKey:@"id"]]; // set id to identify request
+            [httpRequest startAsynchronous];
         }
         return true;
     } else {

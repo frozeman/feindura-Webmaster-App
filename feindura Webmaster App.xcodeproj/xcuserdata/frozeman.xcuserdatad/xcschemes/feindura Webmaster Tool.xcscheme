@@ -14,7 +14,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A3AB892713A4D42F0025FE50"
-               BuildableName = "feindura Webmaster Tool.app"
+               BuildableName = "feindura Webmaster App.app"
                BlueprintName = "feindura Webmaster App"
                ReferencedContainer = "container:feindura Webmaster App.xcodeproj">
             </BuildableReference>
@@ -32,7 +32,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A3AB894B13A4D4300025FE50"
-               BuildableName = "feindura Webmaster ToolTests.octest"
+               BuildableName = "feindura Webmaster AppTests.octest"
                BlueprintName = "feindura Webmaster AppTests"
                ReferencedContainer = "container:feindura Webmaster App.xcodeproj">
             </BuildableReference>
@@ -42,7 +42,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A3AB892713A4D42F0025FE50"
-            BuildableName = "feindura Webmaster Tool.app"
+            BuildableName = "feindura Webmaster App.app"
             BlueprintName = "feindura Webmaster App"
             ReferencedContainer = "container:feindura Webmaster App.xcodeproj">
          </BuildableReference>
@@ -60,7 +60,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A3AB892713A4D42F0025FE50"
-            BuildableName = "feindura Webmaster Tool.app"
+            BuildableName = "feindura Webmaster App.app"
             BlueprintName = "feindura Webmaster App"
             ReferencedContainer = "container:feindura Webmaster App.xcodeproj">
          </BuildableReference>
@@ -78,7 +78,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A3AB892713A4D42F0025FE50"
-            BuildableName = "feindura Webmaster Tool.app"
+            BuildableName = "feindura Webmaster App.app"
             BlueprintName = "feindura Webmaster App"
             ReferencedContainer = "container:feindura Webmaster App.xcodeproj">
          </BuildableReference>

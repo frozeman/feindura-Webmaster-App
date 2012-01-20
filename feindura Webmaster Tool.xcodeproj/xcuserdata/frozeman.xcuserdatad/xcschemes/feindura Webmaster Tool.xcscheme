@@ -14,9 +14,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A3AB892713A4D42F0025FE50"
-               BuildableName = "feindura Webmaster Tool.app"
-               BlueprintName = "feindura Webmaster Tool"
-               ReferencedContainer = "container:feindura Webmaster Tool.xcodeproj">
+               BuildableName = "feindura Webmaster App.app"
+               BlueprintName = "feindura Webmaster App"
+               ReferencedContainer = "container:feindura Webmaster App.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,26 +32,37 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A3AB894B13A4D4300025FE50"
-               BuildableName = "feindura Webmaster ToolTests.octest"
-               BlueprintName = "feindura Webmaster ToolTests"
-               ReferencedContainer = "container:feindura Webmaster Tool.xcodeproj">
+               BuildableName = "feindura Webmaster AppTests.octest"
+               BlueprintName = "feindura Webmaster AppTests"
+               ReferencedContainer = "container:feindura Webmaster App.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A3AB892713A4D42F0025FE50"
+            BuildableName = "feindura Webmaster App.app"
+            BlueprintName = "feindura Webmaster App"
+            ReferencedContainer = "container:feindura Webmaster App.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.GDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.GDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Debug">
+      buildConfiguration = "Debug"
+      debugDocumentVersioning = "YES"
+      allowLocationSimulation = "YES">
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A3AB892713A4D42F0025FE50"
-            BuildableName = "feindura Webmaster Tool.app"
-            BlueprintName = "feindura Webmaster Tool"
-            ReferencedContainer = "container:feindura Webmaster Tool.xcodeproj">
+            BuildableName = "feindura Webmaster App.app"
+            BlueprintName = "feindura Webmaster App"
+            ReferencedContainer = "container:feindura Webmaster App.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -61,14 +72,15 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Release">
+      buildConfiguration = "Release"
+      debugDocumentVersioning = "YES">
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A3AB892713A4D42F0025FE50"
-            BuildableName = "feindura Webmaster Tool.app"
-            BlueprintName = "feindura Webmaster Tool"
-            ReferencedContainer = "container:feindura Webmaster Tool.xcodeproj">
+            BuildableName = "feindura Webmaster App.app"
+            BlueprintName = "feindura Webmaster App"
+            ReferencedContainer = "container:feindura Webmaster App.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

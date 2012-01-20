@@ -442,8 +442,8 @@
 	[self dismissModalViewControllerAnimated:YES];
 
     // reload database
-    [self.tableView reloadData];
-    [navController.accounts updateAccounts];
+//    [self.tableView reloadData];
+//    [navController.accounts updateAccounts];
 }
 
 @end

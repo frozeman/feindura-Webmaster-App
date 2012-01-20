@@ -59,8 +59,9 @@
      */
     
     // update accounts when become active again
-    if(self.appInactive)
-        [navigationController.accounts updateAccounts];
+//    if(self.appInactive)
+//        [navigationController.accounts updateAccounts];
+    self.appInactive = false;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
